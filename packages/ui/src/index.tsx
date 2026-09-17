@@ -1,6 +1,13 @@
 import type { ReactNode } from "react";
 
+export { AccessibilityMenu } from "./accessibility-menu";
+export { Button } from "./button";
+export { cn } from "./cn";
+export { LanguageSwitch } from "./language-switch";
 export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
+export { ParallaxBand } from "./parallax-band";
+export { Reveal } from "./reveal";
+export { SectionHeading } from "./section-heading";
 export {
   COLOR_TOKENS,
   contrastRatio,

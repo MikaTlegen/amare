@@ -10,6 +10,7 @@
 | `packages/ui/src/styles/tokens.css` | палитра RGB-тройками `--c-*`, контрастная тема, `--font-scale` |
 | `packages/ui/src/styles/theme.css` | тема Tailwind v4: цвета, шрифты, радиусы, `max-w-content`, `animate-pulse-ring` |
 | `packages/ui/src/styles/base.css` | кегль 18px, фокус, `prefers-reduced-motion`, цвет рамок |
+| `packages/ui/src/styles/components.css` | `container-content`, `gradient-border` |
 | `packages/ui/src/tokens/palette.ts` | та же палитра данными (для графиков) и `contrastRatio` |
 | `packages/ui/src/tokens/palette.test.ts` | сверка CSS ↔ TS и проверка контраста |
 | `packages/ui/src/logo.tsx` | `Logo`, `LogoMark` |
@@ -104,8 +105,13 @@ import "./globals.css";
 - Цвет рамки по умолчанию в v4 — `currentColor`; в `base.css` он возвращён к `line`.
 - Стандартная палитра Tailwind отключена (в наброске использовался только `white`).
 - `Logo` не содержит ссылку: `next/link` добавляет приложение.
-- Пока не перенесены компонентные классы `.container-content` и `.gradient-border` —
-  они переедут вместе с компонентами.
+- Компонентные классы `container-content` и `gradient-border` — в `styles/components.css` (`@utility`).
+- Классы набросков переведены утилитой `@tailwindcss/upgrade` (`shadow-sm`→`shadow-xs`, `backdrop-blur`→`backdrop-blur-sm`,
+  `min-h-[3rem]`→`min-h-12` и т. п.). Утилита по ошибке переименовала вариант кнопки `'outline'` в `'outline-solid'` — исправлено.
+- **Межстрочный интервал.** В v3 размеры `text-xl…4xl` задавали интервал в rem, `text-5xl+` — 1, и адаптивный
+  `sm:text-*` перебивал явный `leading-*`. В v4 интервал — доля от размера, а явный `leading-*` сильнее размерного
+  класса. Чтобы вёрстка совпала, в заголовках добавлены адаптивные `sm:leading-*` и `leading-8`.
+  В новом коде: если меняете размер на брейкпоинте, задавайте и `leading-*` явно.
 
 ## Логотип
 

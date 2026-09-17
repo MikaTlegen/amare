@@ -1,0 +1,34 @@
+/* Компонентные классы из набросков amare-site (перенесены утилитой @tailwindcss/upgrade) */
+
+@utility container-content {
+  @apply mx-auto w-full max-w-content px-4 sm:px-8 lg:px-20;
+}
+
+/* Переливающаяся рамка bento-карточек при наведении */
+@utility gradient-border {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(130deg, rgb(var(--c-brand-bright)), rgb(var(--c-sky)), rgb(var(--c-accent)));
+    background-size: 200% 200%;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: -1;
+  }
+  &:hover::before {
+    opacity: 1;
+  }
+  &:focus-within::before {
+    opacity: 1;
+  }
+}
