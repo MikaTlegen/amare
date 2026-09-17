@@ -1,0 +1,40 @@
+# Dev-окружение: подхватывается автоматически при `docker compose up`.
+# Горячая перезагрузка кода: `docker compose up --watch`
+x-dev-watch: &dev-watch
+  watch:
+    - action: sync
+      path: ./apps/api/src
+      target: /repo/apps/api/src
+    - action: rebuild
+      path: ./apps/api/package.json
+    - action: rebuild
+      path: ./pnpm-lock.yaml
+
+services:
+  # Порты инфраструктуры открыты только на localhost — для локальных инструментов (psql, redis-cli)
+  postgres:
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
+
+  redis:
+    ports:
+      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:6379"
+
+  s3:
+    ports:
+      - "127.0.0.1:${S3_HOST_PORT:-3900}:3900"
+
+  api:
+    build:
+      target: dev
+    environment:
+      NODE_ENV: development
+    develop: *dev-watch
+
+  worker:
+    build:
+      target: dev
+    command: ["./node_modules/.bin/nest", "start", "--watch", "--entryFile", "worker"]
+    environment:
+      NODE_ENV: development
+    develop: *dev-watch

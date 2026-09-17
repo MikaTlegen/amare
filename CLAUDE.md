@@ -32,3 +32,40 @@
 
 В проекте работают **ECC** и **Impeccable**. Их правила действуют,
 но `./docs/DEVELOPMENT_RULES.md` имеет приоритет над ними.
+Переопределения ECC (TDD, типы тестов, покрытие) — раздел 1 DEVELOPMENT_RULES.md.
+
+## Окружение
+
+- Код лежит в WSL Ubuntu (`~/projects/Amare`). Команды, включая git, запускать внутри WSL:
+  из Windows git отказывается работать с `\\wsl.localhost` (dubious ownership).
+- pnpm 12 — через corepack (`packageManager` в корневом `package.json`), shim в `~/.local/bin`.
+- Решения и их причины — `docs/DECISIONS.md`. Новое архитектурное решение — запись туда.
+
+## Команды
+
+- `pnpm install` — зависимости. pnpm не ставит релизы моложе `minimumReleaseAge`
+  и блокирует install-скрипты (разрешения — `allowBuilds` в `pnpm-workspace.yaml`). Не ослаблять.
+- `pnpm lint` / `pnpm typecheck` / `pnpm test` / `pnpm build` — по всему монорепо через turbo.
+- Один пакет: `pnpm --filter @amare/api test`. Один файл: `pnpm --filter @amare/api test -- health`.
+- `docker compose up -d --wait` — dev-стек (postgres, redis, s3, api, worker); `--watch` — синхронизация `apps/api/src`.
+- `docker compose -f compose.yaml -f compose.prod.yaml up -d --build --wait` — prod-стек.
+- Проверка: `curl localhost:3000/health` (живость), `curl localhost:3000/health/ready` (postgres, redis, s3).
+- Next-приложения в compose не входят: `pnpm --filter @amare/site dev` (site 3001, care 3002, staff 3003).
+
+## Архитектура
+
+- `apps/api` — NestJS, CommonJS, сборка SWC. Один образ `apps/api/Dockerfile` (стадии `dev`/`prod`),
+  два процесса: `dist/main.js` (HTTP) и `dist/worker.js` (без HTTP). Сборка образа — из корня репозитория.
+- Окружение api валидируется zod при старте (`src/config/env.ts`, токен `ENV`); ошибка называет
+  только имена переменных. Новая переменная — в схему, в `x-app-env` compose и в `.env.example`.
+- Клиенты postgres (`pg`), redis (`ioredis`), s3 (`@aws-sdk/client-s3`) — глобальные провайдеры
+  `InfraModule` по токенам из `infra.tokens.ts`, закрываются при shutdown. ORM не выбран.
+- Тесты api — vitest + `unplugin-swc` (метаданные декораторов). В e2e клиенты подменяются через
+  `overrideProvider`, реальной сети нет.
+- `packages/*` отдают TS-исходники без сборки; Next подключает их через `transpilePackages`.
+  `@amare/i18n`: русский словарь — эталон ключей, остальные локали частичные с откатом на ru.
+- TypeScript закреплён на 6.0 (typescript-eslint не поддерживает 7). Правило `no-unused-vars` строгое,
+  а конфиг линтера защищён хуком — чинить код, не конфиг.
+- S3 — Garage single-node: ключ и bucket создаются при старте из `.env`
+  (`S3_ACCESS_KEY_ID` = `GK` + 24 hex, секреты — 64 hex).
+- CI — `.github/workflows/ci.yml`: lint/typecheck/test, затем prod-стек в compose и curl health.

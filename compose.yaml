@@ -1,0 +1,97 @@
+# Базовая конфигурация. Dev-настройки — compose.override.yaml (подхватывается автоматически),
+# prod — compose.prod.yaml: docker compose -f compose.yaml -f compose.prod.yaml up -d
+name: amare
+
+# Общее окружение api и worker. Весь .env в контейнеры не передаётся — только нужное
+x-app-env: &app-env
+  DATABASE_URL: postgres://${POSTGRES_USER:?}:${POSTGRES_PASSWORD:?}@postgres:5432/${POSTGRES_DB:?}
+  REDIS_URL: redis://redis:6379
+  S3_ENDPOINT: http://s3:3900
+  S3_REGION: garage
+  S3_BUCKET: ${S3_BUCKET:?}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?}
+
+x-app-depends: &app-depends
+  postgres:
+    condition: service_healthy
+  redis:
+    condition: service_healthy
+  s3:
+    condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      POSTGRES_DB: ${POSTGRES_DB:?}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8.8-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # S3-совместимое хранилище. Ключ и bucket создаются при старте из переменных окружения
+  s3:
+    image: dxflrs/garage:v2.4.1
+    command: ["/garage", "server", "--single-node", "--default-bucket"]
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?}
+      GARAGE_DEFAULT_ACCESS_KEY: ${S3_ACCESS_KEY_ID:?}
+      GARAGE_DEFAULT_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:?}
+      GARAGE_DEFAULT_BUCKET: ${S3_BUCKET:?}
+    volumes:
+      - ./infra/garage/garage.toml:/etc/garage.toml:ro
+      - garage_data:/var/lib/garage
+    healthcheck:
+      # В образе нет shell: проверяем, что bucket уже создан, самим бинарником garage
+      test: ["CMD", "/garage", "bucket", "info", "${S3_BUCKET:?}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      <<: *app-env
+      PORT: "3000"
+    ports:
+      - "${API_PORT:-3000}:3000"
+    depends_on: *app-depends
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/health > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 3s
+      start_period: 30s
+      retries: 5
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    # Явная команда: без неё образ запустил бы API (CMD по умолчанию)
+    command: ["node", "dist/worker.js"]
+    environment: *app-env
+    depends_on: *app-depends
+
+volumes:
+  postgres_data:
+  redis_data:
+  garage_data:

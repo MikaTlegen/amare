@@ -1,8 +1,13 @@
 .git
+.github
 .claude
-node_modules
-dist
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
 docs
+infra
 .env
 .env.*
 *.md
