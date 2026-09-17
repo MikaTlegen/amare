@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { AnimatedHeaderPreview } from '@/components/header-preview/AnimatedHeaderPreview'
+import { HomePage } from '@/components/pages/HomePage'
 
 export const metadata: Metadata = {
-  title: 'Макет анимированной шапки',
+  title: 'Полный макет главной страницы',
   robots: { index: false, follow: false },
 }
 
 export default function HeaderPreviewPage() {
-  return <AnimatedHeaderPreview />
+  return <HomePage />
 }
