@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import "@amare/ui/styles.css";
+
+/* Классы из общих компонентов тоже должны попасть в сборку */
+@source "../../../packages/ui/src";

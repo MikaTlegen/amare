@@ -5,6 +5,7 @@
     "moduleResolution": "Bundler",
     "lib": ["ES2024", "DOM"],
     "jsx": "react-jsx",
+    "types": ["node"],
     "noEmit": true
   },
   "include": ["src"]

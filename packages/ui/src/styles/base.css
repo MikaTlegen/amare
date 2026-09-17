@@ -1,0 +1,53 @@
+@layer base {
+  /*
+   * Совместимость с набросками на Tailwind 3: там цвет рамки по умолчанию
+   * был светло-серым, в v4 — currentColor. Берём линию из палитры.
+   */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: rgb(var(--c-line));
+  }
+
+  /*
+   * Базовый кегль 18px — требование ТЗ (S-13): основная аудитория старше 55 лет.
+   * Вся шкала Tailwind в rem, поэтому --font-scale масштабирует интерфейс целиком.
+   */
+  html {
+    font-size: calc(18px * var(--font-scale));
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* Видимый фокус обязателен: по интерфейсу ходят с клавиатуры */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-bg;
+  }
+
+  /* Уважение к вестибулярным нарушениям: гасим всё движение */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

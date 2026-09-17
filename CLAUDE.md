@@ -64,6 +64,9 @@
   `overrideProvider`, реальной сети нет.
 - `packages/*` отдают TS-исходники без сборки; Next подключает их через `transpilePackages`.
   `@amare/i18n`: русский словарь — эталон ключей, остальные локали частичные с откатом на ru.
+- Дизайн-токены — только `packages/ui` (`docs/DESIGN_TOKENS.md`): Tailwind v4, стандартная палитра отключена,
+  цвета — классы токенов (`bg-deep`, `text-brand`). Цвет меняется в `tokens.css` и `palette.ts` вместе,
+  затем `pnpm --filter @amare/ui test` (сверка и контраст). Кегль 18px, контраст — `data-contrast="high"`.
 - TypeScript закреплён на 6.0 (typescript-eslint не поддерживает 7). Правило `no-unused-vars` строгое,
   а конфиг линтера защищён хуком — чинить код, не конфиг.
 - S3 — Garage single-node: ключ и bucket создаются при старте из `.env`

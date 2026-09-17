@@ -1,5 +1,17 @@
 import type { ReactNode } from "react";
 
+export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
+export {
+  COLOR_TOKENS,
+  contrastRatio,
+  PALETTE,
+  toCssRgb,
+  type ColorToken,
+  type Palette,
+  type Rgb,
+  type ThemeName,
+} from "./tokens/palette";
+
 export interface PageShellProps {
   title: string;
   children?: ReactNode;
@@ -8,9 +20,9 @@ export interface PageShellProps {
 // Общая оболочка страницы для site, care и staff
 export function PageShell({ title, children }: PageShellProps) {
   return (
-    <main style={{ fontFamily: "system-ui, sans-serif", maxWidth: 960, margin: "0 auto", padding: 24 }}>
-      <h1>{title}</h1>
-      {children}
+    <main className="mx-auto w-full max-w-content px-4 py-10 sm:px-8 lg:px-20">
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">{title}</h1>
+      <div className="mt-6 text-muted">{children}</div>
     </main>
   );
 }
