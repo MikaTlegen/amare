@@ -2,20 +2,41 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Stethoscope } from 'lucide-react'
+import { Stethoscope, LibraryBig } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import type { StaffRole } from '@amare/api-client'
 import { useAuth } from '@/auth/AuthContext'
 
+const DEMO_ROLES: { role: StaffRole; title: string; note: string; Icon: LucideIcon }[] = [
+  {
+    role: 'curator',
+    title: 'Войти как куратор',
+    note: 'Очередь задач, пациенты, тревожные сигналы, проверка видео',
+    Icon: Stethoscope,
+  },
+  {
+    role: 'admin',
+    title: 'Войти как администратор',
+    note: 'Шаблоны курсов, библиотека упражнений, назначение программ',
+    Icon: LibraryBig,
+  },
+]
+
 /**
- * Вход в рабочее место специалиста.
+ * Вход в рабочее место.
  *
- * Один демо-вход одним кликом — приложение однонотевое, выбирать роль
- * не из чего. Справа — форма «телефон + код», выключенная: показывает,
- * каким вход будет на самом деле.
+ * Две роли, потому что это две разные работы: куратор ведёт людей,
+ * администратор — содержимое. Курсы загружает администратор, и у
+ * куратора такой кнопки быть не должно: иначе шаблон правит тот, кто
+ * между делом закрывает двадцать задач.
+ *
+ * Справа — форма «телефон + код», выключенная: показывает, каким вход
+ * будет на самом деле.
  */
 export function LoginPage() {
   const { user, signIn } = useAuth()
   const router = useRouter()
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy] = useState<StaffRole | null>(null)
 
   useEffect(() => {
     if (user) router.replace('/')
@@ -23,9 +44,9 @@ export function LoginPage() {
 
   if (user) return null
 
-  const enter = async () => {
-    setBusy(true)
-    await signIn()
+  const enter = async (role: StaffRole) => {
+    setBusy(role)
+    await signIn(role)
     router.replace('/')
   }
 
@@ -46,23 +67,23 @@ export function LoginPage() {
             <span className="text-sm font-semibold uppercase tracking-[0.1em] text-accent">
               Демонстрационный вход
             </span>
-
-            <button
-              type="button"
-              onClick={() => void enter()}
-              disabled={busy}
-              className="flex items-center gap-4 rounded-3xl border border-line bg-surface p-5 text-left transition-colors hover:border-deep disabled:opacity-60"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-tint">
-                <Stethoscope className="h-6 w-6 text-deep" aria-hidden="true" />
-              </span>
-              <span className="flex flex-1 flex-col gap-0.5">
-                <span className="text-lg font-semibold">
-                  {busy ? 'Входим…' : 'Войти как специалист'}
+            {DEMO_ROLES.map(({ role, title, note, Icon }) => (
+              <button
+                key={role}
+                type="button"
+                onClick={() => void enter(role)}
+                disabled={busy !== null}
+                className="flex items-center gap-4 rounded-3xl border border-line bg-surface p-5 text-left transition-colors hover:border-deep disabled:opacity-60"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-tint">
+                  <Icon className="h-6 w-6 text-deep" aria-hidden="true" />
                 </span>
-                <span className="text-base text-muted">Очередь задач, пациенты, тревожные сигналы</span>
-              </span>
-            </button>
+                <span className="flex flex-1 flex-col gap-0.5">
+                  <span className="text-lg font-semibold">{busy === role ? 'Входим…' : title}</span>
+                  <span className="text-base text-muted">{note}</span>
+                </span>
+              </button>
+            ))}
 
             <p className="m-0 text-base leading-relaxed text-muted">
               Данные в демо вымышлены. Ничего не отправляется и нигде не сохраняется, кроме факта

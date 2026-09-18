@@ -5,7 +5,7 @@
 
 export interface Slot {
   id: string
-  /** ISO-время начала приёма. */
+  /** Локальное время начала приёма: «2026-09-25T10:30». Без Z — это время клиники. */
   at: string
   doctorId: string
   format: 'clinic' | 'online' | 'home'
@@ -22,30 +22,79 @@ export interface BookingPayload {
 /** Имитация сетевой задержки, чтобы интерфейс показывал состояние загрузки. */
 const LATENCY_MS = 260
 
+/** На сколько дней вперёд открыта запись. */
+export const BOOKING_HORIZON_DAYS = 30
+
+/** Сетка приёмов клиники: Пн–Пт 9:00–18:00, Сб 9:00–14:00 (CLINIC.hours). */
+const WEEKDAY_TIMES = [
+  '09:00',
+  '09:30',
+  '10:00',
+  '10:30',
+  '11:00',
+  '11:30',
+  '12:30',
+  '13:00',
+  '13:30',
+  '14:00',
+  '15:00',
+  '15:30',
+  '16:00',
+  '16:30',
+  '17:00',
+]
+const SATURDAY_TIMES = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30']
+
+const SPECIALISTS = ['kuspanova', 'ahaaga', 'zhumabekova', 'moldabekov', 'niyazbekova']
+const FORMATS: Slot['format'][] = ['clinic', 'online', 'home']
+
+/** Дата в «2026-09-25» по локальному времени: toISOString сдвинул бы день. */
+function isoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+/**
+ * Демо-расписание.
+ *
+ * Занятость имитируется детерминированно (по остатку от деления), а не
+ * через Math.random: иначе при каждом ререндере сетка слотов прыгала бы,
+ * и человек терял бы уже выбранное время.
+ *
+ * Выезд на дом идёт реже и только в первой половине дня — так это
+ * и работает в клинике.
+ */
 function createDemoSlots(): Slot[] {
-  const specialists = ['kuspanova', 'ahaaga', 'zhumabekova', 'moldabekov', 'niyazbekova']
-  const times = ['09:30', '11:00', '12:30', '15:00', '16:30']
   const slots: Slot[] = []
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  specialists.forEach((doctorId, doctorIndex) => {
-    for (let dayOffset = 1; dayOffset <= 7; dayOffset += 1) {
-      const date = new Date(today)
-      date.setDate(date.getDate() + dayOffset)
-      const time = times[(doctorIndex + dayOffset) % times.length]
-      slots.push({
-        id: `${doctorId}-${dayOffset}`,
-        at: `${date.toISOString().slice(0, 10)}T${time}`,
-        doctorId,
-        format: 'clinic',
+  for (let dayOffset = 1; dayOffset <= BOOKING_HORIZON_DAYS; dayOffset += 1) {
+    const date = new Date(today)
+    date.setDate(date.getDate() + dayOffset)
+
+    const weekday = date.getDay()
+    if (weekday === 0) continue // воскресенье клиника не работает
+
+    const times = weekday === 6 ? SATURDAY_TIMES : WEEKDAY_TIMES
+    const day = isoDate(date)
+
+    FORMATS.forEach((format, formatIndex) => {
+      times.forEach((time, timeIndex) => {
+        // Часть слотов «занята»: пустое расписание выглядит нерабочим
+        if ((dayOffset + timeIndex + formatIndex * 2) % 3 === 0) return
+        if (format === 'home' && timeIndex % 2 === 1) return
+        if (format === 'home' && time >= '13:00') return
+
+        const doctorId = SPECIALISTS[(dayOffset + timeIndex) % SPECIALISTS.length]!
+        slots.push({ id: `${format}-${day}-${time}`, at: `${day}T${time}`, doctorId, format })
       })
-    }
-  })
+    })
+  }
 
   return slots
 }
-
 
 function delay<T>(value: T, ms = LATENCY_MS): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))

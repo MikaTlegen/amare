@@ -1,6 +1,6 @@
 import { ExternalLink, Quote, Star } from 'lucide-react'
-import { SectionHeading } from '@amare/ui'
-import { Reveal } from '@amare/ui'
+import { Button, Reveal, SectionHeading } from '@amare/ui'
+import { ROUTES } from '@/lib/clinic'
 import { REVIEWS, REVIEWS_SUMMARY } from '@/data/reviews'
 
 /**
@@ -56,15 +56,15 @@ export function Reviews() {
               появятся здесь, а прямо сейчас все отзывы можно прочитать в карточке клиники в 2ГИС —
               там их пишут сами пациенты, и подредактировать их мы не можем.
             </p>
-            <a
-              href={REVIEWS_SUMMARY.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-2 text-base font-semibold no-underline hover:text-accent"
-            >
-              Открыть отзывы в {REVIEWS_SUMMARY.source}
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
+            <div className="flex flex-wrap gap-3">
+              <Button href={REVIEWS_SUMMARY.sourceUrl} variant="deep">
+                Открыть отзывы в {REVIEWS_SUMMARY.source}
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              </Button>
+              <Button to={ROUTES.reviews} variant="ghost">
+                Про отзывы на сайте
+              </Button>
+            </div>
           </div>
         ) : (
           <ul className="grid gap-5 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3">

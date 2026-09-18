@@ -108,3 +108,15 @@ export const MAP = {
   widgetData:
     'eJw1UF1vgkAQ_C_bx17MEUSFpA8UItUg8WIbPxof6HHFs8CRu0MFw39vAN2n3dmZZGbuIGTCJEsCJnKmJWcKnO876Lpk4MCcxbqSDBCUUpRM6v5_ByoyIcGBl_l84po-INBcZ52CbI0Tzb-q2BRvgCBhikpeai4KcGD94b7ipSSV7Y1xaJIq8iY4dNNu14ln4b1PLjpwcbgjKvJuODwP3H1IVBQE_e3fOD1PyV8UvA-4Z-PQVYvIo9gqNsL2Gnz4IZUdbHEoUrzckap269XmmuKlSYrabVaf1wv1x53BZlEk7AaOgZ_TIkiHMuou6qOJteCFBgRUCJnwItZ9UVNjNDZmM2QZI2xj69gi4Ak4RntEkMflWig-RL9DFmtwHjwEWQc-1dAIkYNjTFsEikqRZdsTY9mhR3_jTLH2H3qIhX8',
 } as const
+
+/**
+ * Ссылка в WhatsApp с заготовленным текстом.
+ *
+ * Текст подставляется в поле ввода, но НЕ отправляется — человек видит
+ * его и может стереть. Поэтому в сообщении нет ничего о здоровье:
+ * только то, о чём человек хочет спросить. Диагноз в предзаполненном
+ * тексте был бы медданными, ушедшими в мессенджер до всякого согласия.
+ */
+export function whatsappLink(text?: string): string {
+  return text ? `${CLINIC.whatsapp}?text=${encodeURIComponent(text)}` : CLINIC.whatsapp
+}

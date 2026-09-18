@@ -30,6 +30,13 @@ const HOME_CHECKLIST = [
 export function GuardianSchool() {
   const [lessons, setLessons] = useState<GuardianLesson[]>([])
   const [busy, setBusy] = useState<string | null>(null)
+  const [checked, setChecked] = useState<string[]>([])
+
+  /** Отметка чек-листа: повторное нажатие снимает её. */
+  const toggleCheck = (item: string) =>
+    setChecked((current) =>
+      current.includes(item) ? current.filter((value) => value !== item) : [...current, item],
+    )
 
   useEffect(() => {
     void getGuardianLessons().then(setLessons)
@@ -101,24 +108,47 @@ export function GuardianSchool() {
       </section>
 
       <section className="flex h-fit flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
-        <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-          Чек-лист безопасной квартиры
-        </h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+            Чек-лист безопасной квартиры
+          </h2>
+          <span className="text-base text-muted">
+            сделано {checked.length} из {HOME_CHECKLIST.length}
+          </span>
+        </div>
 
         <ul className="m-0 flex list-none flex-col gap-2 p-0">
-          {HOME_CHECKLIST.map((item) => (
-            <li key={item} className="flex gap-3 rounded-2xl bg-bg px-4 py-3 text-base leading-relaxed">
-              <span aria-hidden="true" className="font-semibold text-brand">
-                —
-              </span>
-              {item}
-            </li>
-          ))}
+          {HOME_CHECKLIST.map((item) => {
+            const isDone = checked.includes(item)
+            return (
+              <li key={item}>
+                <label
+                  className={cn(
+                    'flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 text-base leading-relaxed transition-colors',
+                    isDone ? 'bg-tint text-deep' : 'bg-bg hover:bg-tint',
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isDone}
+                    onChange={() => toggleCheck(item)}
+                    className="h-6 w-6 shrink-0 accent-[rgb(var(--c-deep))]"
+                  />
+                  <span className={cn(isDone && 'line-through decoration-deep/40')}>{item}</span>
+                </label>
+              </li>
+            )
+          })}
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
           Падение дома — самая частая причина, по которой человек возвращается в стационар и теряет
           набранное за курс.
+        </p>
+
+        <p className="m-0 text-sm leading-relaxed text-muted">
+          {/* TODO BACKEND: отметки чек-листа уходят на сервер и видны куратору */}
+          Отметки живут до перезагрузки страницы: сохранять их пока некуда.
         </p>
       </section>
     </div>

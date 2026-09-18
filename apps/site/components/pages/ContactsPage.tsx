@@ -17,9 +17,9 @@ export function ContactsPage() {
         objectPosition="center 60%"
       />
 
-      <section className="container-content grid gap-5 py-14 lg:grid-cols-12">
-        <div className="flex flex-col gap-5 lg:col-span-5">
-          <article className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-7">
+      <section className="container-content grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
+        <div className="flex flex-col gap-8 lg:col-span-5">
+          <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <Phone className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
@@ -43,7 +43,7 @@ export function ContactsPage() {
             </p>
           </article>
 
-          <article className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-7">
+          <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <Clock className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
@@ -58,8 +58,8 @@ export function ContactsPage() {
           </article>
         </div>
 
-        <div className="flex flex-col gap-5 lg:col-span-7">
-          <article className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-7">
+        <div className="flex flex-col gap-8 lg:col-span-7">
+          <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>

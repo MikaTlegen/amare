@@ -50,14 +50,14 @@ export function Header() {
       <div className="container-content flex items-center gap-8 py-3">
         <SiteLogo />
 
-        <nav aria-label="Основная навигация" className="hidden flex-1 gap-7 lg:flex">
+        <nav aria-label="Основная навигация" className="hidden flex-1 gap-5 lg:flex xl:gap-7">
           {NAV.map((item) => (
             <Link
               key={item.to}
               href={item.to}
               className={
                 cn(
-                  'relative py-1 text-base no-underline transition-colors',
+                  'relative whitespace-nowrap py-1 text-base no-underline transition-colors',
                   'after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left',
                   'after:scale-x-0 after:bg-accent after:transition-transform after:duration-300',
                   'hover:after:scale-x-100',

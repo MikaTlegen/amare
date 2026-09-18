@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
+  addTemplate,
   assignProgram,
   closeTask,
+  getEditableTemplates,
   getPatientPrograms,
   getStaffPatients,
   getStaffTasks,
@@ -105,5 +107,46 @@ describe('getWeeklyReview', () => {
 
     const review = await getWeeklyReview(patient!)
     expect(review.sentAt).not.toBeNull()
+  })
+})
+
+describe('addTemplate', () => {
+  it('добавляет шаблон в библиотеку', async () => {
+    resetMockState()
+    const before = await getEditableTemplates()
+    const after = await addTemplate({
+      title: 'Речь, 14 дней',
+      days: 14,
+      includes: ['Логопед'],
+      note: 'При афазии',
+    })
+
+    expect(after).toHaveLength(before.length + 1)
+    expect(after.at(-1)?.title).toBe('Речь, 14 дней')
+    expect(after.at(-1)?.note).toBe('При афазии')
+  })
+
+  it('сам помечает курс короче 14 дней как не подходящий для ОСМС', async () => {
+    resetMockState()
+    const after = await addTemplate({
+      title: 'Поддерживающий, 8 дней',
+      days: 8,
+      includes: ['ЛФК'],
+      note: '',
+    })
+
+    expect(after.at(-1)?.note).toContain('ОСМС')
+  })
+
+  it('не перетирает примечание, если администратор написал своё', async () => {
+    resetMockState()
+    const after = await addTemplate({
+      title: 'Короткий, 10 дней',
+      days: 10,
+      includes: ['Массаж'],
+      note: 'Только платно, по решению врача',
+    })
+
+    expect(after.at(-1)?.note).toBe('Только платно, по решению врача')
   })
 })

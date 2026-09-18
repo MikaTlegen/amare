@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { CheckCircle2, MapPin, Video, Home } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
+import { AppointmentPicker } from '@/components/booking/AppointmentPicker'
 import { Button } from '@amare/ui'
 import { getSlots, createBooking, type Slot } from '@/lib/booking'
 import { DOCTORS } from '@/data/doctors'
@@ -55,6 +56,7 @@ export function BookingPage() {
 
   const visible = slots.filter((slot) => slot.format === format)
   const chosen = slots.find((slot) => slot.id === slotId)
+  const chosenDoctor = chosen && DOCTORS.find((doctor) => doctor.id === chosen.doctorId)
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
@@ -71,8 +73,8 @@ export function BookingPage() {
         crumb="Запись"
         title="Записаться на консультацию"
         note={`${PRICES.freeIntro}. Дальше врач составит план и скажет, нужен ли курс.`}
-        image="/photos/reception.jpg"
-        alt="Ресепшен клиники Amare"
+        image="/photos/reception-desk.jpg"
+        alt="Стойка администратора: здесь подтверждают время приёма"
         objectPosition="center 40%"
       />
 
@@ -130,48 +132,16 @@ export function BookingPage() {
 
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
                 <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
-                  2. Время
+                  2. Дата и время
                 </legend>
 
-                {visible.length === 0 ? (
-                  <p className="m-0 rounded-2xl border border-line bg-surface p-5 text-base text-muted">
-                    В этом формате свободных слотов нет. Позвоните — администратор подберёт время.
+                <AppointmentPicker slots={visible} selectedId={slotId} onSelect={setSlotId} />
+
+                {chosen && (
+                  <p className="m-0 rounded-2xl bg-tint px-5 py-4 text-base leading-relaxed text-deep">
+                    Выбрано: {formatSlot(chosen.at).date}, {formatSlot(chosen.at).time}
+                    {chosenDoctor ? ` · ${chosenDoctor.name}, ${chosenDoctor.role}` : ''}
                   </p>
-                ) : (
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {visible.map((slot) => {
-                      const { date, time } = formatSlot(slot.at)
-                      const doctor = DOCTORS.find((d) => d.id === slot.doctorId)
-                      const active = slotId === slot.id
-                      return (
-                        <label
-                          key={slot.id}
-                          className={cn(
-                            'flex cursor-pointer items-center gap-4 rounded-2xl border-[1.5px] p-4 transition-colors',
-                            active ? 'border-accent bg-[rgb(253,238,237)]' : 'border-line bg-surface',
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name="slot"
-                            value={slot.id}
-                            checked={active}
-                            onChange={() => setSlotId(slot.id)}
-                            className="sr-only"
-                          />
-                          <span className="flex flex-col">
-                            <span className="font-display text-lg font-semibold tracking-[-0.035em]">
-                              {time}
-                            </span>
-                            <span className="text-sm text-muted">{date}</span>
-                          </span>
-                          <span className="flex-1 text-base text-muted">
-                            {doctor ? `${doctor.name} · ${doctor.role}` : 'Специалист клиники'}
-                          </span>
-                        </label>
-                      )
-                    })}
-                  </div>
                 )}
               </fieldset>
             </div>

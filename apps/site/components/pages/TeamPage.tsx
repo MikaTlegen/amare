@@ -38,8 +38,8 @@ export function TeamPage() {
         crumb="Врачи"
         title="С пациентом работает команда"
         note="Не один врач, а мультидисциплинарная группа: решения принимаются совместно и пересматриваются по ходу курса."
-        image="/photos/reception.jpg"
-        alt="Ресепшен клиники Amare"
+        image="/photos/team.jpg"
+        alt="Команда специалистов клиники Amare"
         objectPosition="center 40%"
       />
 

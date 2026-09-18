@@ -65,7 +65,7 @@ export function GuardianCabinetPage() {
         {tab === 'care' && <CareLogPanel />}
         {tab === 'plan' && <TodayPlan readOnly />}
         {tab === 'diary' && <DiaryPanel byGuardian />}
-        {tab === 'meds' && <MedsPanel readOnly />}
+        {tab === 'meds' && <MedsPanel byGuardian />}
         {tab === 'progress' && <ProgressPanel />}
         {tab === 'school' && <GuardianSchool />}
         {tab === 'chat' && <ChatPanel api={CHAT_API} readOnly />}

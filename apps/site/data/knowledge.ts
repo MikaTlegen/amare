@@ -7,6 +7,9 @@ export interface KnowledgeArticle {
   points?: string[]
   /** Требует утверждения мультидисциплинарной группой клиники. */
   needsReview?: boolean
+  /** Иллюстрация к теме. Не медицинская схема — просто якорь для взгляда. */
+  photo: string
+  photoAlt: string
 }
 
 export interface KnowledgeSection {
@@ -52,6 +55,8 @@ export const KNOWLEDGE: KnowledgeSection[] = [
           'Дополнительно: внезапная потеря равновесия и внезапное нарушение зрения на один или оба глаза.',
           'Запомните время, когда человека последний раз видели здоровым, — от него врачи считают срок для лечения.',
         ],
+        photo: '/photos/hospital-drip.jpg',
+        photoAlt: 'Стойка с капельницей в больничной палате',
       },
     ],
   },
@@ -66,12 +71,16 @@ export const KNOWLEDGE: KnowledgeSection[] = [
         summary:
           'Техника перемещения без травм для пациента и для спины ухаживающего, позиционирование в постели.',
         needsReview: true,
+        photo: '/photos/hospital-ward.jpg',
+        photoAlt: 'Кровати в больничной палате',
       },
       {
         id: 'pressure-sores',
         title: 'Профилактика пролежней',
         summary: 'График поворотов, осмотр кожи, что считать тревожным признаком.',
         needsReview: true,
+        photo: '/photos/equipment.jpg',
+        photoAlt: 'Реабилитационное оборудование клиники',
       },
       {
         id: 'falls',
@@ -79,6 +88,8 @@ export const KNOWLEDGE: KnowledgeSection[] = [
         summary:
           'Что убрать из квартиры, где нужны поручни и освещение, как безопасно ходить с поддержкой.',
         needsReview: true,
+        photo: '/photos/walk-bars.jpg',
+        photoAlt: 'Пациент идёт вдоль поручней вместе со специалистом',
       },
     ],
   },
@@ -93,6 +104,8 @@ export const KNOWLEDGE: KnowledgeSection[] = [
         summary:
           'Поза при кормлении, консистенция пищи и жидкости, признаки поперхивания и что делать.',
         needsReview: true,
+        photo: '/photos/healthy-plate.jpg',
+        photoAlt: 'Тарелка с приготовленной едой',
       },
       {
         id: 'diet',
@@ -100,6 +113,8 @@ export const KNOWLEDGE: KnowledgeSection[] = [
         summary:
           'Давление, холестерин, соль и вода — что реально влияет на риск повторного инсульта.',
         needsReview: true,
+        photo: '/photos/vegetables.jpg',
+        photoAlt: 'Свежие овощи и зелень',
       },
     ],
   },
@@ -113,12 +128,16 @@ export const KNOWLEDGE: KnowledgeSection[] = [
         title: 'Как разговаривать с человеком при афазии',
         summary: 'Простые фразы, время на ответ, карточки и жесты. Чего делать не нужно.',
         needsReview: true,
+        photo: '/photos/doctor-patient.jpg',
+        photoAlt: 'Врач разговаривает с пожилой пациенткой',
       },
       {
         id: 'mood',
         title: 'Подавленность после инсульта',
         summary: 'Почему это ожидаемо и когда это уже повод к специалисту.',
         needsReview: true,
+        photo: '/photos/lobby.jpg',
+        photoAlt: 'Спокойная зона ожидания клиники',
       },
     ],
   },

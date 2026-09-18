@@ -14,10 +14,12 @@
     "@amare/i18n": "workspace:*",
     "@amare/ui": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.23",
+    "date-fns": "^4.4.0",
     "lucide-react": "^1.46.0",
     "motion": "^13.4.0",
     "next": "^16.3.0",
     "react": "^19.2.0",
+    "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {

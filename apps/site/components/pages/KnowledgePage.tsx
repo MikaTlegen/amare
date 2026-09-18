@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- иллюстрации статей; next/image — отдельная задача */
 import { AlertTriangle, Phone } from 'lucide-react'
 import { Button } from '@amare/ui'
 import { PageCover } from '@/components/PageCover'
@@ -20,8 +21,8 @@ export function KnowledgePage() {
         crumb="База знаний"
         title="Что делать дома и чего делать нельзя"
         note="Материалы для пациентов и родственников. Клинические тексты выходят после утверждения мультидисциплинарной группой клиники."
-        image="/photos/fine-motor.jpg"
-        alt="Занятие специалиста с пациентом в клинике"
+        image="/photos/library.jpg"
+        alt="Полки с книгами: подборка материалов для пациентов и родственников"
       />
 
       <section className="container-content flex flex-col gap-12 py-14">
@@ -39,34 +40,47 @@ export function KnowledgePage() {
                 <article
                   key={article.id}
                   id={article.id}
-                  className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6"
+                  className="flex flex-col gap-3 overflow-hidden rounded-3xl border border-line bg-surface"
                 >
-                  <h3 className="m-0 text-xl font-semibold leading-snug">{article.title}</h3>
-                  <p className="m-0 text-base leading-relaxed text-muted">{article.summary}</p>
+                  <img
+                    src={article.photo}
+                    alt={article.photoAlt}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-48 w-full object-cover"
+                  />
 
-                  {article.points && (
-                    <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
-                      {article.points.map((point) => (
-                        <li
-                          key={point}
-                          className="flex gap-3 rounded-2xl bg-bg px-4 py-3 text-base leading-relaxed"
-                        >
-                          <span aria-hidden="true" className="font-semibold text-brand">
-                            —
-                          </span>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <div className="flex flex-1 flex-col gap-3 px-6 pb-6">
+                    <h3 className="m-0 text-xl font-semibold leading-snug">{article.title}</h3>
+                    <p className="m-0 text-base leading-relaxed text-muted">{article.summary}</p>
 
-                  {article.needsReview && (
-                    <p className="m-0 flex items-start gap-2.5 rounded-2xl border border-line px-4 py-3 text-base leading-relaxed text-muted">
-                      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
-                      Текст готовится и проходит проверку врачами клиники. Пока спросите у своего
-                      специалиста или на консультации — показать технику безопаснее, чем описать.
-                    </p>
-                  )}
+                    {article.points && (
+                      <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+                        {article.points.map((point) => (
+                          <li
+                            key={point}
+                            className="flex gap-3 rounded-2xl bg-bg px-4 py-3 text-base leading-relaxed"
+                          >
+                            <span aria-hidden="true" className="font-semibold text-brand">
+                              —
+                            </span>
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {article.needsReview && (
+                      <p className="m-0 mt-auto flex items-start gap-2.5 rounded-2xl border border-line px-4 py-3 text-base leading-relaxed text-muted">
+                        <AlertTriangle
+                          className="mt-0.5 h-5 w-5 shrink-0 text-accent"
+                          aria-hidden="true"
+                        />
+                        Текст готовится и проходит проверку врачами клиники. Пока спросите у своего
+                        специалиста или на консультации — показать технику безопаснее, чем описать.
+                      </p>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>

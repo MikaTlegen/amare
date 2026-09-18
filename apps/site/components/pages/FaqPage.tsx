@@ -36,8 +36,8 @@ export function FaqPage() {
         crumb="Вопросы и ответы"
         title="Что обычно спрашивают до первого приёма"
         note="Организационные вопросы — сроки, деньги, документы, формат. На медицинские вопросы отвечает врач после осмотра, а не страница сайта."
-        image="/photos/reception.jpg"
-        alt="Стойка регистратуры клиники Amare"
+        image="/photos/doctor-patient.jpg"
+        alt="Врач разговаривает с пожилой пациенткой"
       />
 
       <section className="container-content flex flex-col gap-3 py-14">

@@ -11,6 +11,7 @@ import { TwoDoors } from '@/components/home/TwoDoors'
 import { Quiz } from '@/components/home/Quiz'
 import { ResultsBand } from '@/components/home/ResultsBand'
 import { Reviews } from '@/components/home/Reviews'
+import { FounderWord } from '@/components/home/FounderWord'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
@@ -30,6 +31,7 @@ export function HomePage() {
       <Quiz />
       <ResultsBand />
       <Team />
+      <FounderWord />
       <Reviews />
       <Contact />
       <section className='bg-bg px-5 py-16 sm:px-8 lg:px-20'>

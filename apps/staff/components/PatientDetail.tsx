@@ -19,12 +19,24 @@ import { useAuth } from '@/auth/AuthContext'
 
 type Section = 'program' | 'docs' | 'progress' | 'weekly' | 'chat'
 
-const SECTIONS: { id: Section; label: string }[] = [
+/**
+ * Разделы карточки.
+ *
+ * Администратору доступны только программа и документы: переписка,
+ * динамика по шкалам и разбор недели — клинические данные, и по
+ * разделу 6 ТЗ они не входят в его роль.
+ */
+const CURATOR_SECTIONS: { id: Section; label: string }[] = [
   { id: 'program', label: 'Программа' },
   { id: 'docs', label: 'Документы' },
   { id: 'progress', label: 'Динамика' },
   { id: 'weekly', label: 'Разбор недели' },
   { id: 'chat', label: 'Переписка' },
+]
+
+const ADMIN_SECTIONS: { id: Section; label: string }[] = [
+  { id: 'program', label: 'Программа' },
+  { id: 'docs', label: 'Документы' },
 ]
 
 /**
@@ -35,7 +47,17 @@ const SECTIONS: { id: Section; label: string }[] = [
  * Документы хранятся по пациентам — общего списка файлов нет и быть
  * не должно.
  */
-export function PatientDetail({ patient, onBack }: { patient: PatientCard; onBack: () => void }) {
+export function PatientDetail({
+  patient,
+  onBack,
+  canAssign = false,
+}: {
+  patient: PatientCard
+  onBack: () => void
+  /** Назначать программу может только администратор (роль admin). */
+  canAssign?: boolean
+}) {
+  const sections = canAssign ? ADMIN_SECTIONS : CURATOR_SECTIONS
   const [section, setSection] = useState<Section>('program')
 
   // Стабильная ссылка на api для ChatPanel: без useMemo объект пересоздавался бы
@@ -87,7 +109,7 @@ export function PatientDetail({ patient, onBack }: { patient: PatientCard; onBac
       )}
 
       <div role="tablist" aria-label="Разделы карточки пациента" className="flex flex-wrap gap-2">
-        {SECTIONS.map((item) => {
+        {sections.map((item) => {
           const on = item.id === section
           return (
             <button
@@ -109,7 +131,7 @@ export function PatientDetail({ patient, onBack }: { patient: PatientCard; onBac
         })}
       </div>
 
-      {section === 'program' && <ProgramSection patient={patient} />}
+      {section === 'program' && <ProgramSection patient={patient} canAssign={canAssign} />}
       {section === 'docs' && <DocumentsSection patient={patient} />}
       {section === 'weekly' && <WeeklyReviewSection patient={patient} />}
       {section === 'chat' && <ChatPanel api={chatApi} />}
@@ -130,7 +152,7 @@ export function PatientDetail({ patient, onBack }: { patient: PatientCard; onBac
 }
 
 /** Назначение курса и список уже назначенных программ. */
-function ProgramSection({ patient }: { patient: PatientCard }) {
+function ProgramSection({ patient, canAssign }: { patient: PatientCard; canAssign: boolean }) {
   const { user } = useAuth()
   const [templates, setTemplates] = useState<ProgramTemplate[]>([])
   const [assigned, setAssigned] = useState<AssignedProgram[]>([])
@@ -168,6 +190,14 @@ function ProgramSection({ patient }: { patient: PatientCard }) {
 
   return (
     <div className="grid gap-5 lg:grid-cols-12">
+      {!canAssign && (
+        <p className="m-0 rounded-3xl border border-line bg-bg px-6 py-5 text-base leading-relaxed text-muted lg:col-span-7">
+          Курс назначает администратор клиники. Если программу нужно изменить — напишите ему,
+          указав, что именно и почему: назначение попадёт в карту пациента и в его кабинет.
+        </p>
+      )}
+
+      {canAssign && (
       <form
         onSubmit={submit}
         className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7"
@@ -262,6 +292,7 @@ function ProgramSection({ patient }: { patient: PatientCard }) {
           </p>
         )}
       </form>
+      )}
 
       <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">

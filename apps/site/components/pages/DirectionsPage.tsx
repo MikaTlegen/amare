@@ -24,31 +24,35 @@ export function DirectionsPage() {
       <section className="container-content flex flex-col gap-5 py-14">
         {DIRECTIONS.map((direction, i) => {
           const Icon = direction.icon
-          const wide = i === 0
+          /* Чередуем сторону фото: иначе десять одинаковых карточек подряд
+             читаются как таблица и взгляд по ним не цепляется. */
+          const photoRight = i % 2 === 1
+
           return (
             <Reveal
               as="article"
               key={direction.id}
+              id={direction.id}
               delay={i * 0.05}
-              className={cn(
-                'gradient-border overflow-hidden rounded-3xl border border-line bg-surface',
-                wide ? 'grid lg:grid-cols-12' : '',
-              )}
+              className="grid overflow-hidden rounded-3xl border border-line bg-surface lg:grid-cols-12"
             >
-              {wide && direction.photo && (
+              {direction.photo && (
                 <img
                   src={direction.photo}
                   alt={direction.photoAlt ?? ''}
                   loading="lazy"
                   decoding="async"
-                  className="h-64 w-full object-cover lg:col-span-4 lg:h-full"
+                  className={cn(
+                    'h-64 w-full object-cover lg:col-span-5 lg:h-full',
+                    photoRight && 'lg:order-2',
+                  )}
                 />
               )}
 
               <div
                 className={cn(
                   'flex flex-col justify-center gap-3 p-7 sm:p-8',
-                  wide && 'lg:col-span-8',
+                  direction.photo ? 'lg:col-span-7' : 'lg:col-span-12',
                 )}
               >
                 <span className="flex items-center gap-2 font-display text-sm font-semibold text-accent">
@@ -62,16 +66,12 @@ export function DirectionsPage() {
 
                 <p className="max-w-[44em] text-lg leading-relaxed text-ink/80">{direction.full}</p>
 
-                <ul className="flex flex-wrap gap-2">
-                  {direction.tags.map((tag) => (
-                    <li
-                      key={tag}
-                      className="rounded-full bg-tint px-3 py-1.5 text-sm font-medium text-deep"
-                    >
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
+                {/*
+                  Раньше здесь были чипы с фоном и скруглением. Это подписи
+                  «чем меряем и кто ведёт», а не действия — вид кнопки заставлял
+                  по ним кликать. Теперь просто строка через точки.
+                */}
+                <p className="m-0 text-base text-muted">{direction.tags.join(' · ')}</p>
               </div>
             </Reveal>
           )

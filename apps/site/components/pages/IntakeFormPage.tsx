@@ -67,8 +67,8 @@ export function IntakeFormPage() {
         crumb="Анкета"
         title="Расскажите о состоянии"
         note="Пять вопросов. Врач-реабилитолог посмотрит ответы и перезвонит с предварительным планом."
-        image="/photos/lobby.jpg"
-        alt="Зона ожидания клиники Amare"
+        image="/photos/intake-desk.jpg"
+        alt="Заполнение медицинских документов"
       />
 
       <section className="container-content py-12">

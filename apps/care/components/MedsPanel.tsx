@@ -1,14 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Clock, Pill, ShoppingCart, X } from 'lucide-react'
+import { Pill, ShoppingCart } from 'lucide-react'
 import type { Medication, MedicationState } from '@amare/api-client'
 import { cn } from '@amare/ui'
 import { getMedications, setMedicationState } from '@/lib/mock'
 
-const STATE_LABEL: Record<MedicationState, string> = {
-  pending: 'не отмечено',
-  taken: 'принял',
+/** Положения переключателя. Порядок — от «всё хорошо» к «не принял». */
+const STATES: { id: MedicationState; label: string }[] = [
+  { id: 'taken', label: 'Принял' },
+  { id: 'postponed', label: 'Позже' },
+  { id: 'missed', label: 'Пропустил' },
+]
+
+const STATE_NOTE: Record<MedicationState, string> = {
+  pending: 'ещё не отмечено',
+  taken: 'принято',
   postponed: 'отложено на 15 минут',
   missed: 'пропущено',
 }
@@ -19,15 +26,16 @@ const REFILL_DAYS = 7
 /**
  * Лекарства (P-05 ТЗ).
  *
- * Три кнопки вместо одной галочки: «принял», «отложить», «пропустил».
- * Пропуск — это тоже информация, и куратору она нужнее, чем тишина.
- * Особенно по антиагрегантам: их пропуск входит в список алертов
- * опекуну (G-04), поэтому такие препараты помечены отдельно.
+ * Статус переключается сегментированным переключателем, а не галочкой:
+ * «пропустил» — такая же нормальная отметка, как «принял», и она нужна
+ * куратору. Галочка даёт только «принял / молчание», а молчание врач
+ * прочитать не может.
  *
- * `readOnly` — опекун видит расписание, но не отмечает приём за
- * пациента: отметка означает «таблетка выпита», а этого он не знает.
+ * Опекун тоже переключает статусы: он и раскладывает таблетки по дням,
+ * и часто единственный, кто вообще заходит в приложение. Отметка при
+ * этом подписывается — кто именно её поставил (G-03 ТЗ).
  */
-export function MedsPanel({ readOnly = false }: { readOnly?: boolean }) {
+export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
   const [items, setItems] = useState<Medication[]>([])
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -58,7 +66,7 @@ export function MedsPanel({ readOnly = false }: { readOnly?: boolean }) {
           <li
             key={item.id}
             className={cn(
-              'flex flex-col gap-4 rounded-3xl border p-5 sm:flex-row sm:items-center sm:gap-5',
+              'flex flex-col gap-4 rounded-3xl border p-5 lg:flex-row lg:items-center lg:gap-5',
               item.state === 'taken' ? 'border-line bg-bg' : 'border-line bg-surface',
             )}
           >
@@ -79,54 +87,46 @@ export function MedsPanel({ readOnly = false }: { readOnly?: boolean }) {
                 {item.at} · {item.title}
               </span>
               <span className="text-base text-muted">
-                {item.dose} · осталось на {item.daysLeft} дн.
+                {item.dose} · осталось на {item.daysLeft} дн. · {STATE_NOTE[item.state]}
               </span>
               {item.critical && (
                 <span className="text-base font-medium text-accent">
                   Пропускать нельзя: препарат против повторного инсульта
                 </span>
               )}
-              <span className="text-base text-muted">Статус: {STATE_LABEL[item.state]}</span>
             </div>
 
-            {!readOnly && (
-              <div className="flex shrink-0 flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => void mark(item.id, 'taken')}
-                  disabled={busy === item.id}
-                  className="inline-flex min-h-[3.2rem] items-center gap-2 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white disabled:opacity-60"
-                >
-                  <Check className="h-5 w-5" aria-hidden="true" />
-                  Принял
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void mark(item.id, 'postponed')}
-                  disabled={busy === item.id}
-                  className="inline-flex min-h-[3.2rem] items-center gap-2 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold"
-                >
-                  <Clock className="h-5 w-5" aria-hidden="true" />
-                  Позже
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void mark(item.id, 'missed')}
-                  disabled={busy === item.id}
-                  className="inline-flex min-h-[3.2rem] items-center gap-2 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold text-muted"
-                >
-                  <X className="h-5 w-5" aria-hidden="true" />
-                  Пропустил
-                </button>
-              </div>
-            )}
+            <div
+              role="group"
+              aria-label={`Отметка приёма: ${item.title}`}
+              className="flex shrink-0 overflow-hidden rounded-xl border-[1.5px] border-line"
+            >
+              {STATES.map((state) => {
+                const active = item.state === state.id
+                return (
+                  <button
+                    key={state.id}
+                    type="button"
+                    onClick={() => void mark(item.id, state.id)}
+                    disabled={busy === item.id}
+                    aria-pressed={active}
+                    className={cn(
+                      'min-h-[3.2rem] flex-1 px-4 py-3 text-base font-semibold transition-colors disabled:opacity-60',
+                      active ? 'bg-deep text-white' : 'bg-surface text-muted hover:text-ink',
+                    )}
+                  >
+                    {state.label}
+                  </button>
+                )
+              })}
+            </div>
           </li>
         ))}
       </ul>
 
       <p className="m-0 text-base leading-relaxed text-muted">
-        {readOnly
-          ? 'Отмечает приём сам пациент: отметка означает, что таблетка действительно выпита.'
+        {byGuardian
+          ? 'Ваши отметки уходят куратору с пометкой «введено опекуном». Отмечайте только то, что видели сами.'
           : 'Отмечайте честно. «Пропустил» — это не двойка, а сигнал куратору разобраться, почему не получилось.'}
       </p>
     </div>

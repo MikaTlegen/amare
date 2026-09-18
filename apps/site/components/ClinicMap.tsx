@@ -1,5 +1,6 @@
 import { MapPin, Clock, Phone, ExternalLink } from 'lucide-react'
-import { CLINIC, MAP } from '@/lib/clinic'
+import { MapFrame } from '@/components/MapFrame'
+import { CLINIC } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 /**
@@ -7,23 +8,21 @@ import { cn } from '@amare/ui'
  *
  * Карта видна сразу — человеку, который ищет, как доехать, лишний клик
  * не нужен. Плата за это: iframe 2ГИС видит IP посетителя и ставит свои
- * куки, поэтому в проекте есть баннер согласия (components/ui/CookieBanner),
+ * куки, поэтому в проекте есть баннер согласия (components/CookieBanner),
  * и упоминание 2ГИС обязано попасть в политику обработки данных.
  *
- * sandbox ограничивает фрейм: скрипты и формы ему нужны для работы карты,
- * а увести пользователя со страницы он может только по его же действию.
+ * Сам фрейм вынесен в MapFrame: ему нужно состояние «карта включена»,
+ * а этот блок остаётся серверным.
  */
 export function ClinicMap({ className }: { className?: string }) {
-  const src = `https://makemap.2gis.ru/widget?data=${MAP.widgetData}`
-
   return (
-    <div className={cn('grid gap-5 lg:grid-cols-12', className)}>
-      <aside className="flex flex-col gap-5 rounded-3xl border border-line bg-surface p-6 lg:col-span-4">
+    <div className={cn('grid gap-6 lg:grid-cols-12', className)}>
+      <aside className="flex flex-col gap-6 rounded-3xl border border-line bg-surface p-8 lg:col-span-4">
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
           <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
         </span>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <h3 className="m-0 font-display text-xl font-medium leading-snug tracking-[-0.035em]">
             {CLINIC.name}
           </h3>
@@ -35,7 +34,7 @@ export function ClinicMap({ className }: { className?: string }) {
           {CLINIC.hours}
         </p>
 
-        <p className="m-0 flex flex-col gap-1">
+        <p className="m-0 flex flex-col gap-2">
           {CLINIC.phones.map((phone) => (
             <a
               key={phone.href}
@@ -62,15 +61,8 @@ export function ClinicMap({ className }: { className?: string }) {
         </a>
       </aside>
 
-      <div className="relative h-104 overflow-hidden rounded-3xl border border-line bg-tint lg:col-span-8 lg:h-auto lg:min-h-104">
-        <iframe
-          title={`Карта: ${CLINIC.name}, ${CLINIC.address.full}`}
-          src={src}
-          loading="lazy"
-          allowFullScreen
-          sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"
-          className="absolute inset-0 h-full w-full border-0"
-        />
+      <div className="lg:col-span-8">
+        <MapFrame title={`Карта: ${CLINIC.name}, ${CLINIC.address.full}`} />
       </div>
     </div>
   )

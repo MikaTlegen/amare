@@ -29,7 +29,7 @@ export function SiteLogo(props: LogoProps) {
     >
       <Logo
         {...props}
-        markClassName={`${props.onDark ? 'text-white' : (props.markClassName ?? 'text-brand-bright')} h-7 motion-reduce:transform-none ${isSpinning ? 'animate-[flip-x_1s_ease-in-out]' : ''}`}
+        markClassName={`h-7 motion-reduce:transform-none ${isSpinning ? 'animate-[flip-x_1s_ease-in-out]' : ''}`}
       />
     </Link>
   )

@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { StubPage } from "@/components/pages/StubPage";
+import { ResultsPage } from "@/components/pages/ResultsPage";
 
-export const metadata: Metadata = { title: "Результаты и истории восстановления" };
+export const metadata: Metadata = {
+  title: "Результаты и истории восстановления",
+  description: "Истории пациентов клиники Amare: что было до курса реабилитации и что стало после.",
+};
 
 export default function Page() {
-  return <StubPage />;
+  return <ResultsPage />;
 }

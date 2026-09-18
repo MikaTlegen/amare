@@ -14,6 +14,7 @@ import {
   type Message,
   type PatientCard,
   type ProgramTemplate,
+  type StaffRole,
   type StaffTask,
   type User,
   type VideoReview,
@@ -52,17 +53,20 @@ export function resetMockState() {
   messagesByPatient = { 'p-1': structuredClone(DEMO_MESSAGES) }
   videoReviews = structuredClone(DEMO_VIDEO_REVIEWS)
   weeklySent = {}
+  templates = structuredClone(PROGRAM_TEMPLATES)
 }
 
 /**
  * Демо-вход специалиста.
  *
+ * Роль выбирается кнопкой только в демо. В бою она приходит с сервера:
+ * клиент не должен иметь возможности назвать себя админом.
+ *
  * TODO AUTH: заменить на вход по телефону с кодом из SMS, как в care.
- * Роль приходит с сервера, клиент её не выбирает.
  */
-export async function signInAsStaff(): Promise<User> {
-  const user = DEMO_USERS.staff
-  if (!user) throw new Error('Нет демо-пользователя для роли staff')
+export async function signInAsStaff(role: StaffRole): Promise<User> {
+  const user = role === 'admin' ? DEMO_USERS.admin : DEMO_USERS.staff
+  if (!user) throw new Error(`Нет демо-пользователя для роли `)
   return delay(user)
 }
 
@@ -255,4 +259,33 @@ export async function sendWeeklyReview(patientId: string): Promise<string> {
   const at = 'только что'
   weeklySent = { ...weeklySent, [patientId]: at }
   return delay(at, 200)
+}
+
+/* ------------------------------------------------------------------ *
+ * Шаблоны курсов: их ведёт администратор (M4 ТЗ)
+ * ------------------------------------------------------------------ */
+
+let templates: ProgramTemplate[] = structuredClone(PROGRAM_TEMPLATES)
+
+export async function getEditableTemplates(): Promise<ProgramTemplate[]> {
+  return delay(templates)
+}
+
+/**
+ * Добавление шаблона курса.
+ *
+ * Проверка длительности живёт здесь, а не только в форме: по стандарту
+ * РК курс короче 14 дней не годится для II и III этапов, и шаблон на
+ * 10 дней обязан нести об этом пометку, в какой бы форме его ни завели.
+ */
+export async function addTemplate(
+  draft: Omit<ProgramTemplate, 'id'>,
+): Promise<ProgramTemplate[]> {
+  const note =
+    draft.days < 14 && !draft.note
+      ? 'Вне ОСМС: стандарт РК требует не менее 14 дней на II–III этапах.'
+      : draft.note
+
+  templates = [...templates, { ...draft, note, id: `tpl-${Date.now()}` }]
+  return delay(templates, 200)
 }

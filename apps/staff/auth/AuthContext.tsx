@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { User } from '@amare/api-client'
+import type { StaffRole, User } from '@amare/api-client'
 import { resetMockState, signInAsStaff } from '@/lib/mock'
 
 const STORAGE_KEY = 'amare-staff:demo-session'
@@ -11,20 +11,26 @@ interface AuthValue {
   user: User | null
   /** Первая проверка сессии ещё идёт — чтобы не мигать формой входа. */
   loading: boolean
-  signIn: () => Promise<User>
+  signIn: (role: StaffRole) => Promise<User>
   signOut: () => void
 }
 
 const AuthContext = createContext<AuthValue | null>(null)
 
+function isStaffRole(value: string | null): value is StaffRole {
+  return value === 'curator' || value === 'admin'
+}
+
 /**
- * Демо-сессия специалиста.
+ * Демо-сессия сотрудника.
  *
- * В отличие от care здесь только одна роль, поэтому в localStorage
- * хранится не роль, а просто факт входа — ни имени, ни данных пациентов.
+ * В localStorage кладётся ТОЛЬКО роль — ни имени, ни данных пациентов.
+ * Это нужно, чтобы показ клиенту пережил перезагрузку страницы.
  *
  * TODO AUTH: в бою сессия живёт в httpOnly-cookie, которую ставит сервер,
- * а клиент узнаёт пользователя запросом /api/me.
+ * а клиент узнаёт пользователя запросом /api/me. Роль тоже приходит
+ * с сервера: возможность выбрать «войти как админ» на клиенте — это
+ * повышение привилегий одной строкой в localStorage.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -34,9 +40,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let cancelled = false
     const restore = async () => {
       try {
-        const signedIn = localStorage.getItem(STORAGE_KEY) === '1'
-        if (signedIn) {
-          const restored = await signInAsStaff()
+        const saved = localStorage.getItem(STORAGE_KEY)
+        if (isStaffRole(saved)) {
+          const restored = await signInAsStaff(saved)
           if (!cancelled) setUser(restored)
         }
       } catch {
@@ -51,11 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const signIn = useCallback(async () => {
-    const next = await signInAsStaff()
+  const signIn = useCallback(async (role: StaffRole) => {
+    const next = await signInAsStaff(role)
     setUser(next)
     try {
-      localStorage.setItem(STORAGE_KEY, '1')
+      localStorage.setItem(STORAGE_KEY, role)
     } catch {
       // см. выше
     }
@@ -81,4 +87,10 @@ export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) throw new Error('useAuth вызван вне AuthProvider')
   return context
+}
+
+/** Человекочитаемое название роли — используется в шапке кабинета. */
+export const STAFF_ROLE_LABEL: Record<StaffRole, string> = {
+  curator: 'Куратор',
+  admin: 'Администратор',
 }

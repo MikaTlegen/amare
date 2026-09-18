@@ -9,6 +9,16 @@
 
 export type Role = "patient" | "guardian" | "staff";
 
+/**
+ * Роль сотрудника внутри рабочего места.
+ *
+ * Куратор ведёт пациентов: очередь задач, алерты, видео, разборы.
+ * Админ отвечает за содержимое — шаблоны курсов и назначение программ.
+ * Разделение из раздела 6 ТЗ: методист и контент-менеджер там отдельная
+ * роль, а не обязанность куратора.
+ */
+export type StaffRole = "curator" | "admin";
+
 export interface User {
   id: string;
   name: string;
@@ -17,6 +27,8 @@ export interface User {
   wardId?: string;
   /** Специальность — только у сотрудника. */
   speciality?: string;
+  /** Роль внутри рабочего места — только у сотрудника. */
+  staffRole?: StaffRole;
 }
 
 export type ExerciseStatus = "done" | "now" | "todo";
@@ -164,6 +176,14 @@ export const DEMO_USERS: Record<string, User> = {
     name: "Индира Жумабекова",
     role: "staff",
     speciality: "Врач-реабилитолог, куратор",
+    staffRole: "curator",
+  },
+  admin: {
+    id: "u-admin",
+    name: "Динара Сатпаева",
+    role: "staff",
+    speciality: "Методист клиники",
+    staffRole: "admin",
   },
 };
 

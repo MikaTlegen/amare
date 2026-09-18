@@ -36,15 +36,10 @@ export function ReviewsPage() {
           <p className="m-0 text-lg leading-relaxed text-white/75">
             {REVIEWS_SUMMARY.count} оценок в {REVIEWS_SUMMARY.source}
           </p>
-          <a
-            href={REVIEWS_SUMMARY.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-2 text-base font-semibold text-white no-underline hover:text-sky"
-          >
+          <Button href={REVIEWS_SUMMARY.sourceUrl} variant="white" className="mt-3 self-start">
             Читать отзывы в {REVIEWS_SUMMARY.source}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
-          </a>
+          </Button>
         </div>
 
         <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8 lg:col-span-7">

@@ -3,8 +3,8 @@
  * (графики, canvas), и для теста контраста.
  * Те же значения лежат в styles/tokens.css; расхождение ловит palette.test.ts.
  *
- * Цвета взяты из фирменного стиля клиники: голубой логотипа #07ACE7,
- * бирюза видеороликов #01B0C9, красный второй половины сердца #D73B3A.
+ * Цвета сняты с логотипа клиники: бирюза #2BC4D4 и красный #E8503C.
+ * Для текста оба затемнены — чистые цвета логотипа не дают 4.5:1 с белым.
  */
 
 export type Rgb = readonly [number, number, number];
@@ -31,19 +31,19 @@ export type Palette = Readonly<Record<ColorToken, Rgb>>;
 
 export const PALETTE: Readonly<Record<ThemeName, Palette>> = {
   default: {
-    bg: [243, 247, 249],
+    bg: [242, 247, 248],
     surface: [255, 255, 255],
-    ink: [15, 26, 31],
-    muted: [76, 93, 102],
-    line: [220, 230, 234],
-    deep: [11, 58, 74],
-    "deep-2": [17, 79, 102],
-    brand: [6, 113, 143],
-    "brand-bright": [7, 172, 231],
-    sky: [127, 215, 242],
-    accent: [200, 53, 46],
+    ink: [15, 26, 28],
+    muted: [76, 95, 99],
+    line: [219, 231, 233],
+    deep: [8, 58, 66],
+    "deep-2": [13, 82, 93],
+    brand: [9, 118, 132],
+    "brand-bright": [43, 196, 212],
+    sky: [140, 228, 238],
+    accent: [201, 58, 44],
     "accent-ink": [255, 255, 255],
-    tint: [227, 243, 249],
+    tint: [224, 246, 249],
   },
   // Контрастная тема: data-contrast="high" на <html>
   highContrast: {
@@ -52,14 +52,14 @@ export const PALETTE: Readonly<Record<ThemeName, Palette>> = {
     ink: [0, 0, 0],
     muted: [26, 26, 26],
     line: [0, 0, 0],
-    deep: [4, 33, 44],
-    "deep-2": [4, 33, 44],
-    brand: [4, 78, 100],
-    "brand-bright": [4, 78, 100],
-    sky: [175, 234, 250],
+    deep: [3, 34, 39],
+    "deep-2": [3, 34, 39],
+    brand: [4, 80, 90],
+    "brand-bright": [4, 80, 90],
+    sky: [176, 236, 244],
     accent: [165, 34, 28],
     "accent-ink": [255, 255, 255],
-    tint: [234, 246, 250],
+    tint: [233, 247, 249],
   },
 };
 

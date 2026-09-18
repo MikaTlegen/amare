@@ -40,8 +40,8 @@ export function RemotePage() {
         crumb="Иногородним"
         title="Если вы не в Астане"
         note="Маршрут для тех, кто приезжает из другого города: онлайн-оценка, плотный очный курс и сопровождение дома."
-        image="/photos/lobby.jpg"
-        alt="Зона ожидания клиники Amare"
+        image="/photos/telemedicine.jpg"
+        alt="Врач на связи с пациентом по телефону"
       />
 
       <section className="container-content grid gap-5 py-14 sm:grid-cols-2">
