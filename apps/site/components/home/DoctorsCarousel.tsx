@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useReducedMotion } from 'motion/react'
-import { Award, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
 import { ROUTES } from '@/lib/clinic'
 
@@ -70,13 +70,15 @@ export function DoctorsCarousel() {
         onBlur={startAutoScroll}
       >
         {doctors.map((doctor, index) => (
-          <article
+          <Link
             key={`${doctor.id}-${index}`}
+        href={ROUTES.team + '/' + doctor.id}
+        tabIndex={index >= DOCTORS.length ? -1 : undefined}
             data-doctor-card
             aria-hidden={index >= DOCTORS.length}
-            className='w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg xl:min-w-0'
+            className='group w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg no-underline xl:min-w-0'
           >
-            <div className='group relative aspect-[4/4.5] overflow-hidden bg-line'>
+            <div className='relative aspect-[4/4.5] overflow-hidden bg-line'>
               {doctor.photo ? (
                 <img
                   src={doctor.photo}
@@ -91,40 +93,11 @@ export function DoctorsCarousel() {
               <span className='absolute left-3 top-3 bg-bg px-2.5 py-1 text-xs font-medium text-ink'>{doctor.experience}</span>
             </div>
 
-            <div className='flex min-h-60 flex-col p-4 sm:p-5'>
+            <div className='flex min-h-36 flex-col p-4 sm:p-5'>
               <p className='m-0 text-xs font-medium uppercase tracking-[0.08em] text-brand'>{doctor.role}</p>
               <h3 className='mt-2 font-display text-xl font-semibold leading-tight tracking-[-0.035em] text-ink'>{doctor.name}</h3>
-              <p className='mt-3 text-sm leading-relaxed text-muted'>{doctor.about}</p>
-              <Link
-                href={`${ROUTES.team}/${doctor.id}`}
-                tabIndex={index >= DOCTORS.length ? -1 : undefined}
-                className='mt-4 inline-flex w-fit text-sm font-semibold text-ink no-underline hover:text-brand'
-              >
-                О враче →
-              </Link>
-              <div className='mt-auto pt-5'>
-                {doctor.certificates.length > 0 ? (
-                  <div className='flex flex-wrap gap-3'>
-                    {doctor.certificates.map((certificate) => (
-                      <a
-                        key={certificate.href}
-                        href={certificate.href}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        tabIndex={index >= DOCTORS.length ? -1 : undefined}
-                        className='inline-flex items-center gap-2 text-sm font-semibold text-ink no-underline hover:text-brand'
-                      >
-                        <Award className='h-4 w-4' aria-hidden='true' />
-                        {certificate.label}
-                      </a>
-                    ))}
-                  </div>
-                ) : (
-                  <p className='m-0 text-sm text-muted'>Сертификат предоставляется по запросу</p>
-                )}
-              </div>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
 

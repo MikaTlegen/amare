@@ -57,6 +57,7 @@ export function GuardianCabinetPage() {
         onTabChange={setTab}
         userName={user?.name ?? ''}
         roleLabel={ROLE_LABEL.guardian}
+    homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
         onSignOut={signOut}
       >
         <DemoNotice />

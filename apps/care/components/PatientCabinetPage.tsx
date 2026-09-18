@@ -46,6 +46,7 @@ export function PatientCabinetPage() {
         onTabChange={setTab}
         userName={user?.name ?? ''}
         roleLabel={ROLE_LABEL.patient}
+    homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
         onSignOut={signOut}
       >
         <DemoNotice />
