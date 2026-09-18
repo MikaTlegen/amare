@@ -14,14 +14,16 @@ import {
   sendPatientMessage,
   uploadPatientDocument,
 } from '@/lib/mock'
+import { WeeklyReviewSection } from './WeeklyReviewSection'
 import { useAuth } from '@/auth/AuthContext'
 
-type Section = 'program' | 'docs' | 'progress' | 'chat'
+type Section = 'program' | 'docs' | 'progress' | 'weekly' | 'chat'
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'program', label: 'Программа' },
   { id: 'docs', label: 'Документы' },
   { id: 'progress', label: 'Динамика' },
+  { id: 'weekly', label: 'Разбор недели' },
   { id: 'chat', label: 'Переписка' },
 ]
 
@@ -109,6 +111,7 @@ export function PatientDetail({ patient, onBack }: { patient: PatientCard; onBac
 
       {section === 'program' && <ProgramSection patient={patient} />}
       {section === 'docs' && <DocumentsSection patient={patient} />}
+      {section === 'weekly' && <WeeklyReviewSection patient={patient} />}
       {section === 'chat' && <ChatPanel api={chatApi} />}
       {section === 'progress' && (
         <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">

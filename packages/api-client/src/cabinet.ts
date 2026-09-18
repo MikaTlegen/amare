@@ -436,3 +436,337 @@ export const DEMO_PROGRAMS: AssignedProgram[] = [
     assignedAt: "12 дней назад",
   },
 ];
+
+/* ------------------------------------------------------------------ *
+ * Дневник самоконтроля, лекарства, материалы и документы (M5 ТЗ)
+ * ------------------------------------------------------------------ */
+
+/** Запись дневника: давление, пульс и настроение (P-04). */
+export interface VitalEntry {
+  id: string;
+  /** Уже отформатированная дата: «сегодня, 08:20». */
+  at: string;
+  systolic: number;
+  diastolic: number;
+  pulse: number;
+  /** 1 — плохо, 5 — хорошо. Пациенту показывается смайлами. */
+  mood: number;
+  /** Ввёл опекун, а не пациент (G-03). */
+  byGuardian?: boolean;
+}
+
+/**
+ * Пороги для подтверждения аномального значения (U-07 ТЗ).
+ *
+ * Это НЕ клинические пороги алертов — те задаёт врач в модуле M8
+ * (Приложение Г ТЗ). Здесь единственная задача: поймать опечатку
+ * на цифровой клавиатуре, прежде чем она уедет в карту.
+ */
+export const VITALS_SANITY = {
+  systolic: { min: 70, max: 220 },
+  diastolic: { min: 40, max: 130 },
+  pulse: { min: 35, max: 160 },
+} as const;
+
+export type MedicationState = "pending" | "taken" | "postponed" | "missed";
+
+/** Лекарство в расписании (P-05). */
+export interface Medication {
+  id: string;
+  title: string;
+  dose: string;
+  /** Время приёма по расписанию: «08:00». */
+  at: string;
+  state: MedicationState;
+  /** Осталось дней по остатку упаковки — повод напомнить купить. */
+  daysLeft: number;
+  /** Пропуск критичен: антиагреганты и антикоагулянты. */
+  critical?: boolean;
+}
+
+/** Обучающий материал, назначенный специалистом (P-11). */
+export interface Material {
+  id: string;
+  title: string;
+  kind: "video" | "article";
+  minutes: number;
+  assignedBy: string;
+  note: string;
+}
+
+export type ConsentState = "active" | "revoked";
+
+/** Согласие пациента (P-14, P-15). */
+export interface Consent {
+  id: string;
+  title: string;
+  at: string;
+  state: ConsentState;
+  /** Согласие обязательно для лечения и отзывается только на бумаге. */
+  required?: boolean;
+}
+
+/** Строка журнала доступа к медданным (раздел 6 ТЗ, P-15). */
+export interface AccessLogEntry {
+  id: string;
+  who: string;
+  role: string;
+  action: string;
+  at: string;
+}
+
+/** Отметка ухода за лежачим пациентом (G-03). */
+export interface CareTask {
+  id: string;
+  title: string;
+  /** Как часто повторяется: «каждые 2 часа». */
+  period: string;
+  doneAt: string | null;
+}
+
+/** Урок школы опекуна (G-06). */
+export interface GuardianLesson {
+  id: string;
+  title: string;
+  minutes: number;
+  summary: string;
+  done: boolean;
+}
+
+export type VideoVerdict = "ok" | "partial" | "wrong";
+
+/** Видео упражнения на проверку специалистом (W-03). */
+export interface VideoReview {
+  id: string;
+  patientId: string;
+  patientName: string;
+  exercise: string;
+  at: string;
+  /** Длительность записи в секундах — показываем рядом с плеером. */
+  seconds: number;
+  verdict: VideoVerdict | null;
+  comment: string;
+}
+
+export const VERDICT_LABEL: Record<VideoVerdict, string> = {
+  ok: "Техника верная",
+  partial: "Частично верно",
+  wrong: "Неверно, переделать",
+};
+
+/** Черновик еженедельного разбора (W-05). */
+export interface WeeklyReview {
+  patientId: string;
+  /** Автоматически собранные факты недели — специалист их правит. */
+  facts: string[];
+  draft: string;
+  sentAt: string | null;
+}
+
+export const DEMO_VITALS: VitalEntry[] = [
+  { id: "v-1", at: "сегодня, 08:20", systolic: 138, diastolic: 86, pulse: 74, mood: 4 },
+  {
+    id: "v-2",
+    at: "вчера, 21:10",
+    systolic: 145,
+    diastolic: 90,
+    pulse: 78,
+    mood: 3,
+    byGuardian: true,
+  },
+  { id: "v-3", at: "вчера, 08:05", systolic: 142, diastolic: 88, pulse: 72, mood: 4 },
+  { id: "v-4", at: "позавчера, 20:40", systolic: 150, diastolic: 92, pulse: 80, mood: 2 },
+  { id: "v-5", at: "позавчера, 08:15", systolic: 139, diastolic: 85, pulse: 70, mood: 4 },
+];
+
+export const DEMO_MEDICATIONS: Medication[] = [
+  {
+    id: "med-1",
+    title: "Аспирин кардио",
+    dose: "100 мг, 1 таблетка",
+    at: "08:00",
+    state: "taken",
+    daysLeft: 12,
+    critical: true,
+  },
+  {
+    id: "med-2",
+    title: "Аторвастатин",
+    dose: "20 мг, 1 таблетка",
+    at: "21:00",
+    state: "pending",
+    daysLeft: 4,
+  },
+  {
+    id: "med-3",
+    title: "Периндоприл",
+    dose: "5 мг, 1 таблетка",
+    at: "09:00",
+    state: "pending",
+    daysLeft: 21,
+  },
+];
+
+export const DEMO_MATERIALS: Material[] = [
+  {
+    id: "mat-1",
+    title: "Как безопасно глотать: поза и консистенция пищи",
+    kind: "video",
+    minutes: 6,
+    assignedBy: "Логопед-дефектолог",
+    note: "Посмотрите вместе с тем, кто вас кормит.",
+  },
+  {
+    id: "mat-2",
+    title: "Профилактика падений дома",
+    kind: "article",
+    minutes: 4,
+    assignedBy: "Эрготерапевт",
+    note: "Список того, что стоит убрать из квартиры уже сегодня.",
+  },
+  {
+    id: "mat-3",
+    title: "Разработка кисти: разбор техники",
+    kind: "video",
+    minutes: 8,
+    assignedBy: "Индира Жумабекова",
+    note: "То же упражнение, что у вас в плане на день.",
+  },
+];
+
+export const DEMO_CONSENTS: Consent[] = [
+  {
+    id: "c-1",
+    title: "Согласие на обработку персональных данных, включая сведения о здоровье",
+    at: "12 дней назад",
+    state: "active",
+    required: true,
+  },
+  {
+    id: "c-2",
+    title: "Согласие на доступ опекуна к кабинету",
+    at: "12 дней назад",
+    state: "active",
+  },
+  {
+    id: "c-3",
+    title: "Согласие на использование обезличенного случая в материалах клиники",
+    at: "10 дней назад",
+    state: "active",
+  },
+];
+
+export const DEMO_ACCESS_LOG: AccessLogEntry[] = [
+  {
+    id: "log-1",
+    who: "Индира Жумабекова",
+    role: "Врач-реабилитолог, куратор",
+    action: "Открыла карту и динамику по шкалам",
+    at: "сегодня, 09:12",
+  },
+  {
+    id: "log-2",
+    who: "Айгерим Абдуллаева",
+    role: "Опекун",
+    action: "Внесла измерение давления",
+    at: "вчера, 21:10",
+  },
+  {
+    id: "log-3",
+    who: "Куспанова Айгуль",
+    role: "Реабилитолог",
+    action: "Посмотрела видео упражнения",
+    at: "вчера, 15:40",
+  },
+];
+
+export const DEMO_CARE_TASKS: CareTask[] = [
+  { id: "ct-1", title: "Поворот и смена положения", period: "каждые 2 часа", doneAt: "11:00" },
+  {
+    id: "ct-2",
+    title: "Осмотр кожи: крестец, пятки, лопатки",
+    period: "утром и вечером",
+    doneAt: "08:30",
+  },
+  { id: "ct-3", title: "Кормление, положение сидя", period: "3 раза в день", doneAt: null },
+  { id: "ct-4", title: "Питьё, отметка объёма", period: "в течение дня", doneAt: null },
+  { id: "ct-5", title: "Стул и диурез", period: "раз в сутки", doneAt: null },
+];
+
+export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
+  {
+    id: "gl-1",
+    title: "Пересаживание и перемещение",
+    minutes: 9,
+    summary: "Как поднять и пересадить человека, не сорвав спину и не повредив ему плечо.",
+    done: true,
+  },
+  {
+    id: "gl-2",
+    title: "Укладки и позиционирование",
+    minutes: 7,
+    summary: "Положение парализованной руки и ноги в постели и в кресле.",
+    done: true,
+  },
+  {
+    id: "gl-3",
+    title: "Помощь при ходьбе",
+    minutes: 6,
+    summary: "С какой стороны идти, где держать, когда не идти вовсе.",
+    done: false,
+  },
+  {
+    id: "gl-4",
+    title: "Кормление при нарушении глотания",
+    minutes: 8,
+    summary: "Поза, консистенция, признаки поперхивания и что делать.",
+    done: false,
+  },
+  {
+    id: "gl-5",
+    title: "Профилактика пролежней и падений",
+    minutes: 10,
+    summary: "График поворотов, осмотр кожи, безопасная квартира.",
+    done: false,
+  },
+  {
+    id: "gl-6",
+    title: "Общение при афазии",
+    minutes: 5,
+    summary: "Как спрашивать и сколько ждать ответа. Чего делать не нужно.",
+    done: false,
+  },
+];
+
+export const DEMO_VIDEO_REVIEWS: VideoReview[] = [
+  {
+    id: "vr-1",
+    patientId: "p-2",
+    patientName: "Мария Ковалёва",
+    exercise: "Равновесие у опоры",
+    at: "сегодня, 08:40",
+    seconds: 74,
+    verdict: null,
+    comment: "",
+  },
+  {
+    id: "vr-2",
+    patientId: "p-1",
+    patientName: "Серик Абдуллаев",
+    exercise: "Разработка кисти",
+    at: "вчера, 19:05",
+    seconds: 126,
+    verdict: "partial",
+    comment: "Амплитуда меньше, чем вчера. Добавьте разогрев перед подходом.",
+  },
+  {
+    id: "vr-3",
+    patientId: "p-3",
+    patientName: "Нурлан Естаев",
+    exercise: "Ходьба по коридору",
+    at: "вчера, 12:20",
+    seconds: 95,
+    verdict: null,
+    comment: "",
+  },
+];

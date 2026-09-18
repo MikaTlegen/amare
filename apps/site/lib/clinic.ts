@@ -9,8 +9,8 @@
 export const CLINIC = {
   name: 'Amare.kz',
   legalName: 'ТОО «AMARE.KZ»',
-  bin: '[БИН]', // TODO: подставить реальный БИН перед публикацией
-  license: '[НОМЕР ЛИЦЕНЗИИ]', // TODO: номер, дата и орган выдачи
+  bin: '', // TODO: подставить реальный БИН перед публикацией
+  license: '', // TODO: номер, дата и орган выдачи
   address: {
     full: 'Астана, проспект Мәңгілік Ел 21, НП 31',
     city: 'Астана',
@@ -23,7 +23,6 @@ export const CLINIC = {
     { label: '+7 7172 25 25 77', href: 'tel:+77172252577', primary: false },
   ],
   whatsapp: 'https://wa.me/77005252577',
-  telegram: 'https://t.me/', // TODO: реальный аккаунт клиники
   instagram: 'https://instagram.com/', // TODO: реальный аккаунт клиники
   rating: { value: '5,0', source: '2ГИС', reviews: 87 },
 } as const
@@ -34,15 +33,26 @@ export const PRICES = {
   course: 'от 250 000 ₸',
   homeVisit: '41 000 ₸',
   online: '18 000 ₸',
-  dayHospital: '[ЦЕНА]', // TODO: уточнить у клиники
+  dayHospital: 'по запросу', // TODO: уточнить у клиники
   freeIntro: 'Первые 15 минут консультации — бесплатно',
-  validFrom: '[ДАТА]', // TODO: дата вступления прайса в силу
+} as const
+
+/**
+ * Адреса кабинетов.
+ *
+ * Кабинеты — отдельные приложения (care для пациента и опекуна, staff для
+ * сотрудника). Ссылка «Сотруднику» обязана вести именно в staff: в care
+ * роли специалиста нет, и человек упирался в чужую форму входа.
+ */
+export const CABINETS = {
+  care: process.env.NEXT_PUBLIC_CARE_URL ?? 'http://localhost:3002',
+  staff: process.env.NEXT_PUBLIC_STAFF_URL ?? 'http://localhost:3003',
 } as const
 
 /**
  * Маршруты сайта — чтобы ссылки не разъезжались по файлам.
- * Каждый путь отсюда обязан существовать в App.tsx, иначе ссылка
- * молча ведёт на 404.
+ * Каждый путь отсюда обязан существовать в app/, иначе ссылка
+ * молча ведёт на 404 (проверяется тестом app/routes.test.ts).
  */
 export const ROUTES = {
   home: '/',
@@ -59,6 +69,13 @@ export const ROUTES = {
   // Заявки
   booking: '/zapis',
   form: '/anketa',
+
+  // Обязательные разделы по S-02 ТЗ
+  remote: '/distancionno',
+  knowledge: '/baza-znaniy',
+  faq: '/voprosy',
+  reviews: '/otzyvy',
+  contacts: '/kontakty',
 
   // Страницы-заглушки: содержимого ещё нет, но ссылка не должна быть битой
   results: '/rezultaty',

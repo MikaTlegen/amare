@@ -12,13 +12,13 @@ const DEMO_ROLES: { role: CareRole; title: string; note: string; Icon: LucideIco
   {
     role: 'patient',
     title: 'Войти как пациент',
-    note: 'План дня, упражнения, дневник, чат с куратором',
+    note: 'План дня, дневник давления, лекарства, документы, чат с куратором',
     Icon: UserRound,
   },
   {
     role: 'guardian',
     title: 'Войти как опекун',
-    note: 'Состояние близкого, отчёты, уведомления',
+    note: 'Состояние близкого, отметки ухода, школа опекуна, уведомления',
     Icon: HeartHandshake,
   },
 ]

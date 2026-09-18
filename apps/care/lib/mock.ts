@@ -1,15 +1,30 @@
 import {
+  DEMO_ACCESS_LOG,
+  DEMO_CARE_TASKS,
+  DEMO_CONSENTS,
   DEMO_DAY_PLAN,
+  DEMO_GUARDIAN_LESSONS,
+  DEMO_MATERIALS,
+  DEMO_MEDICATIONS,
   DEMO_MESSAGES,
   DEMO_PATIENT,
   DEMO_USERS,
+  DEMO_VITALS,
   detectKind,
   formatSize,
+  type AccessLogEntry,
+  type CareTask,
+  type Consent,
   type DayPlan,
+  type GuardianLesson,
+  type Material,
+  type Medication,
+  type MedicationState,
   type Message,
   type PatientCard,
   type Role,
   type User,
+  type VitalEntry,
 } from '@amare/api-client'
 
 /**
@@ -37,6 +52,10 @@ let messages: Message[] = structuredClone(DEMO_MESSAGES)
 export function resetMockState() {
   dayPlan = structuredClone(DEMO_DAY_PLAN)
   messages = structuredClone(DEMO_MESSAGES)
+  vitals = structuredClone(DEMO_VITALS)
+  medications = structuredClone(DEMO_MEDICATIONS)
+  careTasks = structuredClone(DEMO_CARE_TASKS)
+  lessons = structuredClone(DEMO_GUARDIAN_LESSONS)
 }
 
 export type CareRole = Extract<Role, 'patient' | 'guardian'>
@@ -117,4 +136,87 @@ export async function sendMessage(text: string, files: File[] = []): Promise<Mes
     },
   ]
   return delay(messages, 160)
+}
+
+/* ------------------------------------------------------------------ *
+ * Дневник, лекарства, материалы, документы (M5) и кабинет опекуна (M6)
+ * ------------------------------------------------------------------ */
+
+let vitals: VitalEntry[] = structuredClone(DEMO_VITALS)
+let medications: Medication[] = structuredClone(DEMO_MEDICATIONS)
+let careTasks: CareTask[] = structuredClone(DEMO_CARE_TASKS)
+let lessons: GuardianLesson[] = structuredClone(DEMO_GUARDIAN_LESSONS)
+
+export async function getVitals(): Promise<VitalEntry[]> {
+  return delay(vitals)
+}
+
+/**
+ * Новая запись дневника.
+ *
+ * `byGuardian` — не косметика: по G-03 ТЗ видно, кто внёс значение.
+ * Показатель, измеренный родственником по телефону, и показатель,
+ * снятый самим пациентом, врач читает по-разному.
+ */
+export async function addVital(
+  entry: Omit<VitalEntry, 'id' | 'at'>,
+  byGuardian = false,
+): Promise<VitalEntry[]> {
+  vitals = [
+    {
+      ...entry,
+      id: `v-${Date.now()}`,
+      at: 'только что',
+      ...(byGuardian ? { byGuardian: true } : {}),
+    },
+    ...vitals,
+  ]
+  return delay(vitals, 160)
+}
+
+export async function getMedications(): Promise<Medication[]> {
+  return delay(medications)
+}
+
+export async function setMedicationState(
+  id: string,
+  state: MedicationState,
+): Promise<Medication[]> {
+  medications = medications.map((item) => (item.id === id ? { ...item, state } : item))
+  return delay(medications, 140)
+}
+
+export async function getMaterials(): Promise<Material[]> {
+  return delay(DEMO_MATERIALS)
+}
+
+export async function getConsents(): Promise<Consent[]> {
+  return delay(DEMO_CONSENTS)
+}
+
+export async function getAccessLog(): Promise<AccessLogEntry[]> {
+  return delay(DEMO_ACCESS_LOG)
+}
+
+export async function getCareTasks(): Promise<CareTask[]> {
+  return delay(careTasks)
+}
+
+/** Отметка ухода. Повторная отметка снимает предыдущую — это чек-лист смены. */
+export async function toggleCareTask(id: string, at: string): Promise<CareTask[]> {
+  careTasks = careTasks.map((task) =>
+    task.id === id ? { ...task, doneAt: task.doneAt ? null : at } : task,
+  )
+  return delay(careTasks, 140)
+}
+
+export async function getGuardianLessons(): Promise<GuardianLesson[]> {
+  return delay(lessons)
+}
+
+export async function toggleLesson(id: string): Promise<GuardianLesson[]> {
+  lessons = lessons.map((lesson) =>
+    lesson.id === id ? { ...lesson, done: !lesson.done } : lesson,
+  )
+  return delay(lessons, 140)
 }

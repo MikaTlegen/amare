@@ -17,6 +17,8 @@ const NAV = [
   { to: ROUTES.course, label: 'Курс и цены' },
   { to: ROUTES.team, label: 'Врачи' },
   { to: ROUTES.results, label: 'Результаты' },
+  { to: ROUTES.knowledge, label: 'База знаний' },
+  { to: ROUTES.contacts, label: 'Контакты' },
 ]
 
 /**

@@ -12,8 +12,13 @@ import { ROUTES } from '@/lib/clinic'
  * демонстрационные, а реальные истории публикуются только с согласия
  * пациента (S-08 ТЗ). Красивый график с выдуманными данными в медицине —
  * это не маркетинг, а повод для претензии.
+ *
+ * Агрегаты по клинике рисуются только когда они заполнены: строка
+ * «+[X] баллов» на публичной странице выглядит как сломанный шаблон.
  */
 export function ResultsBand() {
+  const hasAggregates = PROGRESS_SUMMARY.averageGain || PROGRESS_SUMMARY.completionRate
+
   return (
     <ParallaxBand
       id="results"
@@ -32,20 +37,26 @@ export function ResultsBand() {
             посторонней помощи, 100 — человек справляется сам.
           </p>
 
-          <dl className="flex flex-wrap gap-8">
-            <div>
-              <dt className="text-sm text-white/60">Средний рост за курс</dt>
-              <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
-                {PROGRESS_SUMMARY.averageGain}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-white/60">Доходят до конца курса</dt>
-              <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
-                {PROGRESS_SUMMARY.completionRate}
-              </dd>
-            </div>
-          </dl>
+          {hasAggregates && (
+            <dl className="flex flex-wrap gap-8">
+              {PROGRESS_SUMMARY.averageGain && (
+                <div>
+                  <dt className="text-sm text-white/60">Средний рост за курс</dt>
+                  <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
+                    {PROGRESS_SUMMARY.averageGain}
+                  </dd>
+                </div>
+              )}
+              {PROGRESS_SUMMARY.completionRate && (
+                <div>
+                  <dt className="text-sm text-white/60">Доходят до конца курса</dt>
+                  <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
+                    {PROGRESS_SUMMARY.completionRate}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          )}
 
           <Button to={ROUTES.results} size="lg" className="self-start">
             Истории восстановления

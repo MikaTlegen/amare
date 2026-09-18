@@ -5,6 +5,7 @@ import {
   DEMO_STAFF_PATIENTS,
   DEMO_STAFF_TASKS,
   DEMO_USERS,
+  DEMO_VIDEO_REVIEWS,
   PROGRAM_TEMPLATES,
   detectKind,
   formatSize,
@@ -15,6 +16,9 @@ import {
   type ProgramTemplate,
   type StaffTask,
   type User,
+  type VideoReview,
+  type VideoVerdict,
+  type WeeklyReview,
 } from '@amare/api-client'
 
 /**
@@ -46,6 +50,8 @@ export function resetMockState() {
   documents = structuredClone(DEMO_DOCUMENTS)
   programs = structuredClone(DEMO_PROGRAMS)
   messagesByPatient = { 'p-1': structuredClone(DEMO_MESSAGES) }
+  videoReviews = structuredClone(DEMO_VIDEO_REVIEWS)
+  weeklySent = {}
 }
 
 /**
@@ -176,4 +182,77 @@ export async function sendPatientMessage(
   ]
   messagesByPatient = { ...messagesByPatient, [patientId]: next }
   return delay(next, 160)
+}
+
+/* ------------------------------------------------------------------ *
+ * Проверка видео (W-03) и еженедельный разбор (W-05)
+ * ------------------------------------------------------------------ */
+
+let videoReviews: VideoReview[] = structuredClone(DEMO_VIDEO_REVIEWS)
+/** Отправленные разборы: id пациента → когда отправлен. */
+let weeklySent: Record<string, string> = {}
+
+export async function getVideoReviews(): Promise<VideoReview[]> {
+  return delay(videoReviews)
+}
+
+/**
+ * Оценка техники по видео.
+ *
+ * Вердикт и комментарий сохраняются вместе: «неверно» без объяснения
+ * человек после инсульта читает как «у меня не получается», и это
+ * прямой путь к тому, что он бросит заниматься.
+ */
+export async function reviewVideo(
+  id: string,
+  verdict: VideoVerdict,
+  comment: string,
+): Promise<VideoReview[]> {
+  videoReviews = videoReviews.map((item) =>
+    item.id === id ? { ...item, verdict, comment } : item,
+  )
+  return delay(videoReviews, 160)
+}
+
+/**
+ * Черновик еженедельного разбора (W-05).
+ *
+ * Факты собираются автоматически из того, что уже есть в карте:
+ * выполнение плана, минуты практики, тревожные сигналы. Текст письма
+ * специалист дописывает сам — автоматическое письмо пациенту от имени
+ * врача отправлять нельзя.
+ */
+export async function getWeeklyReview(patient: PatientCard): Promise<WeeklyReview> {
+  const minutes = patient.weekMinutes.reduce((sum, value) => sum + value, 0)
+  const missedDays = patient.weekMinutes.filter((value) => value === 0).length
+  const first = patient.barthel[0]
+  const last = patient.barthel[patient.barthel.length - 1]
+  const gain = first && last ? last.barthel - first.barthel : 0
+
+  const facts = [
+    `Практика за неделю: ${minutes} минут`,
+    missedDays === 0 ? 'Пропусков нет' : `Дней без занятий: ${missedDays}`,
+    `Индекс Бартел: ${last?.barthel ?? '—'} (${gain >= 0 ? '+' : ''}${gain} за курс)`,
+    `День курса: ${patient.courseDay} из ${patient.courseLength}`,
+    ...patient.alerts.map((alert) => `Сигнал: ${alert.text}`),
+  ]
+
+  return delay({
+    patientId: patient.id,
+    facts,
+    draft: [
+      `${patient.name}, здравствуйте. Итоги недели:`,
+      '',
+      ...facts.map((fact) => `— ${fact}`),
+      '',
+      'Что меняем на следующей неделе: ',
+    ].join('\n'),
+    sentAt: weeklySent[patient.id] ?? null,
+  })
+}
+
+export async function sendWeeklyReview(patientId: string): Promise<string> {
+  const at = 'только что'
+  weeklySent = { ...weeklySent, [patientId]: at }
+  return delay(at, 200)
 }

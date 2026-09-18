@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { assignProgram, closeTask, getPatientPrograms, getStaffTasks, resetMockState } from './mock'
+import {
+  assignProgram,
+  closeTask,
+  getPatientPrograms,
+  getStaffPatients,
+  getStaffTasks,
+  getVideoReviews,
+  getWeeklyReview,
+  resetMockState,
+  reviewVideo,
+  sendWeeklyReview,
+} from './mock'
 
 describe('assignProgram', () => {
   it('добавляет программу конкретному пациенту и не трогает чужие', async () => {
@@ -49,5 +60,50 @@ describe('closeTask', () => {
       .filter((t) => t.id !== target!.id)
       .every((t) => t.done === before.find((b) => b.id === t.id)?.done)
     expect(othersUnchanged).toBe(true)
+  })
+})
+
+describe('reviewVideo', () => {
+  it('сохраняет вердикт с комментарием и не трогает остальные записи', async () => {
+    resetMockState()
+    const before = await getVideoReviews()
+    const target = before.find((item) => item.verdict === null)
+    expect(target).toBeDefined()
+
+    const after = await reviewVideo(target!.id, 'wrong', 'Слишком быстрый темп')
+    const updated = after.find((item) => item.id === target!.id)
+    expect(updated?.verdict).toBe('wrong')
+    expect(updated?.comment).toBe('Слишком быстрый темп')
+
+    const others = after.filter((item) => item.id !== target!.id)
+    for (const item of others) {
+      expect(item.verdict).toBe(before.find((prev) => prev.id === item.id)?.verdict)
+    }
+  })
+})
+
+describe('getWeeklyReview', () => {
+  it('собирает минуты практики и пропуски из карты пациента', async () => {
+    resetMockState()
+    const [patient] = await getStaffPatients()
+    const review = await getWeeklyReview(patient!)
+
+    const minutes = patient!.weekMinutes.reduce((sum, value) => sum + value, 0)
+    const missed = patient!.weekMinutes.filter((value) => value === 0).length
+
+    expect(review.patientId).toBe(patient!.id)
+    expect(review.facts.some((fact) => fact.includes(String(minutes)))).toBe(true)
+    expect(review.facts.some((fact) => fact.includes(String(missed)))).toBe(true)
+    expect(review.draft).toContain(patient!.name)
+    expect(review.sentAt).toBeNull()
+  })
+
+  it('после отправки помечает разбор отправленным', async () => {
+    resetMockState()
+    const [patient] = await getStaffPatients()
+    await sendWeeklyReview(patient!.id)
+
+    const review = await getWeeklyReview(patient!)
+    expect(review.sentAt).not.toBeNull()
   })
 })

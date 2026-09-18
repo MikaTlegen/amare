@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { completeExercise, getDayPlan, resetMockState, sendMessage } from './mock'
+import {
+  addVital,
+  completeExercise,
+  getCareTasks,
+  getDayPlan,
+  getMedications,
+  getVitals,
+  resetMockState,
+  sendMessage,
+  setMedicationState,
+  toggleCareTask,
+} from './mock'
 
 describe('completeExercise', () => {
   it('переводит выполненное упражнение в done и следующее — в now', async () => {
@@ -32,5 +43,57 @@ describe('sendMessage', () => {
     expect(last).toBeDefined()
     expect(last?.author).toBe('me')
     expect(last?.text).toBe('Здравствуйте')
+  })
+})
+
+describe('addVital', () => {
+  it('кладёт новую запись в начало списка', async () => {
+    resetMockState()
+    const before = await getVitals()
+    const after = await addVital({ systolic: 130, diastolic: 80, pulse: 70, mood: 4 })
+
+    expect(after).toHaveLength(before.length + 1)
+    expect(after[0]?.systolic).toBe(130)
+  })
+
+  it('помечает запись, внесённую опекуном', async () => {
+    resetMockState()
+    const own = await addVital({ systolic: 120, diastolic: 75, pulse: 66, mood: 4 })
+    expect(own[0]?.byGuardian).toBeUndefined()
+
+    const byGuardian = await addVital({ systolic: 150, diastolic: 95, pulse: 82, mood: 2 }, true)
+    expect(byGuardian[0]?.byGuardian).toBe(true)
+  })
+})
+
+describe('setMedicationState', () => {
+  it('меняет статус одного лекарства и не трогает остальные', async () => {
+    resetMockState()
+    const before = await getMedications()
+    const target = before.find((item) => item.state === 'pending')
+    expect(target).toBeDefined()
+
+    const after = await setMedicationState(target!.id, 'missed')
+    expect(after.find((item) => item.id === target!.id)?.state).toBe('missed')
+
+    const others = after.filter((item) => item.id !== target!.id)
+    for (const item of others) {
+      expect(item.state).toBe(before.find((prev) => prev.id === item.id)?.state)
+    }
+  })
+})
+
+describe('toggleCareTask', () => {
+  it('ставит отметку со временем и снимает её повторным нажатием', async () => {
+    resetMockState()
+    const before = await getCareTasks()
+    const undone = before.find((task) => task.doneAt === null)
+    expect(undone).toBeDefined()
+
+    const marked = await toggleCareTask(undone!.id, '14:20')
+    expect(marked.find((task) => task.id === undone!.id)?.doneAt).toBe('14:20')
+
+    const unmarked = await toggleCareTask(undone!.id, '14:25')
+    expect(unmarked.find((task) => task.id === undone!.id)?.doneAt).toBeNull()
   })
 })

@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { MessageCircle, Phone, Send, X } from 'lucide-react'
+import { Camera, MessageCircle, Phone, X } from 'lucide-react'
 import { CLINIC } from '@/lib/clinic'
 
 const CHANNELS = [
   { id: 'whatsapp', label: 'WhatsApp', href: CLINIC.whatsapp, Icon: MessageCircle },
-  { id: 'telegram', label: 'Telegram', href: CLINIC.telegram, Icon: Send },
+  { id: 'instagram', label: 'Instagram', href: CLINIC.instagram, Icon: Camera },
   { id: 'call', label: 'Позвонить', href: CLINIC.phones[0].href, Icon: Phone },
 ]
 

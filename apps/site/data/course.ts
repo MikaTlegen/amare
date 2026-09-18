@@ -1,3 +1,4 @@
+import { DOCTORS } from '@/data/doctors'
 import { CLINIC, PRICES } from '@/lib/clinic'
 
 export interface CourseStep {
@@ -85,7 +86,8 @@ export const FACTS = [
     value: `${CLINIC.rating.value} на ${CLINIC.rating.source}`,
     note: `${CLINIC.rating.reviews} оценок`,
   },
-  { value: '10 специалистов', note: 'одна команда' },
+  // Считаем по карточкам: цифра на главной не должна расходиться со страницей «Врачи»
+  { value: `${DOCTORS.length} специалистов`, note: 'одна команда' },
   { value: PRICES.course, note: 'курс 10–14 дней' },
   { value: 'ОСМС и ДМС', note: 'или платно' },
 ]
