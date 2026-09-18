@@ -15,7 +15,7 @@ export const CLINIC = {
     full: 'Астана, проспект Мәңгілік Ел 21, НП 31',
     city: 'Астана',
     street: 'проспект Мәңгілік Ел 21, НП 31',
-    mapUrl: 'https://2gis.kz/astana', // TODO: прямая ссылка на карточку 2ГИС
+    mapUrl: 'https://2gis.kz/astana/geo/70030076192243869',
   },
   hours: 'Пн–Пт 9:00–18:00 · Сб 9:00–14:00 по записи',
   phones: [
@@ -96,17 +96,16 @@ export const ROUTES = {
  * `scripts/make-2gis-widget.mjs` или возьмите готовый iframe из
  * официального конструктора 2ГИС.
  *
- * TODO: координаты приблизительные — снять точную точку входа
- * в карточке клиники на 2ГИС и заменить здесь.
+ * Координаты здания по адресу клиники подтверждены в 2ГИС.
  */
 export const MAP = {
-  lat: 51.0905,
-  lon: 71.4188,
+  lat: 51.1073,
+  lon: 71.430416,
   zoom: 17,
   title: 'Amare.kz',
   description: 'Клиника нейрореабилитации, Мәңгілік Ел 21, НП 31',
   widgetData:
-    'eJw1UF1vgkAQ_C_bx17MEUSFpA8UItUg8WIbPxof6HHFs8CRu0MFw39vAN2n3dmZZGbuIGTCJEsCJnKmJWcKnO876Lpk4MCcxbqSDBCUUpRM6v5_ByoyIcGBl_l84po-INBcZ52CbI0Tzb-q2BRvgCBhikpeai4KcGD94b7ipSSV7Y1xaJIq8iY4dNNu14ln4b1PLjpwcbgjKvJuODwP3H1IVBQE_e3fOD1PyV8UvA-4Z-PQVYvIo9gqNsL2Gnz4IZUdbHEoUrzckap269XmmuKlSYrabVaf1wv1x53BZlEk7AaOgZ_TIkiHMuou6qOJteCFBgRUCJnwItZ9UVNjNDZmM2QZI2xj69gi4Ak4RntEkMflWig-RL9DFmtwHjwEWQc-1dAIkYNjTFsEikqRZdsTY9mhR3_jTLH2H3qIhX8',
+    'eJxFUFtvgjAU_i_d44gpASWS7IGVyDRIbNziZfGBQad1hUNKUYH431fAZX0657ul52sRyJRJlgYMMqYkZyVyP1uk6oIhF81YrCrJkIEKCQWTqudblIAAqfmn2WziWb7mFVeic9CNeUqyjyq24EXDKSsTyQvFIdfk6s17xgtJqymxcWjRKiITHHrHblYpGeOdTy8q8HC4pWVEbjg8D9pdqPcg6Hf_xpOzQ3-i4HXAyVRnlPOIJHicr2FKGrz_0r5gg0M44sWWVrVXL9dXPVs0r71m-X69JL7dfbCZ5ym7IdfEf-9uoONQRt2d-mhiBTxXWp-ALoznseqLcsyRbWHbnBhjc2RixzpoN0913P1goCwuVlDy4fgWiVgh96EzkOjAfz9qADLtc3SArgyE2JwYE_se_Y5Fye6_bDKGMw',
 } as const
 
 /**

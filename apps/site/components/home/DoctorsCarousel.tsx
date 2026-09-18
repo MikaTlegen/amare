@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
 import { ROUTES } from '@/lib/clinic'
 
-const AUTO_SCROLL_INTERVAL = 3_000
+const AUTO_SCROLL_INTERVAL = 2_000
 
 /** Компактная бесконечная лента специалистов с ручным управлением. */
 export function DoctorsCarousel() {
@@ -60,7 +60,7 @@ export function DoctorsCarousel() {
     <div className='relative mt-9'>
       <div
         ref={trackRef}
-        className='-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:-mx-20 lg:px-20 [&::-webkit-scrollbar]:hidden'
+        className='-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden'
         aria-label='Карточки специалистов'
         onPointerEnter={stopAutoScroll}
         onPointerLeave={startAutoScroll}
@@ -76,7 +76,7 @@ export function DoctorsCarousel() {
         tabIndex={index >= DOCTORS.length ? -1 : undefined}
             data-doctor-card
             aria-hidden={index >= DOCTORS.length}
-            className='group w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg no-underline xl:min-w-0'
+            className='group w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg no-underline lg:min-w-0'
           >
             <div className='relative aspect-[4/4.5] overflow-hidden bg-line'>
               {doctor.photo ? (

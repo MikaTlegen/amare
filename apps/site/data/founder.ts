@@ -11,7 +11,7 @@
 export const FOUNDER = {
   name: 'Асемгуль Амирбековна',
   role: 'Врач, основатель клиники Amare',
-  photo: null as string | null,
+  photo: '/photos/founder.jpg',
   photoAlt: 'Асемгуль Амирбековна, основатель клиники Amare',
   /** Инициалы для плашки, пока нет портрета. */
   initials: 'АА',
