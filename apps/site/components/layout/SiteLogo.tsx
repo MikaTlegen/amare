@@ -17,18 +17,19 @@ export function SiteLogo(props: LogoProps) {
   return (
     <Link
       href={ROUTES.home}
-      className='inline-flex shrink-0 no-underline'
+      className='inline-flex shrink-0 no-underline [perspective:600px]'
       aria-label='Amare.kz — на главную'
       onClick={(event) => {
-        if (window.location.pathname === ROUTES.home) {
-          event.preventDefault()
-          spinMark()
-        }
+        event.preventDefault()
+        spinMark()
+        window.setTimeout(() => {
+          if (window.location.pathname !== ROUTES.home) window.location.assign(ROUTES.home)
+        }, 1_000)
       }}
     >
       <Logo
         {...props}
-        markClassName={`${props.markClassName ?? 'text-brand-bright'} h-7 motion-reduce:transform-none ${isSpinning ? 'animate-[spin_1s_ease-in-out]' : ''}`}
+        markClassName={`${props.onDark ? 'text-white' : (props.markClassName ?? 'text-brand-bright')} h-7 motion-reduce:transform-none ${isSpinning ? 'animate-[flip-x_1s_ease-in-out]' : ''}`}
       />
     </Link>
   )

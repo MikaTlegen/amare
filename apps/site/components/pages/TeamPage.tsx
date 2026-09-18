@@ -149,7 +149,7 @@ export function TeamPage() {
                   </span>
 
                   <Link
-                    href={`${ROUTES.booking}?doctor=${doctor.id}`}
+                    href={`${ROUTES.team}/${doctor.id}`}
                     className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline"
                   >
                     <CalendarDays className="h-4 w-4" aria-hidden="true" />

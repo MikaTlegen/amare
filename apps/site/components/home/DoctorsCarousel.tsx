@@ -1,9 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { useReducedMotion } from 'motion/react'
 import { Award, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
+import { ROUTES } from '@/lib/clinic'
 
 const AUTO_SCROLL_INTERVAL = 3_000
 
@@ -72,7 +74,7 @@ export function DoctorsCarousel() {
             key={`${doctor.id}-${index}`}
             data-doctor-card
             aria-hidden={index >= DOCTORS.length}
-            className='w-[min(16.5rem,75vw)] shrink-0 snap-start bg-bg sm:w-[18rem]'
+            className='w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg xl:min-w-0'
           >
             <div className='group relative aspect-[4/4.5] overflow-hidden bg-line'>
               {doctor.photo ? (
@@ -93,6 +95,13 @@ export function DoctorsCarousel() {
               <p className='m-0 text-xs font-medium uppercase tracking-[0.08em] text-brand'>{doctor.role}</p>
               <h3 className='mt-2 font-display text-xl font-semibold leading-tight tracking-[-0.035em] text-ink'>{doctor.name}</h3>
               <p className='mt-3 text-sm leading-relaxed text-muted'>{doctor.about}</p>
+              <Link
+                href={`${ROUTES.team}/${doctor.id}`}
+                tabIndex={index >= DOCTORS.length ? -1 : undefined}
+                className='mt-4 inline-flex w-fit text-sm font-semibold text-ink no-underline hover:text-brand'
+              >
+                О враче →
+              </Link>
               <div className='mt-auto pt-5'>
                 {doctor.certificates.length > 0 ? (
                   <div className='flex flex-wrap gap-3'>

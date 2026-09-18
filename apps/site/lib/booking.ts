@@ -22,14 +22,30 @@ export interface BookingPayload {
 /** Имитация сетевой задержки, чтобы интерфейс показывал состояние загрузки. */
 const LATENCY_MS = 260
 
-const DEMO_SLOTS: Slot[] = [
-  { id: 's-1', at: '2026-09-18T09:00', doctorId: 'zhumabekova', format: 'clinic' },
-  { id: 's-2', at: '2026-09-18T11:30', doctorId: 'zhumabekova', format: 'clinic' },
-  { id: 's-3', at: '2026-09-18T15:00', doctorId: 'kuspanova', format: 'online' },
-  { id: 's-4', at: '2026-09-19T10:00', doctorId: 'ahaaga', format: 'clinic' },
-  { id: 's-5', at: '2026-09-19T14:00', doctorId: 'zhumabekova', format: 'home' },
-  { id: 's-6', at: '2026-09-20T09:30', doctorId: 'niyazbekova', format: 'clinic' },
-]
+function createDemoSlots(): Slot[] {
+  const specialists = ['kuspanova', 'ahaaga', 'zhumabekova', 'moldabekov', 'niyazbekova']
+  const times = ['09:30', '11:00', '12:30', '15:00', '16:30']
+  const slots: Slot[] = []
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  specialists.forEach((doctorId, doctorIndex) => {
+    for (let dayOffset = 1; dayOffset <= 7; dayOffset += 1) {
+      const date = new Date(today)
+      date.setDate(date.getDate() + dayOffset)
+      const time = times[(doctorIndex + dayOffset) % times.length]
+      slots.push({
+        id: `${doctorId}-${dayOffset}`,
+        at: `${date.toISOString().slice(0, 10)}T${time}`,
+        doctorId,
+        format: 'clinic',
+      })
+    }
+  })
+
+  return slots
+}
+
 
 function delay<T>(value: T, ms = LATENCY_MS): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
@@ -37,7 +53,7 @@ function delay<T>(value: T, ms = LATENCY_MS): Promise<T> {
 
 /** TODO API: свободные слоты по врачу, формату и дате (S-03, модуль M2). */
 export async function getSlots(): Promise<Slot[]> {
-  return delay(DEMO_SLOTS)
+  return delay(createDemoSlots())
 }
 
 /**
