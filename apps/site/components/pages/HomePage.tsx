@@ -6,7 +6,7 @@ import { ArrowDownRight, ArrowRight, Phone } from 'lucide-react'
 import { Button, Reveal } from '@amare/ui'
 import { COURSE_STEPS, FACTS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
-import { DOCTORS } from '@/data/doctors'
+import { DoctorsCarousel } from '@/components/home/DoctorsCarousel'
 import { TwoDoors } from '@/components/home/TwoDoors'
 import { Quiz } from '@/components/home/Quiz'
 import { ResultsBand } from '@/components/home/ResultsBand'
@@ -210,21 +210,7 @@ function Team() {
             <ArrowRight className='h-5 w-5' aria-hidden='true' />
           </Link>
         </Reveal>
-        <div className='mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4'>
-          {DOCTORS.slice(0, 4).map((doctor, index) => (
-            <Reveal key={doctor.id} delay={index * 0.1}>
-              <div className='aspect-4/5 overflow-hidden bg-bg'>
-                {doctor.photo ? (
-                  <img src={doctor.photo} alt={`${doctor.role} ${doctor.name}`} loading='lazy' decoding='async' className='h-full w-full object-cover object-top grayscale transition duration-500 hover:grayscale-0' />
-                ) : (
-                  <div className='flex h-full items-center justify-center px-4 text-center text-sm text-muted'>Фото специалиста</div>
-                )}
-              </div>
-              <h3 className='mt-4 text-xl font-medium text-ink'>{doctor.name}</h3>
-              <p className='mt-1 text-base leading-relaxed text-muted'>{doctor.role}</p>
-            </Reveal>
-          ))}
-        </div>
+        <DoctorsCarousel />
       </div>
     </section>
   )

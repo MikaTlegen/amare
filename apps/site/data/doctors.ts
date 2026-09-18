@@ -7,14 +7,19 @@ export interface Doctor {
   about?: string
   /** Фото с сайта клиники. null — портрета пока нет, рисуем плейсхолдер. */
   photo: string | null
-  /** TODO CRM: сертификаты приходят из карточки сотрудника (M2). */
-  certificates: string[]
+  /** Опубликованные клиникой документы. */
+  certificates: DoctorCertificate[]
   /**
    * Состояния, с которыми работает специалист.
    * По этим меткам блок «С какими состояниями работаем» ведёт
    * на карточки нужных врачей.
    */
   conditions: ConditionId[]
+}
+
+export interface DoctorCertificate {
+  label: string
+  href: string
 }
 
 export type ConditionId = 'ischemic' | 'hemorrhagic' | 'tbi' | 'postop' | 'cp'
@@ -30,9 +35,9 @@ export const DOCTORS: Doctor[] = [
     name: 'Куспанова Айгуль Нургалиевна',
     role: 'Врач-реабилитолог',
     experience: '15 лет стажа',
-    about: 'Магистр в сфере здравоохранения, более 15 лет в реабилитации.',
-    photo: '/photos/doctor-kuspanova.jpg',
-    certificates: ['[СЕРТИФИКАТ]'],
+    about: 'Врач-реабилитолог с более чем 15-летним опытом работы, магистр в сфере здравоохранения.',
+    photo: '/photos/doctor-kuspanova.webp',
+    certificates: [{ label: 'Сертификат', href: '/certificates/kuspanova.webp' }],
     conditions: ['ischemic', 'hemorrhagic', 'tbi', 'postop'],
   },
   {
@@ -42,35 +47,40 @@ export const DOCTORS: Doctor[] = [
     experience: '25 лет стажа',
     about:
       'Врач-невролог высшей квалификационной категории. Диагностика, лечение и профилактика заболеваний нервной системы у взрослых.',
-    photo: '/photos/doctor-ahaaga.jpg',
-    certificates: ['[СЕРТИФИКАТ]'],
+    photo: '/photos/doctor-ahaaga.webp',
+    certificates: [{ label: 'Сертификат высшей категории', href: '/certificates/ahaaga.pdf' }],
     conditions: ['ischemic', 'hemorrhagic', 'tbi'],
   },
   {
     id: 'zhumabekova',
-    name: 'Индира Жумабекова',
+    name: 'Жумабекова Индира Кайратовна',
     role: 'Врач-реабилитолог',
     experience: '10+ лет стажа',
-    photo: '/photos/doctor-zhumabekova.jpg',
-    certificates: ['[СЕРТИФИКАТ]'],
+    about:
+      'Магистр медицинских наук, реабилитолог второй квалификационной категории и преподаватель кафедры реабилитологии и спортивной медицины МУА.',
+    photo: '/photos/doctor-zhumabekova.png',
+    certificates: [{ label: 'Сертификат', href: '/certificates/zhumabekova.pdf' }],
     conditions: ['ischemic', 'hemorrhagic', 'postop', 'cp'],
   },
   {
     id: 'moldabekov',
-    name: 'Айдос Молдабеков',
+    name: 'Молдабеков Айдос Есимханович',
     role: 'Нейрохирург',
     experience: '18 лет стажа',
-    photo: '/photos/doctor-moldabekov.jpg',
-    certificates: ['[СЕРТИФИКАТ]'],
+    about: 'Врач-нейрохирург высшей квалификационной категории. Общий практический стаж работы — 18 лет.',
+    photo: '/photos/doctor-moldabekov.png',
+    certificates: [],
     conditions: ['hemorrhagic', 'tbi', 'postop'],
   },
   {
     id: 'niyazbekova',
-    name: 'Каламкас Ниязбекова',
-    role: 'Нейропсихолог-дефектолог',
+    name: 'Ниязбекова Каламкас Артыкбаевна',
+    role: 'Психолог, дефектолог, нейропсихолог',
     experience: '10 лет стажа',
-    photo: '/photos/doctor-niyazbekova.jpg',
-    certificates: ['[СЕРТИФИКАТ]'],
+    about:
+      'Проводит индивидуальную работу по психологическому, дефектологическому и нейропсихологическому направлениям с учётом особенностей пациента.',
+    photo: '/photos/doctor-niyazbekova.png',
+    certificates: [],
     conditions: ['ischemic', 'hemorrhagic', 'tbi', 'cp'],
   },
 ]
