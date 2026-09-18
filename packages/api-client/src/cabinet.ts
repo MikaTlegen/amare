@@ -17,7 +17,7 @@ export type Role = "patient" | "guardian" | "staff";
  * Разделение из раздела 6 ТЗ: методист и контент-менеджер там отдельная
  * роль, а не обязанность куратора.
  */
-export type StaffRole = "curator" | "admin";
+export type StaffRole = "curator" | "admin" | "moderator";
 
 export interface User {
   id: string;
@@ -177,6 +177,13 @@ export const DEMO_USERS: Record<string, User> = {
     role: "staff",
     speciality: "Врач-реабилитолог, куратор",
     staffRole: "curator",
+  },
+  moderator: {
+    id: "u-moderator",
+    name: "Алия Турсунова",
+    role: "staff",
+    speciality: "Модератор курсов и контента",
+    staffRole: "moderator",
   },
   admin: {
     id: "u-admin",

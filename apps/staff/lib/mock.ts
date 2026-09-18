@@ -65,7 +65,7 @@ export function resetMockState() {
  * TODO AUTH: заменить на вход по телефону с кодом из SMS, как в care.
  */
 export async function signInAsStaff(role: StaffRole): Promise<User> {
-  const user = role === 'admin' ? DEMO_USERS.admin : DEMO_USERS.staff
+  const user = role === 'admin' ? DEMO_USERS.admin : role === 'moderator' ? DEMO_USERS.moderator : DEMO_USERS.staff
   if (!user) throw new Error(`Нет демо-пользователя для роли `)
   return delay(user)
 }

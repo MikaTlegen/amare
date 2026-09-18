@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Stethoscope, LibraryBig } from 'lucide-react'
+import { Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { StaffRole } from '@amare/api-client'
 import { useAuth } from '@/auth/AuthContext'
@@ -13,6 +13,12 @@ const DEMO_ROLES: { role: StaffRole; title: string; note: string; Icon: LucideIc
     title: 'Войти как куратор',
     note: 'Очередь задач, пациенты, тревожные сигналы, проверка видео',
     Icon: Stethoscope,
+  },
+  {
+    role: 'moderator',
+    title: 'Войти как модератор',
+    note: 'Упражнения, материалы, версии и проверка шаблонов',
+    Icon: ShieldCheck,
   },
   {
     role: 'admin',

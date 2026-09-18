@@ -1,101 +1,50 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { CabinetShell, DemoNotice, type Tab } from '@amare/ui'
-import type { PatientCard, StaffTask } from '@amare/api-client'
-import { CourseLibrary } from './CourseLibrary'
-import { PatientDetail } from './PatientDetail'
-import { PatientsBoard } from './PatientsBoard'
-import { TaskQueue } from './TaskQueue'
-import { VideoReviewPanel } from './VideoReviewPanel'
-import { getStaffPatients, getStaffTasks } from '@/lib/mock'
-import { STAFF_ROLE_LABEL, useAuth } from '@/auth/AuthContext'
+import { useEffect, useState } from "react"
+import type { PatientCard, StaffTask } from "@amare/api-client"
+import { CabinetShell, DemoNotice, type Tab } from "@amare/ui"
+import { STAFF_ROLE_LABEL, useAuth } from "@/auth/AuthContext"
+import { getStaffPatients, getStaffTasks } from "@/lib/mock"
+import { AdminOperationsPanel } from "./AdminOperationsPanel"
+import { ContentApprovalPanel } from "./ContentApprovalPanel"
+import { ModeratorContentPanel } from "./ModeratorContentPanel"
+import { PatientDetail } from "./PatientDetail"
+import { PatientsBoard } from "./PatientsBoard"
+import { TaskQueue } from "./TaskQueue"
+import { VideoReviewPanel } from "./VideoReviewPanel"
 
-/**
- * Вкладки по роли.
- *
- * У куратора работа с людьми, у администратора — с содержимым.
- * Пересечение одно: список пациентов, он нужен обоим, но админу без
- * очереди задач и тревожных сигналов.
- */
-const CURATOR_TABS: Tab[] = [
-  { id: 'queue', label: 'Очередь задач' },
-  { id: 'patients', label: 'Мои пациенты' },
-  { id: 'video', label: 'Видео на проверку' },
-]
+const CURATOR_TABS: Tab[] = [{ id: "queue", label: "Очередь задач" }, { id: "patients", label: "Мои пациенты" }, { id: "video", label: "Видео на проверку" }, { id: "content-review", label: "Контент на утверждение" }]
+const MODERATOR_TABS: Tab[] = [{ id: "dashboard", label: "Сводка" }, { id: "library", label: "Контент и шаблоны" }, { id: "review", label: "На проверке" }, { id: "archive", label: "Архив" }]
+const ADMIN_TABS: Tab[] = [{ id: "dashboard", label: "Дашборд" }, { id: "patients", label: "Пациенты и кураторы" }, { id: "operations", label: "Оплаты" }]
 
-const ADMIN_TABS: Tab[] = [
-  { id: 'library', label: 'Курсы и шаблоны' },
-  { id: 'patients', label: 'Пациенты и назначения' },
-]
-
-/**
- * Рабочее место специалиста и куратора (модуль M7 ТЗ).
- *
- * Главный экран куратора — не список пациентов, а очередь задач: у него
- * двадцать человек, и важно не «посмотреть всех», а не пропустить тех,
- * у кого что-то пошло не так. Поэтому тревожные сигналы сверху.
- */
 export function StaffCabinetPage() {
   const { user, signOut } = useAuth()
-  const isAdmin = user?.staffRole === 'admin'
-  const tabs = isAdmin ? ADMIN_TABS : CURATOR_TABS
-
-  const [tab, setTab] = useState(tabs[0]!.id)
+  const role = user?.staffRole ?? "curator"
+  const isAdmin = role === "admin"
+  const isModerator = role === "moderator"
+  const tabs = isAdmin ? ADMIN_TABS : isModerator ? MODERATOR_TABS : CURATOR_TABS
+  const [tab, setTab] = useState(tabs[0]?.id ?? "queue")
   const [tasks, setTasks] = useState<StaffTask[]>([])
   const [patients, setPatients] = useState<PatientCard[]>([])
-  /** Открытая карточка пациента. null — показываем список. */
   const [selectedId, setSelectedId] = useState<string | null>(null)
-
-  useEffect(() => {
-    void getStaffPatients().then(setPatients)
-    if (!isAdmin) void getStaffTasks().then(setTasks)
-  }, [isAdmin])
-
-  const openCount = tasks.filter((task) => !task.done).length
+  useEffect(() => { if (!isAdmin && !isModerator) { void getStaffPatients().then(setPatients); void getStaffTasks().then(setTasks) } }, [isAdmin, isModerator])
   const selected = patients.find((patient) => patient.id === selectedId) ?? null
+  const openPatient = (id: string) => { setSelectedId(id); setTab("patients") }
+  const subtitle = isModerator ? "Упражнения, материалы и версии шаблонов" : isAdmin ? "Пациенты, кураторы, расписание и оплаты" : `Открытых задач: ${tasks.filter((task) => !task.done).length} · пациентов: ${patients.length}`
+  return <CabinetShell title={isModerator ? "Модерация курсов и контента" : isAdmin ? "Операционное управление клиникой" : "Рабочее место врача-куратора"} subtitle={subtitle} tabs={tabs} active={tab} onTabChange={setTab} userName={user?.name ?? ""} roleLabel={STAFF_ROLE_LABEL[role]} homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"} onSignOut={signOut}>
+    <DemoNotice />
+    {isModerator && tab === "dashboard" && <ModeratorDashboard />}
+    {isModerator && tab !== "dashboard" && <ModeratorContentPanel view={tab as "library" | "review" | "archive"} />}
+    {isAdmin && <AdminOperationsPanel view={tab as "dashboard" | "patients" | "operations"} />}
+    {!isAdmin && !isModerator && tab === "queue" && <TaskQueue tasks={tasks} onTasksChange={setTasks} onOpenPatient={openPatient} />}
+    {!isAdmin && !isModerator && tab === "video" && <VideoReviewPanel />}
+    {!isAdmin && !isModerator && tab === "content-review" && <ContentApprovalPanel />}
+    {!isAdmin && !isModerator && tab === "patients" && (selected ? <PatientDetail patient={selected} canAssign onBack={() => setSelectedId(null)} /> : <PatientsBoard patients={patients} onOpen={setSelectedId} />)}
+  </CabinetShell>
+}
 
-  /** Переход из очереди задач сразу в карточку нужного пациента. */
-  const openPatient = (id: string) => {
-    setSelectedId(id)
-    setTab('patients')
-  }
 
-  const subtitle = isAdmin
-    ? `Пациентов на курсе: ${patients.length}`
-    : `Открытых задач: ${openCount} · пациентов на курсе: ${patients.length}`
-
-  return (
-    <CabinetShell
-      title={isAdmin ? 'Администрирование курсов' : 'Рабочее место куратора'}
-      subtitle={subtitle}
-      tabs={tabs}
-      active={tab}
-      onTabChange={setTab}
-      userName={user?.name ?? ''}
-      roleLabel={user?.staffRole ? STAFF_ROLE_LABEL[user.staffRole] : 'Сотрудник'}
-      onSignOut={signOut}
-    >
-      <DemoNotice />
-
-      {tab === 'library' && <CourseLibrary />}
-
-      {tab === 'queue' && (
-        <TaskQueue tasks={tasks} onTasksChange={setTasks} onOpenPatient={openPatient} />
-      )}
-
-      {tab === 'video' && <VideoReviewPanel />}
-
-      {tab === 'patients' &&
-        (selected ? (
-          <PatientDetail
-            patient={selected}
-            canAssign={isAdmin}
-            onBack={() => setSelectedId(null)}
-          />
-        ) : (
-          <PatientsBoard patients={patients} onOpen={setSelectedId} />
-        ))}
-    </CabinetShell>
-  )
+function ModeratorDashboard() {
+  const items = [{ label: "Черновики", value: "4", note: "требуют подготовки" }, { label: "На проверке", value: "2", note: "ожидают врача-куратора" }, { label: "Утверждено", value: "12", note: "доступно для курсов" }, { label: "Новые версии", value: "1", note: "создана сегодня" }]
+  return <div className="grid gap-5"><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{items.map((item) => <section key={item.label} className="rounded-3xl border border-line bg-surface p-6"><p className="m-0 text-3xl font-semibold">{item.value}</p><p className="mb-0 mt-2 text-base font-medium">{item.label}</p><p className="mb-0 mt-1 text-sm text-muted">{item.note}</p></section>)}</div><div className="grid gap-5 xl:grid-cols-2"><section className="rounded-3xl border border-line bg-surface p-6"><h2 className="m-0 font-display text-xl font-medium">Ближайшие действия</h2><div className="mt-4 grid gap-3"><p className="m-0 rounded-2xl bg-bg p-4"><strong>Речь и глотание v1.0</strong><br /><span className="text-sm text-muted">Отправлено врачу на проверку сегодня.</span></p><p className="m-0 rounded-2xl bg-bg p-4"><strong>Комплексный курс v1.1</strong><br /><span className="text-sm text-muted">Черновик: добавить упражнения второй недели.</span></p></div></section><section className="rounded-3xl border border-line bg-surface p-6"><h2 className="m-0 font-display text-xl font-medium">Статус библиотеки</h2><dl className="mt-4 grid gap-3"><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Упражнений в библиотеке</dt><dd className="m-0 font-semibold">38</dd></div><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Материалов для пациентов</dt><dd className="m-0 font-semibold">16</dd></div><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Версий в архиве</dt><dd className="m-0 font-semibold">7</dd></div></dl></section></div></div>
 }

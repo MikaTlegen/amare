@@ -1,7 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
-import { LogOut, UserRound } from 'lucide-react'
+import { House, LogOut, UserRound } from 'lucide-react'
 import { cn } from './cn'
 
 export interface Tab {
@@ -17,6 +17,7 @@ interface Props {
   onTabChange: (id: string) => void
   userName: string
   roleLabel: string
+  homeHref: string
   onSignOut: () => void
   children: ReactNode
 }
@@ -39,6 +40,7 @@ export function CabinetShell({
   onTabChange,
   userName,
   roleLabel,
+  homeHref,
   onSignOut,
   children,
 }: Props) {
@@ -53,6 +55,9 @@ export function CabinetShell({
             </div>
 
             <div className="flex items-center gap-3 rounded-2xl border border-line px-4 py-3">
+            <a href={homeHref} className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:border-ink" aria-label="Вернуться на главную страницу">
+              <House className="h-5 w-5" aria-hidden="true" />
+            </a>
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-tint">
                 <UserRound className="h-5 w-5 text-deep" aria-hidden="true" />
               </span>

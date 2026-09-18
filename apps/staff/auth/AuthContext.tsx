@@ -18,7 +18,7 @@ interface AuthValue {
 const AuthContext = createContext<AuthValue | null>(null)
 
 function isStaffRole(value: string | null): value is StaffRole {
-  return value === 'curator' || value === 'admin'
+  return value === 'curator' || value === 'admin' || value === 'moderator'
 }
 
 /**
@@ -93,4 +93,5 @@ export function useAuth() {
 export const STAFF_ROLE_LABEL: Record<StaffRole, string> = {
   curator: 'Куратор',
   admin: 'Администратор',
+  moderator: 'Модератор контента',
 }
