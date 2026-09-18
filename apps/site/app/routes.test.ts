@@ -12,7 +12,6 @@ const CABINET_ROUTES = new Set<string>([
   ROUTES.cabinet,
   ROUTES.cabinetPatient,
   ROUTES.cabinetGuardian,
-  ROUTES.cabinetStaff,
 ]);
 
 function pageFile(route: string): string {

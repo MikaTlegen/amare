@@ -24,10 +24,12 @@
     "react-dom": "^19.2.0"
   },
   "dependencies": {
+    "@amare/api-client": "workspace:*",
     "@radix-ui/react-popover": "^1.1.23",
     "clsx": "^2.1.1",
     "lucide-react": "^1.46.0",
     "motion": "^13.4.0",
+    "recharts": "^3.10.1",
     "tailwind-merge": "^3.7.0"
   }
 }

@@ -69,6 +69,12 @@
   (тест `app/routes.test.ts` проверяет, что у каждого маршрута есть страница). Посетитель всегда гость:
   `/vhod` и `/kabinet/*` редиректят в care (`NEXT_PUBLIC_CARE_URL`). Стиль перенесённых файлов — как в наброске
   (одинарные кавычки, без точек с запятой).
+- `apps/care` (пациент, опекун) и `apps/staff` (специалист, отдельно от care и от публичного сайта) —
+  кабинеты из наброска, каждый со своим `auth/AuthContext.tsx`+`RequireAuth.tsx` и мок-клиентом
+  `lib/mock.ts` (демо-данные без бэкенда, состояние в памяти вкладки, между care и staff не
+  синхронизируется — `docs/DECISIONS.md`). Общие компоненты кабинета (`CabinetShell`, `ChatPanel`,
+  `AttachmentChip`, `BarthelChart`) — в `packages/ui`; общие типы и демо-данные — в
+  `packages/api-client/src/cabinet.ts`.
 - Дизайн-токены — только `packages/ui` (`docs/DESIGN_TOKENS.md`): Tailwind v4, стандартная палитра отключена,
   цвета — классы токенов (`bg-deep`, `text-brand`). Цвет меняется в `tokens.css` и `palette.ts` вместе,
   затем `pnpm --filter @amare/ui test` (сверка и контраст). Кегль 18px, контраст — `data-contrast="high"`.

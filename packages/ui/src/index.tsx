@@ -1,7 +1,11 @@
 import type { ReactNode } from "react";
 
 export { AccessibilityMenu } from "./accessibility-menu";
+export { AttachmentChip, KIND_ICON, KIND_LABEL } from "./attachment-chip";
+export { BarthelChart } from "./barthel-chart";
 export { Button } from "./button";
+export { CabinetShell, DemoNotice, type Tab } from "./cabinet-shell";
+export { ChatPanel, type ChatApi } from "./chat-panel";
 export { cn } from "./cn";
 export { LanguageSwitch } from "./language-switch";
 export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";

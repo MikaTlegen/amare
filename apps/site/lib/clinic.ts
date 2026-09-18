@@ -50,12 +50,11 @@ export const ROUTES = {
   course: '/kurs-i-ceny',
   team: '/vrachi',
 
-  // Кабинеты
+  // Кабинеты. Специалист заходит напрямую в приложение staff, не через сайт.
   login: '/vhod',
   cabinet: '/kabinet',
   cabinetPatient: '/kabinet/pacient',
   cabinetGuardian: '/kabinet/opekun',
-  cabinetStaff: '/kabinet/specialist',
 
   // Заявки
   booking: '/zapis',

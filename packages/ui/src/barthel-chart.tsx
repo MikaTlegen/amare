@@ -10,7 +10,7 @@ import {
   Cell,
   CartesianGrid,
 } from 'recharts'
-import { DEMO_PROGRESS, type ProgressPoint } from '@/data/progress'
+import type { ScalePoint } from '@amare/api-client'
 
 /**
  * Динамика индекса Бартел за курс.
@@ -25,12 +25,11 @@ import { DEMO_PROGRESS, type ProgressPoint } from '@/data/progress'
  */
 export function BarthelChart({
   onDark = false,
-  data = DEMO_PROGRESS,
+  data,
   height = '15rem',
 }: {
   onDark?: boolean
-  /** Ряд замеров. По умолчанию — демонстрационный. */
-  data?: ProgressPoint[]
+  data: ScalePoint[]
   height?: string
 }) {
   const axisColor = onDark ? 'rgb(154 184 196)' : 'rgb(90 95 92)'
@@ -38,10 +37,7 @@ export function BarthelChart({
 
   return (
     <figure className="m-0 flex flex-col gap-3">
-      <figcaption className="sr-only">
-        Индекс Бартел вырос с 25 баллов в первый день курса до 80 баллов на двадцатый.
-        Демонстрационные данные.
-      </figcaption>
+      <figcaption className="sr-only">Динамика индекса Бартел по дням курса.</figcaption>
 
       <div className="w-full" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">

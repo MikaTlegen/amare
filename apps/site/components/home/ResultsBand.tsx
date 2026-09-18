@@ -1,8 +1,8 @@
 import { ParallaxBand } from '@amare/ui'
 import { Button } from '@amare/ui'
 import { Reveal } from '@amare/ui'
-import { BarthelChart } from './BarthelChart'
-import { PROGRESS_SUMMARY } from '@/data/progress'
+import { BarthelChart } from '@amare/ui'
+import { DEMO_PROGRESS, PROGRESS_SUMMARY } from '@/data/progress'
 import { ROUTES } from '@/lib/clinic'
 
 /**
@@ -58,7 +58,7 @@ export function ResultsBand() {
             <span className="text-sm text-white/55">демонстрационные данные</span>
           </div>
 
-          <BarthelChart onDark />
+          <BarthelChart onDark data={DEMO_PROGRESS} />
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/20 px-5 py-4">

@@ -1,12 +1,6 @@
-import { DEFAULT_LOCALE, t } from "@amare/i18n";
-import { Logo, PageShell } from "@amare/ui";
+import { redirect } from "next/navigation";
 
-// Заглушка: проверяет, что приложение собирается с общими пакетами и токенами
+// У care нет отдельной «домашней» страницы — вход и кабинет решают роль
 export default function HomePage() {
-  return (
-    <PageShell title={t(DEFAULT_LOCALE, "common.appName")}>
-      <Logo />
-      <p className="mt-4">care: {t(DEFAULT_LOCALE, "common.missingInKk")}</p>
-    </PageShell>
-  );
+  redirect("/kabinet");
 }

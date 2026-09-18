@@ -1,3 +1,5 @@
+export * from "./cabinet";
+
 export interface HealthResponse {
   status: "ok";
 }

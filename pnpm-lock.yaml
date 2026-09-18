@@ -254,12 +254,18 @@ importers:
 
   apps/care:
     dependencies:
+      '@amare/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@amare/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@amare/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      lucide-react:
+        specifier: ^1.46.0
+        version: 1.46.0(react@19.3.0)
       next:
         specifier: ^16.3.0
         version: 16.3.5(@types/node@24.13.5)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -309,9 +315,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.3.0(react@19.3.0)
-      recharts:
-        specifier: ^3.10.1
-        version: 3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.3.0)(react@19.3.0)(redux@5.0.1)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.3.3
@@ -328,12 +331,18 @@ importers:
 
   apps/staff:
     dependencies:
+      '@amare/api-client':
+        specifier: workspace:*
+        version: link:../../packages/api-client
       '@amare/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
       '@amare/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      lucide-react:
+        specifier: ^1.46.0
+        version: 1.46.0(react@19.3.0)
       next:
         specifier: ^16.3.0
         version: 16.3.5(@types/node@24.13.5)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -363,6 +372,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@amare/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@radix-ui/react-popover':
         specifier: ^1.1.23
         version: 1.1.23(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -375,6 +387,9 @@ importers:
       motion:
         specifier: ^13.4.0
         version: 13.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      recharts:
+        specifier: ^3.10.1
+        version: 3.10.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react-is@19.3.0)(react@19.3.0)(redux@5.0.1)
       tailwind-merge:
         specifier: ^3.7.0
         version: 3.7.0
