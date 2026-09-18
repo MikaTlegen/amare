@@ -1,0 +1,44 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "site",
+      "runtimeExecutable": "wsl.exe",
+      "runtimeArgs": [
+        "-d",
+        "ubuntu",
+        "--",
+        "bash",
+        "-lc",
+        "cd ~/projects/Amare && pnpm --filter @amare/site dev"
+      ],
+      "port": 3001
+    },
+    {
+      "name": "care",
+      "runtimeExecutable": "wsl.exe",
+      "runtimeArgs": [
+        "-d",
+        "ubuntu",
+        "--",
+        "bash",
+        "-lc",
+        "cd ~/projects/Amare && pnpm --filter @amare/care dev"
+      ],
+      "port": 3002
+    },
+    {
+      "name": "staff",
+      "runtimeExecutable": "wsl.exe",
+      "runtimeArgs": [
+        "-d",
+        "ubuntu",
+        "--",
+        "bash",
+        "-lc",
+        "cd ~/projects/Amare && pnpm --filter @amare/staff dev"
+      ],
+      "port": 3003
+    }
+  ]
+}
