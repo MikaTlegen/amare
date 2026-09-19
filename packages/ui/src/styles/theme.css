@@ -24,9 +24,9 @@
   --color-accent-ink: rgb(var(--c-accent-ink));
   --color-tint: rgb(var(--c-tint));
 
-  /* Переменные --font-unbounded и --font-onest задаёт next/font в приложении */
-  --font-display: var(--font-unbounded), system-ui, sans-serif;
-  --font-sans: var(--font-onest), "Segoe UI", system-ui, sans-serif;
+  /* Переменные --font-manrope и --font-inter задаёт next/font в приложении */
+  --font-display: var(--font-manrope), system-ui, sans-serif;
+  --font-sans: var(--font-inter), "Segoe UI", system-ui, sans-serif;
 }
 
 @theme {

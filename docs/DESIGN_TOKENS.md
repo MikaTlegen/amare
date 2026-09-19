@@ -67,7 +67,7 @@ pnpm --filter @amare/ui test
 
 ## Шрифты
 
-- `font-display` — Unbounded (заголовки, логотип), `font-sans` — Onest (текст). Кириллица и латиница.
+- `font-display` — Manrope (заголовки, логотип), `font-sans` — Inter (текст). Кириллица и латиница.
 - Подключаются в каждом приложении через `next/font/google` (`app/fonts.ts`). Файлы скачиваются
   при сборке и раздаются с нашего домена — браузер посетителя в Google не обращается.
   Сборка приложения требует доступа к Google Fonts.
@@ -95,9 +95,9 @@ pnpm --filter @amare/ui test
 
 ```tsx
 // app/layout.tsx
-import { onest, unbounded } from "./fonts";
+import { inter, manrope } from "./fonts";
 import "./globals.css";
-// <html lang="ru" className={`${unbounded.variable} ${onest.variable}`}>
+// <html lang="ru" className={`${manrope.variable} ${inter.variable}`}>
 ```
 
 ## Отличия от набросков на Tailwind 3

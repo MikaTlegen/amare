@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SpinningFavicon } from "@amare/ui";
 import { AuthProvider } from "@/auth/AuthContext";
-import { onest, unbounded } from "./fonts";
+import { inter, manrope } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru" className={`${unbounded.variable} ${onest.variable}`}>
+    <html lang="ru" className={`${manrope.variable} ${inter.variable}`}>
       <body>
         <SpinningFavicon />
         <AuthProvider>{children}</AuthProvider>

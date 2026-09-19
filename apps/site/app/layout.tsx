@@ -6,7 +6,7 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { MobileActionBar } from "@/components/MobileActionBar";
-import { onest, unbounded } from "./fonts";
+import { inter, manrope } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -60,7 +60,7 @@ const CLINIC_JSON_LD = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru" className={`${unbounded.variable} ${onest.variable}`}>
+    <html lang="ru" className={`${manrope.variable} ${inter.variable}`}>
       <body>
         <SpinningFavicon />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(CLINIC_JSON_LD) }} />
