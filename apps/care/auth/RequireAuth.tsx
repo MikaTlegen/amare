@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
+import { useT } from '@amare/i18n/react'
 import { useAuth } from './AuthContext'
 import { ROUTES } from '@/lib/routes'
 import type { CareRole } from '@/lib/mock'
@@ -15,6 +16,7 @@ import type { CareRole } from '@/lib/mock'
  * данным закрывает сервер, проверяя сессию на каждом запросе.
  */
 export function RequireAuth({ children, allow }: { children: ReactNode; allow?: CareRole[] }) {
+  const t = useT('cabinet')
   const { user, loading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -32,7 +34,7 @@ export function RequireAuth({ children, allow }: { children: ReactNode; allow?: 
   }, [unauthenticated, wrongRole, pathname, router])
 
   if (loading || unauthenticated || wrongRole) {
-    return <div className="container-content py-24 text-center text-lg text-muted">Загружаем кабинет…</div>
+    return <div className="container-content py-24 text-center text-lg text-muted">{t('loading')}</div>
   }
 
   return <>{children}</>

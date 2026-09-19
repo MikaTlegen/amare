@@ -15,6 +15,7 @@ import { ru } from "./ru";
 /** Пространства имён, объявленные переведёнными: в них пропуск ключа — ошибка. */
 const COMPLETE: readonly Namespace[] = [
   "booking",
+  "cabinet",
   "common",
   "contacts",
   "course",
@@ -34,6 +35,7 @@ const COMPLETE: readonly Namespace[] = [
   "quiz",
   "remote",
   "reviews",
+  "staff",
   "stories",
   "ui",
 ];

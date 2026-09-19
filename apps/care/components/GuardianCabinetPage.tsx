@@ -11,20 +11,21 @@ import { MedsPanel } from './MedsPanel'
 import { CareLogPanel } from './CareLogPanel'
 import { GuardianSchool } from './GuardianSchool'
 import { SosButton } from './SosButton'
-import { useAuth, ROLE_LABEL } from '@/auth/AuthContext'
+import { useT } from '@amare/i18n/react'
+import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
 import { getMessages, getPatientCard, sendMessage } from '@/lib/mock'
 import { CLINIC_PHONE } from '@/lib/clinic'
 
-const TABS: Tab[] = [
-  { id: 'ward', label: 'Близкий человек' },
-  { id: 'care', label: 'Отметки ухода' },
-  { id: 'plan', label: 'План дня' },
-  { id: 'diary', label: 'Дневник' },
-  { id: 'meds', label: 'Лекарства' },
-  { id: 'progress', label: 'Прогресс' },
-  { id: 'school', label: 'Школа опекуна' },
-  { id: 'chat', label: 'Куратор' },
-]
+const TAB_KEYS = [
+  ['ward', 'tab.person'],
+  ['care', 'tab.care'],
+  ['plan', 'tab.plan'],
+  ['diary', 'tab.diary'],
+  ['meds', 'tab.meds'],
+  ['progress', 'tab.progress'],
+  ['school', 'tab.school'],
+  ['chat', 'tab.chat'],
+] as const
 
 // См. PatientCabinetPage.tsx — та же стабильная ссылка на api для ChatPanel.
 const CHAT_API = { getMessages, sendMessage }
@@ -39,8 +40,11 @@ const CHAT_API = { getMessages, sendMessage }
  * это его работа, и куратору важно видеть именно её.
  */
 export function GuardianCabinetPage() {
+  const t = useT('cabinet')
   const { user, signOut } = useAuth()
   const [tab, setTab] = useState('ward')
+
+  const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
   const [card, setCard] = useState<PatientCard | null>(null)
 
   useEffect(() => {
@@ -50,13 +54,13 @@ export function GuardianCabinetPage() {
   return (
     <>
       <CabinetShell
-        title="Кабинет опекуна"
-        subtitle={card ? `Вы смотрите за: ${card.name}` : undefined}
-        tabs={TABS}
+        title={t('guardian.title')}
+        subtitle={card ? t('guardian.subtitle', { name: card.name }) : undefined}
+        tabs={tabs}
         active={tab}
         onTabChange={setTab}
         userName={user?.name ?? ''}
-        roleLabel={ROLE_LABEL.guardian}
+        roleLabel={t(ROLE_KEY.guardian)}
     homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
         onSignOut={signOut}
       >
@@ -86,6 +90,8 @@ export function GuardianCabinetPage() {
  * о двух днях без активности он пролистает.
  */
 function WardSummary({ card }: { card: PatientCard }) {
+  const t = useT('cabinet')
+
   return (
     <div className="grid gap-5 lg:grid-cols-12">
       {card.alerts.length > 0 && (
@@ -110,27 +116,27 @@ function WardSummary({ card }: { card: PatientCard }) {
 
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-          {card.name}, {card.age} года
+          {t('guardian.age', { name: card.name, age: card.age })}
         </h2>
 
         <dl className="m-0 grid gap-3 sm:grid-cols-2">
           <div>
-            <dt className="text-sm text-muted">Состояние</dt>
+            <dt className="text-sm text-muted">{t('guardian.state')}</dt>
             <dd className="m-0 text-base font-medium">{card.diagnosis}</dd>
           </div>
           <div>
-            <dt className="text-sm text-muted">Курс</dt>
+            <dt className="text-sm text-muted">{t('guardian.course')}</dt>
             <dd className="m-0 text-base font-medium">
-              День {card.courseDay} из {card.courseLength}
+              {t('guardian.courseDay', { day: card.courseDay, total: card.courseLength })}
             </dd>
           </div>
           <div>
-            <dt className="text-sm text-muted">Куратор</dt>
+            <dt className="text-sm text-muted">{t('guardian.curator')}</dt>
             <dd className="m-0 text-base font-medium">{card.curator}</dd>
           </div>
           <div>
-            <dt className="text-sm text-muted">Следующая переоценка</dt>
-            <dd className="m-0 text-base font-medium">15-й день курса</dd>
+            <dt className="text-sm text-muted">{t('guardian.nextReview')}</dt>
+            <dd className="m-0 text-base font-medium">{t('guardian.reviewDay')}</dd>
           </div>
         </dl>
 
@@ -139,36 +145,36 @@ function WardSummary({ card }: { card: PatientCard }) {
           className="inline-flex min-h-[3rem] w-fit items-center gap-2 rounded-xl border-[1.5px] border-deep px-5 py-3 text-base font-semibold text-deep no-underline"
         >
           <Phone className="h-5 w-5" aria-hidden="true" />
-          Позвонить в клинику
+          {t('guardian.call')}
         </a>
       </section>
 
       <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-          Отчёты с занятий
+          {t('guardian.reports')}
         </h2>
 
         <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
           <li className="flex items-center gap-3 rounded-2xl bg-bg px-4 py-3.5">
             <Video className="h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
-            <span className="flex-1 text-base">Видео с занятия ЛФК</span>
-            <span className="text-sm text-muted">вчера</span>
+            <span className="flex-1 text-base">{t('guardian.reportVideo')}</span>
+            <span className="text-sm text-muted">{t('guardian.yesterday')}</span>
           </li>
           <li className="flex items-center gap-3 rounded-2xl bg-bg px-4 py-3.5">
             <FileText className="h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
-            <span className="flex-1 text-base">Заключение за первую неделю</span>
-            <span className="text-sm text-muted">3 дня назад</span>
+            <span className="flex-1 text-base">{t('guardian.reportWeek')}</span>
+            <span className="text-sm text-muted">{t('guardian.daysAgo', { count: 3 })}</span>
           </li>
           <li className="flex items-center gap-3 rounded-2xl bg-bg px-4 py-3.5">
             <Video className="h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
-            <span className="flex-1 text-base">Разбор домашнего задания</span>
-            <span className="text-sm text-muted">4 дня назад</span>
+            <span className="flex-1 text-base">{t('guardian.reportHomework')}</span>
+            <span className="text-sm text-muted">{t('guardian.daysAgo', { count: 4 })}</span>
           </li>
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
           {/* TODO BACKEND: выдача файлов только по подписанной ссылке с коротким сроком жизни */}
-          Материалы доступны только вам и лечащей команде.
+          {t('guardian.reportsNote')}
         </p>
       </section>
     </div>

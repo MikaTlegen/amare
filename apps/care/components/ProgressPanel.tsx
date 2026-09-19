@@ -4,19 +4,21 @@ import { useEffect, useState } from 'react'
 import { TriangleAlert, Info } from 'lucide-react'
 import type { PatientCard } from '@amare/api-client'
 import { BarthelChart, cn } from '@amare/ui'
+import { useContentList, useT } from '@amare/i18n/react'
 import { getPatientCard } from '@/lib/mock'
 
-const DAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 /** Прогресс: шкалы, минуты практики за неделю, уведомления куратора. */
 export function ProgressPanel() {
+  const t = useT('cabinet')
+  const days = useContentList('cabinet')('weekdays')
   const [card, setCard] = useState<PatientCard | null>(null)
 
   useEffect(() => {
     void getPatientCard().then(setCard)
   }, [])
 
-  if (!card) return <p className="text-lg text-muted">Загружаем данные…</p>
+  if (!card) return <p className="text-lg text-muted">{t('progress.loading')}</p>
 
   const weekTotal = card.weekMinutes.reduce((a, b) => a + b, 0)
   const maxMinutes = Math.max(...card.weekMinutes, 60)
@@ -26,23 +28,22 @@ export function ProgressPanel() {
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-            Индекс Бартел
+            {t('progress.barthel')}
           </h2>
-          <span className="text-base text-muted">больше — лучше, максимум 100</span>
+          <span className="text-base text-muted">{t('progress.barthelNote')}</span>
         </div>
 
         <BarthelChart data={card.barthel} height="14rem" />
 
         <p className="m-0 text-base leading-relaxed text-muted">
-          Замеряется при поступлении, в динамике и при выписке. Следующая переоценка — на 15-й день
-          курса.
+          {t('progress.barthelHint')}
         </p>
       </section>
 
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-            Практика за неделю
+            {t('progress.week')}
           </h2>
           <span className="font-display text-xl font-semibold tracking-[-0.04em]">
             {weekTotal} мин
@@ -52,7 +53,7 @@ export function ProgressPanel() {
         {/* Столбики по дням: главная метрика платформы — набранные минуты */}
         <ul className="flex h-40 items-end gap-2">
           {card.weekMinutes.map((minutes, i) => (
-            <li key={DAYS[i]} className="flex flex-1 flex-col items-center gap-2">
+            <li key={days[i]} className="flex flex-1 flex-col items-center gap-2">
               <span className="text-sm text-muted">{minutes || ''}</span>
               <div
                 className={cn(
@@ -63,20 +64,19 @@ export function ProgressPanel() {
                 style={minutes === 0 ? undefined : { height: `${(minutes / maxMinutes) * 100}%` }}
                 aria-hidden="true"
               />
-              <span className="text-sm text-muted">{DAYS[i]}</span>
+              <span className="text-sm text-muted">{days[i]}</span>
             </li>
           ))}
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
-          Цель — заниматься не меньше пяти дней в неделю. Пропуск одного дня не критичен, два
-          подряд — уже повод написать куратору.
+          {t('progress.weekHint')}
         </p>
       </section>
 
       {card.alerts.length > 0 && (
         <section className="flex flex-col gap-3 lg:col-span-12">
-          <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">Уведомления</h2>
+          <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('progress.notifications')}</h2>
           <ul className="flex flex-col gap-2.5">
             {card.alerts.map((alert) => (
               <li

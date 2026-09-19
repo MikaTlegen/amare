@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Check, Clock, Play, Info } from 'lucide-react'
 import type { DayPlan } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useT } from '@amare/i18n/react'
 import { completeExercise, getDayPlan } from '@/lib/mock'
 
 /**
@@ -15,6 +16,7 @@ import { completeExercise, getDayPlan } from '@/lib/mock'
  * кто занимался.
  */
 export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
+  const t = useT('cabinet')
   const [plan, setPlan] = useState<DayPlan | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -23,7 +25,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
   }, [])
 
   if (!plan) {
-    return <p className="text-lg text-muted">Загружаем план…</p>
+    return <p className="text-lg text-muted">{t('plan.loading')}</p>
   }
 
   const doneMinutes = plan.exercises
@@ -55,7 +57,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
           aria-valuenow={percent}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`Выполнено ${percent} процентов плана`}
+          aria-label={t('plan.percent', { percent })}
         >
           <div
             className="h-full rounded-full bg-accent transition-[width] duration-500"
@@ -65,7 +67,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
 
         {percent >= 100 && (
           <p className="m-0 text-base font-medium text-brand">
-            План на сегодня выполнен. Отдыхайте — переработка здесь не помогает.
+            {t('plan.allDone')}
           </p>
         )}
       </div>
@@ -122,7 +124,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                   disabled={busy === exercise.id}
                   className="min-h-[3rem] shrink-0 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white disabled:opacity-60"
                 >
-                  {busy === exercise.id ? 'Отмечаем…' : 'Выполнено'}
+                  {busy === exercise.id ? t('plan.marking') : t('plan.done')}
                 </button>
               )}
             </li>
@@ -132,7 +134,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
 
       {readOnly && (
         <p className="m-0 text-base text-muted">
-          Отмечать упражнения может только сам пациент — так запись о занятии остаётся достоверной.
+          {t('plan.patientOnly')}
         </p>
       )}
     </div>

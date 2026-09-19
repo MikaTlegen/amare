@@ -84,8 +84,8 @@ export function useAuth() {
   return context
 }
 
-/** Человекочитаемое название роли — используется в шапке кабинета. */
-export const ROLE_LABEL: Record<CareRole, string> = {
-  patient: 'Пациент',
-  guardian: 'Опекун',
+/** Ключ названия роли в словаре cabinet — подпись рисует шапка кабинета. */
+export const ROLE_KEY: Record<CareRole, 'role.patient' | 'role.guardian'> = {
+  patient: 'role.patient',
+  guardian: 'role.guardian',
 }

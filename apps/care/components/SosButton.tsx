@@ -2,22 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Phone, TriangleAlert, X } from 'lucide-react'
+import { useContent, useContentList, useT } from '@amare/i18n/react'
 
-const SIGNS = [
-  { letter: 'У', title: 'Улыбка', text: 'Попросите улыбнуться. Один угол рта не поднимается.' },
-  { letter: 'Д', title: 'Движение', text: 'Попросите поднять обе руки. Одна опускается.' },
-  { letter: 'А', title: 'Артикуляция', text: 'Попросите повторить фразу. Речь невнятная.' },
-  { letter: 'Р', title: 'Решение', text: 'Есть хоть один признак — звоните 103 немедленно.' },
-]
+/** Порядок признаков. Буквы и тексты лежат в словаре: мнемоника у каждого языка своя. */
+const SIGN_IDS = ['smile', 'move', 'speech', 'act'] as const
 
-const BEFORE_AMBULANCE = [
-  'Уложите человека, приподняв голову и плечи. Не давайте вставать.',
-  'Не давайте еду, питьё и лекарства — при инсульте нарушено глотание.',
-  'Расстегните тесную одежду, откройте окно.',
-  'Если рвота — поверните голову набок.',
-  'Запомните время, когда человек был в норме последний раз: врачи считают срок от него.',
-  'Соберите документы и список принимаемых лекарств к приезду бригады.',
-]
+/** Единый номер скорой помощи в Казахстане. */
+const EMERGENCY_PHONE = '103'
 
 /**
  * Кнопка SOS (P-06 ТЗ).
@@ -37,6 +28,9 @@ const BEFORE_AMBULANCE = [
  * что сигнал ушёл, опаснее, чем честно об этом написать.
  */
 export function SosButton() {
+  const t = useT('cabinet')
+  const text = useContent('cabinet')
+  const list = useContentList('cabinet')
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [open, setOpen] = useState(false)
 
@@ -61,18 +55,18 @@ export function SosButton() {
       <dialog
         ref={dialogRef}
         onClose={() => setOpen(false)}
-        aria-label="Признаки инсульта и вызов скорой"
+        aria-label={t('sos.open')}
         className="m-auto max-h-[90dvh] w-[min(40rem,92vw)] overflow-y-auto overscroll-contain rounded-3xl border border-line bg-bg p-0 text-ink backdrop:bg-ink/60"
       >
         <div className="flex flex-col gap-5 p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
             <h2 className="m-0 font-display text-2xl font-semibold tracking-[-0.04em]">
-              Признаки инсульта
+              {t('sos.signs')}
             </h2>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Закрыть"
+              aria-label={t('sos.close')}
               className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line"
             >
               <X className="h-5 w-5" aria-hidden="true" />
@@ -80,22 +74,24 @@ export function SosButton() {
           </div>
 
           <a
-            href="tel:103"
+            href={`tel:${EMERGENCY_PHONE}`}
             className="flex min-h-16 items-center justify-center gap-3 rounded-2xl bg-[rgb(179,38,30)] px-6 text-2xl font-bold text-white no-underline"
           >
             <Phone className="h-7 w-7" aria-hidden="true" />
-            Позвонить 103
+            {t('sos.call', { phone: EMERGENCY_PHONE })}
           </a>
 
           <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
-            {SIGNS.map((sign) => (
-              <li key={sign.letter} className="flex gap-4 rounded-2xl bg-surface px-5 py-4">
+            {SIGN_IDS.map((id) => (
+              <li key={id} className="flex gap-4 rounded-2xl bg-surface px-5 py-4">
                 <span className="font-display text-3xl font-bold leading-none text-[rgb(179,38,30)]">
-                  {sign.letter}
+                  {text(`sos.sign.${id}.letter`)}
                 </span>
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-lg font-semibold">{sign.title}</span>
-                  <span className="text-base leading-relaxed text-muted">{sign.text}</span>
+                  <span className="text-lg font-semibold">{text(`sos.sign.${id}.title`)}</span>
+                  <span className="text-base leading-relaxed text-muted">
+                    {text(`sos.sign.${id}.text`, { phone: EMERGENCY_PHONE })}
+                  </span>
                 </span>
               </li>
             ))}
@@ -103,10 +99,10 @@ export function SosButton() {
 
           <details className="rounded-2xl border border-line px-5 py-4">
             <summary className="cursor-pointer text-lg font-semibold">
-              Что делать до приезда скорой
+              {t('sos.before')}
             </summary>
             <ul className="mt-3 flex list-none flex-col gap-2 p-0">
-              {BEFORE_AMBULANCE.map((item) => (
+              {list('sos.steps').map((item) => (
                 <li key={item} className="text-base leading-relaxed text-ink/85">
                   — {item}
                 </li>
@@ -115,8 +111,7 @@ export function SosButton() {
           </details>
 
           <p className="m-0 rounded-2xl border border-accent bg-[rgb(253,238,237)] px-5 py-4 text-base leading-relaxed">
-            Демонстрационный режим: уведомление куратору и опекуну отсюда пока не уходит. Звоните
-            103 — это работает всегда.
+            {t('sos.demo', { phone: EMERGENCY_PHONE })}
           </p>
         </div>
       </dialog>

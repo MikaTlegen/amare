@@ -1,5 +1,6 @@
 import type { Namespace, Translation } from "../../types";
 import { booking } from "./booking";
+import { cabinet } from "./cabinet";
 import { common } from "./common";
 import { contacts } from "./contacts";
 import { course } from "./course";
@@ -19,6 +20,7 @@ import { quiz } from "./quiz";
 import { remote } from "./remote";
 import { pages } from "./pages";
 import { reviews } from "./reviews";
+import { staff } from "./staff";
 import { stories } from "./stories";
 import { ui } from "./ui";
 
@@ -31,6 +33,7 @@ import { ui } from "./ui";
  */
 export const kk: { [N in Namespace]: Translation<N> } = {
   booking,
+  cabinet,
   common,
   contacts,
   course,
@@ -50,6 +53,7 @@ export const kk: { [N in Namespace]: Translation<N> } = {
   quiz,
   remote,
   reviews,
+  staff,
   stories,
   ui,
 };

@@ -41,3 +41,35 @@ export function localeFromPath(path: string): Locale {
   const [, first] = path.split("/");
   return first && isLocale(first) ? first : DEFAULT_LOCALE;
 }
+
+/**
+ * Язык кабинетов хранится в браузере, а не в адресе.
+ *
+ * Кабинеты за логином и закрыты от индексации, поэтому префикс /kk/ им
+ * ничего не даёт, а число экспортируемых страниц удвоил бы. На сайте
+ * наоборот: там источник правды — только адрес, и сайт в это хранилище
+ * лишь пишет выбор человека, чтобы кабинет открылся на том же языке.
+ *
+ * На файловом хостинге сайт, /care/ и /staff/ лежат на одном домене,
+ * поэтому хранилище у них общее. В разработке (порты 3001–3003) — нет:
+ * то же ограничение, что у виджета доступности (docs/DECISIONS.md).
+ */
+export const LANG_STORAGE_KEY = "amare:lang";
+
+export function readStoredLocale(): Locale {
+  try {
+    const raw = localStorage.getItem(LANG_STORAGE_KEY);
+    return raw && isLocale(raw) ? raw : DEFAULT_LOCALE;
+  } catch {
+    // приватный режим или заблокированное хранилище — не повод падать
+    return DEFAULT_LOCALE;
+  }
+}
+
+export function writeStoredLocale(locale: Locale): void {
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, locale);
+  } catch {
+    // см. выше: выбор просто не переживёт перезагрузку
+  }
+}

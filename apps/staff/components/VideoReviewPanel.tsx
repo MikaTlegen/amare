@@ -2,19 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { Check, PlayCircle } from 'lucide-react'
-import { VERDICT_LABEL, type VideoReview, type VideoVerdict } from '@amare/api-client'
+import { VERDICT_KEY, type VideoReview, type VideoVerdict } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useContent, useT } from '@amare/i18n/react'
 import { getVideoReviews, reviewVideo } from '@/lib/mock'
 
 const VERDICTS: VideoVerdict[] = ['ok', 'partial', 'wrong']
 
 /** Быстрые ответы: 80% комментариев — это одно из четырёх предложений. */
-const QUICK = [
-  'Амплитуда меньше нужной — доводите движение до конца.',
-  'Темп слишком быстрый, делайте медленнее и без рывков.',
-  'Обязательно рядом с опорой и в присутствии близкого.',
-  'Всё верно, продолжайте в том же объёме.',
-]
+const QUICK_KEYS = ['verdict.amplitude', 'verdict.tempo', 'verdict.support', 'verdict.ok'] as const
 
 function duration(seconds: number): string {
   const min = Math.floor(seconds / 60)
@@ -31,6 +27,8 @@ function duration(seconds: number): string {
  * быстрые ответы и комментарий.
  */
 export function VideoReviewPanel() {
+  const t = useT('staff')
+  const text = useContent('staff')
   const [items, setItems] = useState<VideoReview[]>([])
   const [openId, setOpenId] = useState<string | null>(null)
   const [verdict, setVerdict] = useState<VideoVerdict>('ok')
@@ -81,11 +79,11 @@ export function VideoReviewPanel() {
                   {item.patientName} · {item.exercise}
                 </span>
                 <span className="text-base text-muted">
-                  {item.at} · запись {duration(item.seconds)}
+                  {item.at} · {t('video.recorded', { duration: duration(item.seconds) })}
                 </span>
                 {item.verdict && (
                   <span className="text-base font-medium text-brand">
-                    {VERDICT_LABEL[item.verdict]}
+                    {text(VERDICT_KEY[item.verdict])}
                   </span>
                 )}
               </div>
@@ -95,7 +93,11 @@ export function VideoReviewPanel() {
                 onClick={() => (openId === item.id ? setOpenId(null) : open(item))}
                 className="min-h-[3.2rem] shrink-0 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold transition-colors hover:border-ink"
               >
-                {openId === item.id ? 'Свернуть' : item.verdict ? 'Изменить' : 'Оценить'}
+                {openId === item.id
+                  ? t('video.collapse')
+                  : item.verdict
+                    ? t('video.edit')
+                    : t('video.rate')}
               </button>
             </div>
 
@@ -121,20 +123,20 @@ export function VideoReviewPanel() {
                           : 'border border-line text-muted hover:border-ink hover:text-ink',
                       )}
                     >
-                      {VERDICT_LABEL[value]}
+                      {text(VERDICT_KEY[value])}
                     </button>
                   ))}
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {QUICK.map((text) => (
+                  {QUICK_KEYS.map((key) => (
                     <button
-                      key={text}
+                      key={key}
                       type="button"
-                      onClick={() => setComment(text)}
+                      onClick={() => setComment(t(key))}
                       className="min-h-11 max-w-full rounded-2xl border border-line px-4 py-2.5 text-left text-sm text-muted [overflow-wrap:anywhere] hover:border-ink hover:text-ink sm:rounded-full"
                     >
-                      {text}
+                      {t(key)}
                     </button>
                   ))}
                 </div>
@@ -143,8 +145,8 @@ export function VideoReviewPanel() {
                   rows={3}
                   value={comment}
                   onChange={(event) => setComment(event.target.value)}
-                  placeholder="Что исправить в технике"
-                  aria-label="Комментарий пациенту"
+                  placeholder={t('video.technique')}
+                  aria-label={t('video.comment')}
                   className="rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
                 />
 
@@ -155,7 +157,7 @@ export function VideoReviewPanel() {
                   className="inline-flex min-h-[3.2rem] w-fit items-center gap-2 rounded-xl bg-deep px-6 py-3 text-base font-semibold text-white disabled:opacity-60"
                 >
                   <Check className="h-5 w-5" aria-hidden="true" />
-                  {busy ? 'Сохраняем…' : 'Отправить пациенту'}
+                  {busy ? t('video.saving') : t('video.send')}
                 </button>
               </div>
             )}

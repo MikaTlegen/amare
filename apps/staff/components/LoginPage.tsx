@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import type { LucideIcon } from 'lucide-react'
 import type { StaffRole } from '@amare/api-client'
 import { useAuth } from '@/auth/AuthContext'
@@ -56,6 +57,7 @@ function isStaffRole(value: string | null): value is StaffRole {
  * будет на самом деле.
  */
 export function LoginPage() {
+  const t = useT('staff')
   const { user, signIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -102,7 +104,7 @@ export function LoginPage() {
             На главную страницу
           </a>
           <h1 className="m-0 mt-2 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
-            Вход в рабочее место
+            {t('login.title')}
           </h1>
           <p className="m-0 max-w-[40em] text-lg leading-relaxed text-muted">
             Доступ выдаёт администратор клиники штатным специалистам. Общий вход клиники —{' '}

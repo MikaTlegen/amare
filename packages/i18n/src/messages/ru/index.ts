@@ -1,4 +1,5 @@
 import { booking } from "./booking";
+import { cabinet } from "./cabinet";
 import { common } from "./common";
 import { contacts } from "./contacts";
 import { course } from "./course";
@@ -18,6 +19,7 @@ import { quiz } from "./quiz";
 import { remote } from "./remote";
 import { pages } from "./pages";
 import { reviews } from "./reviews";
+import { staff } from "./staff";
 import { stories } from "./stories";
 import { ui } from "./ui";
 
@@ -27,6 +29,7 @@ import { ui } from "./ui";
  */
 export const ru = {
   booking,
+  cabinet,
   common,
   contacts,
   course,
@@ -46,6 +49,7 @@ export const ru = {
   quiz,
   remote,
   reviews,
+  staff,
   stories,
   ui,
 } as const;

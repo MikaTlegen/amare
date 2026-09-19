@@ -5,6 +5,7 @@ import { Check, ClipboardCheck, Phone, TriangleAlert, Video } from 'lucide-react
 import type { LucideIcon } from 'lucide-react'
 import type { StaffTask } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useT } from '@amare/i18n/react'
 import { closeTask } from '@/lib/mock'
 
 const TASK_ICON: Record<StaffTask['kind'], LucideIcon> = {
@@ -24,6 +25,7 @@ export function TaskQueue({
   onTasksChange: (next: StaffTask[]) => void
   onOpenPatient: (patientId: string) => void
 }) {
+  const t = useT('staff')
   const [busy, setBusy] = useState<string | null>(null)
 
   const done = async (id: string) => {
@@ -74,7 +76,7 @@ export function TaskQueue({
                   onClick={() => onOpenPatient(task.patientId)}
                   className="min-h-[3rem] flex-1 rounded-xl border-[1.5px] border-line px-4 py-3 text-base font-semibold transition-colors hover:border-ink sm:flex-none sm:px-5"
                 >
-                  Открыть карточку
+                  {t('queue.open')}
                 </button>
                 <button
                   type="button"
@@ -82,7 +84,7 @@ export function TaskQueue({
                   disabled={busy === task.id}
                   className="min-h-[3rem] flex-1 rounded-xl bg-deep px-4 py-3 text-base font-semibold text-white disabled:opacity-60 sm:flex-none sm:px-5"
                 >
-                  {busy === task.id ? 'Закрываем…' : 'Выполнено'}
+                  {busy === task.id ? t('queue.closing') : t('queue.done')}
                 </button>
               </div>
             </li>
@@ -92,14 +94,14 @@ export function TaskQueue({
 
       {open.length === 0 && (
         <p className="m-0 rounded-3xl border border-line bg-surface p-6 text-lg text-muted">
-          Открытых задач нет.
+          {t('queue.empty')}
         </p>
       )}
 
       {closed.length > 0 && (
         <section className="flex flex-col gap-2.5">
           <h2 className="m-0 font-display text-lg font-medium tracking-[-0.035em] text-muted">
-            Закрытые сегодня
+            {t('queue.closedToday')}
           </h2>
           <ul className="m-0 flex list-none flex-col gap-2 p-0">
             {closed.map((task) => (

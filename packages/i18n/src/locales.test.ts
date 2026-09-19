@@ -1,5 +1,13 @@
-import { describe, expect, it } from "vitest";
-import { localeFromPath, localeHref, stripLocale } from "./locales";
+import { describe, expect, it, vi } from "vitest";
+import {
+  DEFAULT_LOCALE,
+  LANG_STORAGE_KEY,
+  localeFromPath,
+  localeHref,
+  readStoredLocale,
+  stripLocale,
+  writeStoredLocale,
+} from "./locales";
 
 describe("localeHref", () => {
   it("русский остаётся без префикса", () => {
@@ -49,5 +57,41 @@ describe("localeFromPath", () => {
     expect(localeFromPath("/kk/vrachi")).toBe("kk");
     expect(localeFromPath("/vrachi")).toBe("ru");
     expect(localeFromPath("/")).toBe("ru");
+  });
+});
+
+describe("хранилище языка", () => {
+  it("неизвестное значение откатывается на язык по умолчанию", () => {
+    const store = new Map<string, string>();
+    vi.stubGlobal("localStorage", {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => void store.set(key, value),
+    });
+
+    expect(readStoredLocale()).toBe(DEFAULT_LOCALE);
+
+    writeStoredLocale("kk");
+    expect(readStoredLocale()).toBe("kk");
+
+    store.set(LANG_STORAGE_KEY, "de");
+    expect(readStoredLocale()).toBe(DEFAULT_LOCALE);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("недоступное хранилище не роняет страницу", () => {
+    vi.stubGlobal("localStorage", {
+      getItem: () => {
+        throw new Error("приватный режим");
+      },
+      setItem: () => {
+        throw new Error("приватный режим");
+      },
+    });
+
+    expect(readStoredLocale()).toBe(DEFAULT_LOCALE);
+    expect(() => writeStoredLocale("kk")).not.toThrow();
+
+    vi.unstubAllGlobals();
   });
 });

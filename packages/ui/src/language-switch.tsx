@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { LOCALES, localeHref, stripLocale, type Locale } from '@amare/i18n/locales'
+import { LOCALES, localeHref, stripLocale, writeStoredLocale, type Locale } from '@amare/i18n/locales'
 import { useLocale, useT } from '@amare/i18n/react'
 import { cn } from './cn'
 
@@ -81,6 +81,8 @@ export function LanguageSwitch({
           <a
             key={code}
             href={localeHref(code, path)}
+            // Кабинеты живут без префикса локали и читают выбор из хранилища
+            onClick={() => writeStoredLocale(code)}
             hrefLang={code}
             aria-current={current ? 'page' : undefined}
             className={cn(className, 'no-underline')}

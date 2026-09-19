@@ -6,10 +6,11 @@ export type PatientStatus = 'red' | 'orange' | 'green'
 /** Дней без занятий в неделю, после которых пациент перестаёт быть «по плану». */
 const MISSED_DAYS_LIMIT = 2
 
-export const STATUS_LABEL: Record<PatientStatus, string> = {
-  red: 'Критический сигнал',
-  orange: 'Требует внимания',
-  green: 'По плану',
+/** Ключ подписи статуса в словаре staff — текст рисует компонент. */
+export const STATUS_KEY: Record<PatientStatus, string> = {
+  red: 'status.red',
+  orange: 'status.orange',
+  green: 'status.green',
 }
 
 /** Цвет рамки карточки и точки в списке. Держим рядом, чтобы не разъехались. */

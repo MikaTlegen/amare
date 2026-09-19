@@ -4,6 +4,8 @@ import type { ReactNode } from 'react'
 import { House, LogOut, UserRound } from 'lucide-react'
 import { useT } from '@amare/i18n/react'
 import { AccessibilityMenu } from './accessibility-menu'
+import { useSetCabinetLocale } from './cabinet-locale'
+import { LanguageSwitch } from './language-switch'
 import { cn } from './cn'
 
 export interface Tab {
@@ -59,6 +61,7 @@ export function CabinetShell({
   children,
 }: Props) {
   const t = useT('ui')
+  const setLocale = useSetCabinetLocale()
 
   return (
     <div className="flex min-h-dvh flex-col bg-bg">
@@ -70,9 +73,11 @@ export function CabinetShell({
               {subtitle && <p className="m-0 text-base text-muted">{subtitle}</p>}
             </div>
 
-            {/* Размер шрифта и контраст нужны в кабинете не меньше, чем на сайте:
-                этим кабинетом пользуется сам пациент после инсульта (S-13) */}
-            <div className="shrink-0">
+            {/* Размер шрифта, контраст и язык нужны в кабинете не меньше, чем на
+                сайте: этим кабинетом пользуется сам пациент после инсульта (S-13).
+                Язык здесь переключается без смены адреса — кабинет за логином. */}
+            <div className="flex shrink-0 items-center gap-2">
+              <LanguageSwitch onChange={setLocale} />
               <AccessibilityMenu />
             </div>
 
