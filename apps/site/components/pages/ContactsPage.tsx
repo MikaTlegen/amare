@@ -17,7 +17,7 @@ export function ContactsPage() {
         objectPosition="center 60%"
       />
 
-      <section className="container-content grid gap-8 py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
+      <section className="container-content grid gap-8 pt-16 lg:grid-cols-12 lg:gap-10 lg:pt-20">
         <div className="flex flex-col gap-8 lg:col-span-5">
           <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
@@ -59,7 +59,7 @@ export function ContactsPage() {
         </div>
 
         <div className="flex flex-col gap-8 lg:col-span-7">
-          <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
+          <article className="flex h-full flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
@@ -80,9 +80,16 @@ export function ContactsPage() {
               <Button to={ROUTES.booking}>Записаться</Button>
             </div>
           </article>
-
-          <ClinicMap />
         </div>
+      </section>
+
+      {/*
+       * Карта во всю ширину контента: внутри колонки lg:col-span-7 карточке
+       * адреса доставалось ~19% ширины страницы и номер телефона переносился
+       * на две строки.
+       */}
+      <section className="container-content pb-16 pt-8 lg:pb-20 lg:pt-10">
+        <ClinicMap />
       </section>
     </>
   )

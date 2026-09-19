@@ -40,7 +40,7 @@ export function ClinicMap({ className }: { className?: string }) {
               key={phone.href}
               href={phone.href}
               className={cn(
-                'tap-target inline-flex items-center gap-3 no-underline',
+                'tap-target inline-flex items-center gap-3 whitespace-nowrap no-underline',
                 phone.primary ? 'text-xl font-semibold text-ink' : 'text-base text-muted',
               )}
             >
