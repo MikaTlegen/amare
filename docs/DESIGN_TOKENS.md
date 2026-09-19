@@ -9,8 +9,8 @@
 | --- | --- |
 | `packages/ui/src/styles/tokens.css` | палитра RGB-тройками `--c-*`, контрастная тема, `--font-scale` |
 | `packages/ui/src/styles/theme.css` | тема Tailwind v4: цвета, шрифты, радиусы, `max-w-content`, `animate-pulse-ring` |
-| `packages/ui/src/styles/base.css` | кегль 18px, фокус, `prefers-reduced-motion`, цвет рамок |
-| `packages/ui/src/styles/components.css` | `container-content`, `gradient-border` |
+| `packages/ui/src/styles/base.css` | кегль 18px, фокус, `prefers-reduced-motion`, цвет рамок, перенос длинных слов в заголовках, отступ якорей под шапку, запрет горизонтальной прокрутки на телефоне |
+| `packages/ui/src/styles/components.css` | `container-content`, `tap-target` (зона нажатия 44px), `gradient-border` |
 | `packages/ui/src/tokens/palette.ts` | та же палитра данными (для графиков) и `contrastRatio` |
 | `packages/ui/src/tokens/palette.test.ts` | сверка CSS ↔ TS и проверка контраста |
 | `packages/ui/src/logo.tsx` | `Logo`, `LogoMark` |
