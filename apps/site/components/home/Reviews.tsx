@@ -1,5 +1,6 @@
 import { ExternalLink, Quote, Star } from 'lucide-react'
-import { Button, Reveal, SectionHeading } from '@amare/ui'
+import { Reveal, SectionHeading } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
 import { REVIEWS, REVIEWS_SUMMARY } from '@/data/reviews'
 

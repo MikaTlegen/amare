@@ -1,5 +1,5 @@
 import { Reveal } from '@amare/ui'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
 
 /**

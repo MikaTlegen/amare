@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { SiteLogo } from './SiteLogo'
 import { CABINETS, CLINIC, ROUTES } from '@/lib/clinic'
 

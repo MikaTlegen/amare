@@ -6,6 +6,13 @@ const CARE_URL = (process.env.NEXT_PUBLIC_CARE_URL ?? "http://localhost:3002").r
 // Сборка для файлового хостинга (FTP, отдача статики): STATIC_EXPORT=1 pnpm build
 const isStaticExport = process.env.STATIC_EXPORT === "1";
 
+// Кабинетные пути ведут в care в обеих локалях: /vhod и /kk/vhod — один и тот же кабинет
+const cabinetRedirects = (prefix: string) => [
+  { source: `${prefix}/vhod`, destination: `${CARE_URL}/vhod`, permanent: false },
+  { source: `${prefix}/kabinet`, destination: `${CARE_URL}/kabinet`, permanent: false },
+  { source: `${prefix}/kabinet/:path*`, destination: `${CARE_URL}/kabinet/:path*`, permanent: false },
+];
+
 const nextConfig: NextConfig = {
   // Общие пакеты монорепо поставляются исходниками TS
   transpilePackages: ["@amare/ui", "@amare/i18n"],
@@ -20,11 +27,7 @@ const nextConfig: NextConfig = {
 
   // Старые пути входа и кабинетов из набросков ведут в care, чтобы ссылки не ломались
   async redirects() {
-    return [
-      { source: "/vhod", destination: `${CARE_URL}/vhod`, permanent: false },
-      { source: "/kabinet", destination: `${CARE_URL}/kabinet`, permanent: false },
-      { source: "/kabinet/:path*", destination: `${CARE_URL}/kabinet/:path*`, permanent: false },
-    ];
+    return [...cabinetRedirects(""), ...cabinetRedirects("/kk")];
   },
 };
 

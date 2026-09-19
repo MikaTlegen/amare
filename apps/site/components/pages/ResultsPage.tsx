@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- фото «до/после»; next/image — отдельная задача */
 import { Info } from 'lucide-react'
-import { Button, Reveal } from '@amare/ui'
+import { Reveal } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { RECOVERY_STORIES } from '@/data/stories'
 import { CLINIC, ROUTES, whatsappLink } from '@/lib/clinic'

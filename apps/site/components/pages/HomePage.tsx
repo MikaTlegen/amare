@@ -1,9 +1,9 @@
 'use client'
 
-import Link from 'next/link'
+import { Button, Link } from '@/components/Links'
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowDownRight, ArrowRight, Phone } from 'lucide-react'
-import { Button, Reveal } from '@amare/ui'
+import { Reveal } from '@amare/ui'
 import { COURSE_STEPS, FACTS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
 import { DoctorsCarousel } from '@/components/home/DoctorsCarousel'

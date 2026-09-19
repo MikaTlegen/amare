@@ -1,9 +1,9 @@
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { ArrowRight, MessageCircle } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { ParallaxBand } from '@amare/ui'
 import { Reveal } from '@amare/ui'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { COURSE_STEPS, FORMATS } from '@/data/course'
 import { CLINIC, PRICES, ROUTES, whatsappLink } from '@/lib/clinic'
 

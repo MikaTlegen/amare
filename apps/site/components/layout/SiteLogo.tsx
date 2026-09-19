@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { Logo, type LogoProps } from '@amare/ui'
 import { ROUTES } from '@/lib/clinic'
 

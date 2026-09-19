@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element -- перенос 1:1 из набросков; next/image — отдельная задача */
 import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
-import { Button } from '@amare/ui'
-import Link from 'next/link'
+import { Button } from '@/components/Links'
+import { Link } from '@/components/Links'
 import { ArrowRight } from 'lucide-react'
 import { DIRECTIONS } from '@/data/directions'
 import { CONDITION_LIST, DOCTORS } from '@/data/doctors'

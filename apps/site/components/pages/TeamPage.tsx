@@ -1,12 +1,12 @@
 'use client'
 
 /* eslint-disable @next/next/no-img-element -- перенос 1:1 из набросков; next/image — отдельная задача */
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { CalendarDays, X, Award } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { DOCTORS, TEAM_ROLES, CONDITION_LIST, type ConditionId } from '@/data/doctors'
 import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { UserRound } from 'lucide-react'
 import { ROUTES } from '@/lib/clinic'
 

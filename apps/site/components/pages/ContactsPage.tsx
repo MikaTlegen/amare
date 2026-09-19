@@ -1,5 +1,5 @@
 import { Camera, Clock, MapPin, MessageCircle, Phone } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'

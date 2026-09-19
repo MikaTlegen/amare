@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { useReducedMotion } from 'motion/react'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'

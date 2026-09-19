@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { usePathname } from 'next/navigation'
+import { stripLocale } from '@amare/i18n/locales'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Menu, X, UserRound } from 'lucide-react'
 import { SiteLogo } from './SiteLogo'
@@ -35,7 +36,8 @@ const NAV = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const pathname = usePathname()
+  // Маршруты в ROUTES без префикса локали: на /kk/ его надо снять
+  const pathname = stripLocale(usePathname())
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)

@@ -1,8 +1,9 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { stripLocale } from '@amare/i18n/locales'
 import { Construction } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
@@ -45,7 +46,8 @@ const TITLES: Record<string, { title: string; note: string }> = {
 }
 
 export function StubPage() {
-  const pathname = usePathname()
+  // Маршруты в ROUTES без префикса локали: на /kk/ его надо снять
+  const pathname = stripLocale(usePathname())
   const page = TITLES[pathname] ?? {
     title: 'Раздел готовится',
     note: 'Страница появится в ближайшее время.',

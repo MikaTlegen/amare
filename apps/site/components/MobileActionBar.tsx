@@ -1,5 +1,5 @@
 import { Phone, CalendarCheck } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
 /**

@@ -1,5 +1,5 @@
 import { Home, MonitorSmartphone, Route, Video } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
 

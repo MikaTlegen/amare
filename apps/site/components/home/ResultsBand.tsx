@@ -1,5 +1,5 @@
 import { ParallaxBand } from '@amare/ui'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { Reveal } from '@amare/ui'
 import { BarthelChart } from '@amare/ui'
 import { DEMO_PROGRESS, PROGRESS_SUMMARY } from '@/data/progress'

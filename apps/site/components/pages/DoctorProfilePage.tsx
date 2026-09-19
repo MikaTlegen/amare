@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { ArrowLeft, CalendarDays, Clock3 } from 'lucide-react'
 import { AppointmentPicker } from '@/components/booking/AppointmentPicker'
 import { DOCTORS } from '@/data/doctors'

@@ -1,5 +1,5 @@
 import { Phone } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { FAQ } from '@/data/faq'
 import { CLINIC, ROUTES } from '@/lib/clinic'

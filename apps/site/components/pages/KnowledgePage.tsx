@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- иллюстрации статей; next/image — отдельная задача */
 import { AlertTriangle, Phone } from 'lucide-react'
-import { Button, cn } from '@amare/ui'
+import { cn } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { KNOWLEDGE } from '@/data/knowledge'
 import { CLINIC, ROUTES } from '@/lib/clinic'

@@ -1,5 +1,5 @@
 import { ExternalLink, ShieldCheck, Star } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { REVIEWS, REVIEWS_SUMMARY } from '@/data/reviews'
 import { CLINIC, ROUTES } from '@/lib/clinic'

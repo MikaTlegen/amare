@@ -10,7 +10,11 @@ import { describe, expect, it } from "vitest";
  */
 
 const componentsDir = fileURLToPath(new URL(".", import.meta.url));
-const layout = readFileSync(fileURLToPath(new URL("../app/layout.tsx", import.meta.url)), "utf8");
+// Корневых макетов два: у каждой локали свой <html lang> (см. app/(ru) и app/(kk))
+const layouts = ["(ru)", "(kk)"].map((group) => ({
+  name: `app/${group}/layout.tsx`,
+  text: readFileSync(fileURLToPath(new URL(`../app/${group}/layout.tsx`, import.meta.url)), "utf8"),
+}));
 
 const sources = readdirSync(componentsDir, { recursive: true, encoding: "utf8" })
   .filter((name) => name.endsWith(".tsx"))
@@ -41,12 +45,12 @@ describe("боковые отступы", () => {
   });
 });
 
-describe("app/layout.tsx", () => {
+describe.each(layouts)("$name", ({ text }) => {
   it("объявляет viewport-fit=cover — иначе env(safe-area-inset-*) на iOS равен нулю", () => {
-    expect(layout).toMatch(/viewportFit:\s*"cover"/);
+    expect(text).toMatch(/viewportFit:\s*'cover'/);
   });
 
   it("не запрещает масштабирование пальцами (S-13)", () => {
-    expect(layout).not.toMatch(/userScalable|maximumScale/);
+    expect(text).not.toMatch(/userScalable|maximumScale/);
   });
 });

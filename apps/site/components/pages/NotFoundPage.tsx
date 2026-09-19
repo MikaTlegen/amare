@@ -1,4 +1,4 @@
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
 /**

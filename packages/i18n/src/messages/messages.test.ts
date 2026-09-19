@@ -13,7 +13,7 @@ import { ru } from "./ru";
  */
 
 /** Пространства имён, объявленные переведёнными: в них пропуск ключа — ошибка. */
-const COMPLETE: readonly Namespace[] = ["common", "footer", "nav", "ui"];
+const COMPLETE: readonly Namespace[] = ["common", "contacts", "footer", "meta", "nav", "ui"];
 
 const entries = (dictionary: Record<string, unknown>) => Object.entries(dictionary);
 
