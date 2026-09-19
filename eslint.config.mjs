@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 // Общий конфиг линтера для всего монорепо
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/.next/**", "**/.turbo/**", "**/coverage/**", "**/next-env.d.ts"],
+    ignores: ["**/dist/**", "**/.next/**", "**/out/**", "**/.turbo/**", "**/coverage/**", "**/next-env.d.ts"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
