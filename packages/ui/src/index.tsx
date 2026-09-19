@@ -12,6 +12,7 @@ export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
 export { ParallaxBand } from "./parallax-band";
 export { Reveal } from "./reveal";
 export { SectionHeading } from "./section-heading";
+export { SpinningFavicon } from "./spinning-favicon";
 export {
   COLOR_TOKENS,
   contrastRatio,

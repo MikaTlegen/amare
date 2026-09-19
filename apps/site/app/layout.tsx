@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { SpinningFavicon } from "@amare/ui";
 import { ContactFab } from "@/components/ContactFab";
 import { CookieBanner } from "@/components/CookieBanner";
 import { Footer } from "@/components/layout/Footer";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru" className={`${unbounded.variable} ${onest.variable}`}>
       <body>
+        <SpinningFavicon />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(CLINIC_JSON_LD) }} />
 
         {/* Ссылка для клавиатуры: первый Tab — пропустить навигацию */}
