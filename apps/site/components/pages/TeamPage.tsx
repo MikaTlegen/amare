@@ -3,12 +3,12 @@
 /* eslint-disable @next/next/no-img-element -- перенос 1:1 из набросков; next/image — отдельная задача */
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { CalendarDays, X, Award } from 'lucide-react'
+import { ArrowRight, CalendarDays, X, Award } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
 import { Button } from '@amare/ui'
 import { DOCTORS, TEAM_ROLES, CONDITION_LIST, type ConditionId } from '@/data/doctors'
-import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
+import { CLINIC, PRICES, ROUTES, bookingLink } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 /**
@@ -44,30 +44,10 @@ export function TeamPage() {
       />
 
       {/*
-        Основатель. Фото намеренно нет: в материалах не было портрета
-        Асемгуль Амирбековны, а подставлять сюда снимок другого
-        сотрудника — прямой обман.
+        Блока «Основатель клиники» здесь нет намеренно: слово основателя
+        стоит на главной (components/home/FounderWord), дублировать его
+        на странице врачей незачем.
       */}
-      <section className="container-content pt-12">
-        <Reveal
-          as="article"
-          className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-7 sm:p-9"
-        >
-          <span className="text-sm font-semibold uppercase tracking-widest text-accent">
-            Основатель клиники
-          </span>
-          <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em] sm:text-3xl">
-            Асемгуль Амирбековна
-          </h2>
-          <p className="m-0 max-w-[44em] text-lg leading-relaxed text-ink/80">
-            «[ЦИТАТА ОСНОВАТЕЛЯ — 2–3 предложения о том, почему была открыта клиника и что значит
-            предотвратить инвалидность]»
-          </p>
-          <span className="text-base text-muted">
-            [Должность, квалификация и портрет — прислать из клиники]
-          </span>
-        </Reveal>
-      </section>
 
       {/* Фильтр по состоянию */}
       <section className="container-content flex flex-col gap-4 pt-10">
@@ -117,7 +97,7 @@ export function TeamPage() {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {doctors.map((doctor, i) => (
             <Reveal as="li" key={doctor.id} delay={i * 0.05}>
-              <article className="gradient-border group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface">
+              <article className="gradient-border group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-surface">
                 <div className="aspect-4/5 overflow-hidden bg-tint">
                   {doctor.photo ? (
                     <img
@@ -148,12 +128,25 @@ export function TeamPage() {
                     Сертификат
                   </span>
 
+                  {/*
+                    Растянутая ссылка: нажатие в любом месте карточки ведёт
+                    на запись к этому врачу. Ссылка одна — вложенных <a> нет.
+                  */}
                   <Link
-                    href={`${ROUTES.team}/${doctor.id}`}
-                    className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline"
+                    href={bookingLink(doctor.id)}
+                    className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline after:absolute after:inset-0 after:content-['']"
                   >
                     <CalendarDays className="h-4 w-4" aria-hidden="true" />
                     Записаться
+                  </Link>
+
+                  {/* Профиль врача остаётся доступен: эта ссылка лежит поверх растянутой. */}
+                  <Link
+                    href={`${ROUTES.team}/${doctor.id}`}
+                    className="relative z-10 mt-2 inline-flex w-fit items-center gap-1.5 text-base font-medium text-deep"
+                  >
+                    Подробнее о враче
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
               </article>
@@ -168,12 +161,15 @@ export function TeamPage() {
           <h2 className="m-0 font-display text-2xl font-medium leading-[1.16] tracking-[-0.045em] sm:text-3xl sm:leading-9">
             И специалисты, которые ведут занятия каждый день
           </h2>
-          <ul className="flex flex-wrap gap-2.5">
-            {TEAM_ROLES.map((role) => (
-              <li
-                key={role}
-                className="rounded-full bg-tint px-4 py-2.5 text-base font-medium text-deep"
-              >
+          {/*
+            Список ролей — перечисление, а не набор действий. Плашки
+            читались как кнопки, поэтому здесь обычный текст с точками
+            в качестве разделителя.
+          */}
+          <ul className="m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1.5 p-0 text-lg text-deep">
+            {TEAM_ROLES.map((role, i) => (
+              <li key={role} className="flex items-center gap-3">
+                {i > 0 && <span className="text-line" aria-hidden="true">·</span>}
                 {role}
               </li>
             ))}

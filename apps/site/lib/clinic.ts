@@ -119,3 +119,8 @@ export const MAP = {
 export function whatsappLink(text?: string): string {
   return text ? `${CLINIC.whatsapp}?text=${encodeURIComponent(text)}` : CLINIC.whatsapp
 }
+
+/** Запись к конкретному специалисту: страница записи с преднастроенным врачом. */
+export function bookingLink(doctorId: string): string {
+  return `${ROUTES.booking}?doctor=${encodeURIComponent(doctorId)}`
+}

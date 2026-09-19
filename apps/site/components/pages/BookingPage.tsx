@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle2, MapPin, Video, Home } from 'lucide-react'
+import { CheckCircle2, MapPin, Video, Home, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { AppointmentPicker } from '@/components/booking/AppointmentPicker'
 import { Button } from '@amare/ui'
 import { getSlots, createBooking, type Slot } from '@/lib/booking'
 import { DOCTORS } from '@/data/doctors'
-import { CLINIC, PRICES } from '@/lib/clinic'
+import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 const FORMATS: { id: Slot['format']; label: string; price: string; Icon: LucideIcon }[] = [
@@ -54,7 +55,16 @@ export function BookingPage() {
     void getSlots().then(setSlots)
   }, [])
 
-  const visible = slots.filter((slot) => slot.format === format)
+  /*
+   * ?doctor=<id> приходит с карточки врача. Показываем только его слоты,
+   * иначе человек, нажавший «Записаться» у конкретного специалиста,
+   * попадёт в общий список и выберет чужое время.
+   * Неизвестный id фильтр не включает — лучше общий список, чем пустая страница.
+   */
+  const doctor = DOCTORS.find((item) => item.id === params.get('doctor'))
+  const visible = slots.filter(
+    (slot) => slot.format === format && (!doctor || slot.doctorId === doctor.id),
+  )
   const chosen = slots.find((slot) => slot.id === slotId)
   const chosenDoctor = chosen && DOCTORS.find((doctor) => doctor.id === chosen.doctorId)
 
@@ -134,6 +144,19 @@ export function BookingPage() {
                 <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
                   2. Дата и время
                 </legend>
+
+                {doctor && (
+                  <p className="m-0 flex flex-wrap items-center gap-3 text-base text-muted">
+                    Показано время только к специалисту: {doctor.name}, {doctor.role.toLowerCase()}
+                    <Link
+                      href={ROUTES.booking}
+                      className="inline-flex min-h-[2.6rem] items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-base font-medium text-ink no-underline"
+                    >
+                      <X className="h-4 w-4" aria-hidden="true" />
+                      Показать всех
+                    </Link>
+                  </p>
+                )}
 
                 <AppointmentPicker slots={visible} selectedId={slotId} onSelect={setSlotId} />
 

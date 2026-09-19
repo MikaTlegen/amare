@@ -118,12 +118,16 @@ export function CoursePage() {
       </section>
 
       <section className="container-content pb-14">
+        {/*
+          Кадр по верхней трети: вывеска «amare.kz» и входная группа.
+          При center 62% в широкую полосу попадал только козырёк над дверью.
+        */}
         <ParallaxBand
-          image="/photos/facade.jpg"
-          alt="Вход в клинику Amare"
+          image="/photos/facade-sign.webp"
+          alt="Фасад клиники Amare с вывеской и входной группой"
           scrim="side"
           strength={14}
-          objectPosition="center 62%"
+          objectPosition="center 22%"
           className="rounded-3xl"
         >
           <div className="flex max-w-136 flex-col items-start gap-4 p-8 sm:p-10">

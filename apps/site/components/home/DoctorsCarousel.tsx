@@ -5,13 +5,16 @@ import Link from 'next/link'
 import { useReducedMotion } from 'motion/react'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
-import { ROUTES } from '@/lib/clinic'
+import { bookingLink } from '@/lib/clinic'
 
-const AUTO_SCROLL_INTERVAL = 2_000
+/** Первый сдвиг — через секунду после загрузки, дальше раз в три секунды. */
+const AUTO_SCROLL_DELAY = 1_000
+const AUTO_SCROLL_INTERVAL = 3_000
 
 /** Компактная бесконечная лента специалистов с ручным управлением. */
 export function DoctorsCarousel() {
   const trackRef = useRef<HTMLDivElement>(null)
+  const delayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const reduced = useReducedMotion()
   const doctors = [...DOCTORS, ...DOCTORS]
@@ -39,6 +42,10 @@ export function DoctorsCarousel() {
   }, [getStep])
 
   const stopAutoScroll = useCallback(() => {
+    if (delayRef.current) {
+      clearTimeout(delayRef.current)
+      delayRef.current = null
+    }
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
@@ -48,7 +55,12 @@ export function DoctorsCarousel() {
   const startAutoScroll = useCallback(() => {
     stopAutoScroll()
     if (reduced) return
-    intervalRef.current = setInterval(() => move(1), AUTO_SCROLL_INTERVAL)
+    // Секунда паузы перед первым сдвигом: страница успевает дорисоваться,
+    // и лента не дёргается прямо под курсором читающего.
+    delayRef.current = setTimeout(() => {
+      move(1)
+      intervalRef.current = setInterval(() => move(1), AUTO_SCROLL_INTERVAL)
+    }, AUTO_SCROLL_DELAY)
   }, [move, reduced, stopAutoScroll])
 
   useEffect(() => {
@@ -74,7 +86,7 @@ export function DoctorsCarousel() {
             key={`${doctor.id}-${index}`}
             data-doctor-card
             aria-hidden={index >= DOCTORS.length}
-            className='gradient-border group flex w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-line bg-surface lg:min-w-0'
+            className='gradient-border group relative flex w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-line bg-surface lg:min-w-0'
           >
             <div className='aspect-4/5 overflow-hidden bg-tint'>
               {doctor.photo ? (
@@ -95,10 +107,11 @@ export function DoctorsCarousel() {
               <span className='text-base text-muted'>{doctor.role}</span>
               <span className='text-base font-medium text-accent'>{doctor.experience}</span>
 
+              {/* Растянутая ссылка: нажатие в любом месте карточки ведёт на запись к этому врачу. */}
               <Link
-                href={ROUTES.team + '/' + doctor.id}
+                href={bookingLink(doctor.id)}
                 tabIndex={index >= DOCTORS.length ? -1 : undefined}
-                className='mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline'
+                className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline after:absolute after:inset-0 after:content-['']"
               >
                 <CalendarDays className='h-4 w-4' aria-hidden='true' />
                 Записаться
