@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { Eye, Type, Contrast } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { cn } from './cn'
 
 const SCALES = [1, 1.15, 1.3] as const
@@ -35,6 +36,7 @@ function loadPrefs(): Prefs {
  * не должен включать его при каждом заходе.
  */
 export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
+  const t = useT('ui')
   const [prefs, setPrefs] = useState<Prefs>({ scaleIndex: 0, highContrast: false })
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
       <Popover.Trigger asChild>
         <button
           type="button"
-          aria-label="Настройки доступности: размер шрифта и контраст"
+          aria-label={t('a11y.trigger')}
           className={cn(
             'inline-flex h-11 items-center gap-2 rounded-xl border-[1.5px] px-3 text-base font-medium transition-colors',
             onDark
@@ -79,12 +81,12 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
           collisionPadding={16}
           className="z-50 w-[min(19rem,calc(100vw_-_2rem))] rounded-2xl border border-line bg-surface p-4 text-ink shadow-2xl sm:p-5"
         >
-          <h2 className="font-display text-lg font-medium tracking-tight">Удобство чтения</h2>
+          <h2 className="font-display text-lg font-medium tracking-tight">{t('a11y.title')}</h2>
 
           <div className="mt-4">
             <label htmlFor="a11y-scale" className="flex items-center gap-2 text-base font-medium">
               <Type className="h-5 w-5 text-brand" aria-hidden="true" />
-              Размер текста
+              {t('a11y.textSize')}
             </label>
             <input
               id="a11y-scale"
@@ -97,9 +99,9 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
               className="mt-3 w-full accent-[rgb(var(--c-accent))]"
             />
             <div className="mt-1 flex justify-between text-sm text-muted">
-              <span>Обычный</span>
-              <span>Крупнее</span>
-              <span>Максимум</span>
+              <span>{t('a11y.scaleNormal')}</span>
+              <span>{t('a11y.scaleLarger')}</span>
+              <span>{t('a11y.scaleMax')}</span>
             </div>
           </div>
 
@@ -111,12 +113,11 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
               className="h-5 w-5 accent-[rgb(var(--c-accent))]"
             />
             <Contrast className="h-5 w-5 text-brand" aria-hidden="true" />
-            <span className="text-base font-medium">Высокий контраст</span>
+            <span className="text-base font-medium">{t('a11y.highContrast')}</span>
           </label>
 
           <p className="mt-4 text-sm leading-relaxed text-muted">
-            Если в системе включено уменьшение движения, анимации на сайте отключаются
-            автоматически.
+            {t('a11y.motionNote')}
           </p>
 
           <Popover.Arrow className="fill-[rgb(var(--c-line))]" />

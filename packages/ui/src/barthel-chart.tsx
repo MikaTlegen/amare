@@ -11,6 +11,7 @@ import {
   CartesianGrid,
 } from 'recharts'
 import type { ScalePoint } from '@amare/api-client'
+import { usePlural, useT } from '@amare/i18n/react'
 
 /**
  * Динамика индекса Бартел за курс.
@@ -34,12 +35,14 @@ export function BarthelChart({
 }) {
   // Цвета — через переменные палитры: иначе график не следует контрастной теме.
   // Кегли подписей в rem, а не в px: они должны расти вместе с --font-scale (S-13).
+  const t = useT('ui')
+  const score = usePlural('ui')
   const axisColor = onDark ? 'rgb(255 255 255 / 0.72)' : 'rgb(var(--c-muted))'
   const gridColor = onDark ? 'rgb(255 255 255 / 0.12)' : 'rgb(var(--c-line))'
 
   return (
     <figure className="m-0 flex flex-col gap-3">
-      <figcaption className="sr-only">Динамика индекса Бартел по дням курса.</figcaption>
+      <figcaption className="sr-only">{t('barthel.caption')}</figcaption>
 
       <div className="w-full" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -67,7 +70,7 @@ export function BarthelChart({
                 color: 'rgb(var(--c-ink))',
                 fontSize: '0.85rem',
               }}
-              formatter={(value) => [`${value} баллов`, 'Индекс Бартел']}
+              formatter={(value) => [score('barthel.score', Number(value)), t('barthel.label')]}
             />
             <Bar dataKey="barthel" radius={[8, 8, 0, 0]} maxBarSize={56}>
               {data.map((point, i) => (

@@ -87,13 +87,13 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
             {children}
           </main>
 
-          <Footer />
+          <Footer locale={locale} />
 
           {/* Место под липкую панель действий: раньше отступ стоял на <main>,
               и панель накрывала низ футера с лицензией и политикой данных */}
           <div aria-hidden="true" className="h-[calc(6rem_+_env(safe-area-inset-bottom))] md:hidden" />
           <ContactFab />
-          <MobileActionBar />
+          <MobileActionBar locale={locale} />
           <CookieBanner />
         </I18nProvider>
       </body>

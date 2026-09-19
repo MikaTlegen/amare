@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { Link } from '@/components/Links'
 import { Logo, type LogoProps } from '@amare/ui'
+import { useT } from '@amare/i18n/react'
 import { ROUTES } from '@/lib/clinic'
 
 /** Логотип-ссылка на главную; повторный клик запускает один оборот марки. */
 export function SiteLogo(props: LogoProps) {
+  const t = useT('nav')
   const [isSpinning, setIsSpinning] = useState(false)
 
   function spinMark() {
@@ -18,7 +20,7 @@ export function SiteLogo(props: LogoProps) {
     <Link
       href={ROUTES.home}
       className='tap-target inline-flex shrink-0 no-underline [perspective:600px]'
-      aria-label='Amare.kz — на главную'
+      aria-label={t('logoAria')}
       onClick={(event) => {
         event.preventDefault()
         spinMark()

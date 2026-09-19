@@ -1,45 +1,47 @@
+import { getT, type Locale } from '@amare/i18n'
 import { Link } from '@/components/Links'
 import { SiteLogo } from './SiteLogo'
 import { CABINETS, CLINIC, ROUTES } from '@/lib/clinic'
 
+/** Колонки ссылок. Подписи берутся из словаря по ключу, адреса — из ROUTES. */
 const COLUMNS = [
   {
-    title: 'Клиника',
+    title: 'column.clinic',
     links: [
-      { label: 'О клинике', to: ROUTES.about },
-      { label: 'Врачи', to: ROUTES.team },
-      { label: 'Отзывы', to: ROUTES.reviews },
-      { label: 'Контакты', to: ROUTES.contacts },
-      { label: 'Вакансии', to: ROUTES.jobs },
+      { key: 'link.about', to: ROUTES.about },
+      { key: 'link.team', to: ROUTES.team },
+      { key: 'link.reviews', to: ROUTES.reviews },
+      { key: 'link.contacts', to: ROUTES.contacts },
+      { key: 'link.jobs', to: ROUTES.jobs },
     ],
   },
   {
-    title: 'Пациентам',
+    title: 'column.patients',
     links: [
-      { label: 'Направления', to: ROUTES.directions },
-      { label: 'Курс и цены', to: ROUTES.course },
-      { label: 'Иногородним', to: ROUTES.remote },
-      { label: 'Родственникам', to: ROUTES.relatives },
-      { label: 'Записаться', to: ROUTES.booking },
+      { key: 'link.directions', to: ROUTES.directions },
+      { key: 'link.course', to: ROUTES.course },
+      { key: 'link.remote', to: ROUTES.remote },
+      { key: 'link.relatives', to: ROUTES.relatives },
+      { key: 'link.booking', to: ROUTES.booking },
     ],
   },
   {
-    title: 'Полезное',
+    title: 'column.useful',
     links: [
-      { label: 'База знаний', to: ROUTES.knowledge },
-      { label: 'Вопросы и ответы', to: ROUTES.faq },
-      { label: 'Результаты', to: ROUTES.results },
+      { key: 'link.knowledge', to: ROUTES.knowledge },
+      { key: 'link.faq', to: ROUTES.faq },
+      { key: 'link.results', to: ROUTES.results },
     ],
   },
   {
-    title: 'Документы',
+    title: 'column.documents',
     links: [
-      { label: 'Публичная оферта', to: ROUTES.offer },
-      { label: 'Политика ПД', to: ROUTES.privacy },
-      { label: 'Лицензия', to: ROUTES.license },
+      { key: 'link.offer', to: ROUTES.offer },
+      { key: 'link.privacy', to: ROUTES.privacy },
+      { key: 'link.license', to: ROUTES.license },
     ],
   },
-]
+] as const
 
 /**
  * Кабинеты — внешние адреса, а не пути сайта.
@@ -49,10 +51,10 @@ const COLUMNS = [
  * роли нет вообще.
  */
 const CABINET_LINKS = [
-  { label: 'Пациенту', href: `${CABINETS.care}${ROUTES.cabinetPatient}` },
-  { label: 'Опекуну', href: `${CABINETS.care}${ROUTES.cabinetGuardian}` },
-  { label: 'Сотруднику', href: CABINETS.staff },
-]
+  { key: 'cabinet.patient', href: `${CABINETS.care}${ROUTES.cabinetPatient}` },
+  { key: 'cabinet.guardian', href: `${CABINETS.care}${ROUTES.cabinetGuardian}` },
+  { key: 'cabinet.staff', href: CABINETS.staff },
+] as const
 
 /**
  * Подвал с юридическим блоком.
@@ -63,12 +65,17 @@ const CABINET_LINKS = [
  *
  * БИН и номер лицензии выводятся только когда заполнены: строка
  * «БИН [БИН]» на публичном сайте хуже, чем её отсутствие.
+ *
+ * Серверный компонент: локаль приходит пропом из макета, а не из контекста.
  */
-export function Footer() {
+export function Footer({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'footer')
+  const tc = getT(locale, 'contacts')
+
   const requisites = [
-    CLINIC.legalName,
-    CLINIC.bin && `БИН ${CLINIC.bin}`,
-    CLINIC.license && `лицензия № ${CLINIC.license}`,
+    tc('legalName'),
+    CLINIC.bin && t('legal.bin', { value: CLINIC.bin }),
+    CLINIC.license && t('legal.license', { value: CLINIC.license }),
   ]
     .filter(Boolean)
     .join(', ')
@@ -80,9 +87,9 @@ export function Footer() {
           <div className="flex flex-col gap-3 lg:col-span-4">
             <SiteLogo onDark textClassName="text-white" />
             <p className="text-base leading-relaxed text-white/65">
-              {CLINIC.address.full}
+              {tc('addressFull')}
               <br />
-              {CLINIC.hours}
+              {tc('hours')}
             </p>
             {CLINIC.phones.map((phone) => (
               <a
@@ -101,37 +108,35 @@ export function Footer() {
 
           {COLUMNS.map((column) => (
             <nav key={column.title} className="flex flex-col gap-2.5 lg:col-span-2">
-              <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">{column.title}</h3>
+              <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">{t(column.title)}</h3>
               {column.links.map((link) => (
                 <Link
-                  key={link.label}
+                  key={link.key}
                   href={link.to}
                   className="tap-target text-base text-white/85 no-underline transition-colors hover:text-accent"
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               ))}
             </nav>
           ))}
 
           <nav className="flex flex-col gap-2.5 lg:col-span-2">
-            <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">Кабинеты</h3>
+            <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">{t('column.cabinets')}</h3>
             {CABINET_LINKS.map((link) => (
               <a
-                key={link.label}
+                key={link.key}
                 href={link.href}
                 className="tap-target text-base text-white/85 no-underline transition-colors hover:text-accent"
               >
-                {link.label}
+                {t(link.key)}
               </a>
             ))}
           </nav>
         </div>
 
         <p className="border-t border-white/10 pt-5 text-sm leading-relaxed text-white/60">
-          {requisites} · Персональные данные обрабатываются и хранятся на территории Республики
-          Казахстан. Имеются противопоказания, необходима консультация специалиста. Информация на
-          сайте не является публичной офертой. © {new Date().getFullYear()}
+          {requisites} · {t('legal.notice')} © {new Date().getFullYear()}
         </p>
       </div>
     </footer>

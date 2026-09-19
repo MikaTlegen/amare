@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@/components/Links'
 import { Cookie } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { ROUTES } from '@/lib/clinic'
 
 const STORAGE_KEY = 'amare:cookie-choice'
@@ -21,6 +22,7 @@ const STORAGE_KEY = 'amare:cookie-choice'
  * поэтому решение только сохраняется.
  */
 export function CookieBanner() {
+  const t = useT('common')
   const [choice, setChoice] = useState<string | null>('pending')
 
   useEffect(() => {
@@ -46,17 +48,16 @@ export function CookieBanner() {
   return (
     <div
       role="region"
-      aria-label="Согласие на использование файлов cookie"
+      aria-label={t('cookie.region')}
       className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface px-4 pt-4 pb-[calc(6rem_+_env(safe-area-inset-bottom))] shadow-2xl sm:px-8 md:pb-4"
     >
       <div className="mx-auto flex max-w-content flex-col gap-4 lg:flex-row lg:items-center">
         <Cookie className="h-6 w-6 shrink-0 text-brand" aria-hidden="true" />
 
         <p className="m-0 flex-1 text-base leading-relaxed">
-          Сайт использует файлы cookie. Карта 2ГИС загружается со стороннего сервера и тоже ставит
-          свои cookie.{' '}
+          {t('cookie.text')}{' '}
           <Link href={ROUTES.privacy} className="tap-target font-semibold">
-            Политика обработки данных
+            {t('cookie.policy')}
           </Link>
         </p>
 
@@ -66,14 +67,14 @@ export function CookieBanner() {
             onClick={() => decide('necessary')}
             className="min-h-12 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold"
           >
-            Только необходимые
+            {t('cookie.necessary')}
           </button>
           <button
             type="button"
             onClick={() => decide('all')}
             className="min-h-12 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white"
           >
-            Принять все
+            {t('cookie.acceptAll')}
           </button>
         </div>
       </div>

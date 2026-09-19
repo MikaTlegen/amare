@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link } from '@/components/Links'
 import { usePathname } from 'next/navigation'
 import { stripLocale } from '@amare/i18n/locales'
+import { useT } from '@amare/i18n/react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Menu, X, UserRound } from 'lucide-react'
 import { SiteLogo } from './SiteLogo'
@@ -13,14 +14,15 @@ import { CabinetLink } from './CabinetLink'
 import { ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
+// Подпись каждого пункта берётся из словаря по ключу с тем же именем, что и маршрут
 const NAV = [
-  { to: ROUTES.directions, label: 'Направления' },
-  { to: ROUTES.course, label: 'Курс и цены' },
-  { to: ROUTES.team, label: 'Врачи' },
-  { to: ROUTES.results, label: 'Результаты' },
-  { to: ROUTES.knowledge, label: 'База знаний' },
-  { to: ROUTES.contacts, label: 'Контакты' },
-]
+  { to: ROUTES.directions, key: 'directions' },
+  { to: ROUTES.course, key: 'course' },
+  { to: ROUTES.team, key: 'team' },
+  { to: ROUTES.results, key: 'results' },
+  { to: ROUTES.knowledge, key: 'knowledge' },
+  { to: ROUTES.contacts, key: 'contacts' },
+] as const
 
 /**
  * Шапка: липкая, с размытием фона.
@@ -34,6 +36,7 @@ const NAV = [
  * «Кабинет» уезжала за край экрана. До 2xl работает бургер.
  */
 export function Header() {
+  const t = useT('nav')
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   // Маршруты в ROUTES без префикса локали: на /kk/ его надо снять
@@ -56,7 +59,7 @@ export function Header() {
       <div className="container-content flex items-center gap-3 py-3 lg:gap-8">
         <SiteLogo />
 
-        <nav aria-label="Основная навигация" className="hidden flex-1 gap-4 2xl:flex">
+        <nav aria-label={t('mainLabel')} className="hidden flex-1 gap-4 2xl:flex">
           {NAV.map((item) => (
             <Link
               key={item.to}
@@ -71,7 +74,7 @@ export function Header() {
                 )
               }
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
@@ -89,7 +92,7 @@ export function Header() {
             <Dialog.Trigger asChild>
               <button
                 type="button"
-                aria-label="Открыть меню"
+                aria-label={t('menuOpen')}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-bg 2xl:hidden"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
@@ -101,12 +104,12 @@ export function Header() {
               <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[min(22rem,88vw)] flex-col gap-6 overflow-y-auto overscroll-contain border-l border-line bg-bg p-6 pb-[calc(1.5rem_+_env(safe-area-inset-bottom))] shadow-2xl">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
-                    Меню
+                    {t('menuTitle')}
                   </Dialog.Title>
                   <Dialog.Close asChild>
                     <button
                       type="button"
-                      aria-label="Закрыть меню"
+                      aria-label={t('menuClose')}
                       className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-line"
                     >
                       <X className="h-5 w-5" aria-hidden="true" />
@@ -114,7 +117,7 @@ export function Header() {
                   </Dialog.Close>
                 </div>
 
-                <nav className="flex flex-col gap-1" aria-label="Мобильная навигация">
+                <nav className="flex flex-col gap-1" aria-label={t('mobileLabel')}>
                   {NAV.map((item) => (
                     <Link
                       key={item.to}
@@ -127,7 +130,7 @@ export function Header() {
                         )
                       }
                     >
-                      {item.label}
+                      {t(item.key)}
                     </Link>
                   ))}
                 </nav>
@@ -138,7 +141,7 @@ export function Header() {
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-deep px-5 py-3.5 text-base font-semibold text-white no-underline"
                 >
                   <UserRound className="h-5 w-5" aria-hidden="true" />
-                  Войти в кабинет
+                  {t('cabinetEnter')}
                 </Link>
 
                 <div className="mt-auto">

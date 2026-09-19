@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { LOCALES, localeHref, stripLocale, type Locale } from '@amare/i18n/locales'
 import { useLocale, useT } from '@amare/i18n/react'
@@ -17,9 +18,9 @@ import { cn } from './cn'
  * (у каждого свой <html lang>), поэтому <a>, а не router.push: так честнее
  * и без неочевидной задержки.
  *
- * Параметры и якорь дописывает onChange на стороне приложения: получить их
- * здесь можно только через useSearchParams, а он потребовал бы обернуть в
- * Suspense всю шапку.
+ * Параметры и якорь дописываются после гидратации из window.location:
+ * useSearchParams потребовал бы обернуть в Suspense всю шапку, а без них
+ * переключение языка на /zapis?doctor=kuspanova теряло бы выбранного врача.
  */
 const LABEL = { ru: 'lang.ru', kk: 'lang.kk' } as const
 
@@ -34,7 +35,13 @@ export function LanguageSwitch({
   const active = useLocale()
   const pathname = usePathname()
   const t = useT('ui')
-  const path = stripLocale(pathname)
+  const [tail, setTail] = useState('')
+
+  useEffect(() => {
+    setTail(window.location.search + window.location.hash)
+  }, [pathname])
+
+  const path = stripLocale(pathname) + tail
 
   return (
     <div

@@ -4,12 +4,17 @@ import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { SendHorizontal, Paperclip } from 'lucide-react'
 import { formatSize, detectKind, type Message } from '@amare/api-client'
+import { useT } from '@amare/i18n/react'
 import { AttachmentChip } from './attachment-chip'
 import { cn } from './cn'
 
 /** Ограничения выбора файлов. Сервер обязан проверить их заново. */
 const MAX_FILES = 5
-const MAX_BYTES = 25 * 1024 * 1024
+const MAX_MEGABYTES = 25
+const MAX_BYTES = MAX_MEGABYTES * 1024 * 1024
+
+/** Единый номер скорой помощи в Казахстане. */
+const EMERGENCY_PHONE = '103'
 
 export interface ChatApi {
   getMessages: () => Promise<Message[]>
@@ -37,6 +42,7 @@ export interface ChatApi {
  * тривиально.
  */
 export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: boolean }) {
+  const t = useT('ui')
   const [messages, setMessages] = useState<Message[]>([])
   const [text, setText] = useState('')
   const [files, setFiles] = useState<File[]>([])
@@ -59,9 +65,9 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
     const tooBig = next.find((f) => f.size > MAX_BYTES)
 
     if (tooBig) {
-      setError(`Файл «${tooBig.name}» больше 25 МБ. Видео лучше сжать или загрузить частями.`)
+      setError(t('chat.fileTooBig', { name: tooBig.name, limit: MAX_MEGABYTES }))
     } else if (files.length + chosen.length > MAX_FILES) {
-      setError(`За раз можно приложить не больше ${MAX_FILES} файлов.`)
+      setError(t('chat.tooManyFiles', { max: MAX_FILES }))
     } else {
       setError(null)
     }
@@ -77,7 +83,7 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
     if (!value && files.length === 0) return
 
     setSending(true)
-    setMessages(await api.sendMessage(value || 'Файл во вложении', files))
+    setMessages(await api.sendMessage(value || t('chat.defaultText'), files))
     setText('')
     setFiles([])
     setError(null)
@@ -149,13 +155,13 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
 
           <div className="flex flex-col gap-2 sm:flex-row">
             <label htmlFor="chat-input" className="sr-only">
-              Сообщение
+              {t('chat.messageLabel')}
             </label>
             <input
               id="chat-input"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Напишите сообщение…"
+              placeholder={t('chat.placeholder')}
               className="min-h-[3.2rem] flex-1 rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
             />
 
@@ -173,7 +179,7 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
               className="inline-flex min-h-[3.2rem] cursor-pointer items-center justify-center gap-2 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-medium"
             >
               <Paperclip className="h-5 w-5 text-brand" aria-hidden="true" />
-              Файл
+              {t('chat.attach')}
             </label>
 
             <button
@@ -182,19 +188,18 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
               className="inline-flex min-h-[3.2rem] items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 text-base font-semibold text-accent-ink disabled:opacity-50"
             >
               <SendHorizontal className="h-5 w-5" aria-hidden="true" />
-              Отправить
+              {t('chat.send')}
             </button>
           </div>
 
           <p className="m-0 text-sm leading-relaxed text-muted">
-            Выписки, снимки и видео с занятий сразу попадут в документы пациента. До {MAX_FILES}{' '}
-            файлов, каждый не больше 25 МБ.
+            {t('chat.attachHint', { max: MAX_FILES, limit: MAX_MEGABYTES })}
           </p>
         </form>
       )}
 
       <p className="m-0 text-base leading-relaxed text-muted">
-        Чат работает в рабочее время. Если стало резко хуже — не пишите, а звоните в скорую по 103.
+        {t('chat.emergency', { phone: EMERGENCY_PHONE })}
       </p>
     </div>
   )

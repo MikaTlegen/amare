@@ -14,6 +14,8 @@ export const nav: Translation<"nav"> = {
   menuTitle: "Мәзір",
   menuOpen: "Мәзірді ашу",
   menuClose: "Мәзірді жабу",
+  cabinet: "Кабинет",
   cabinetEnter: "Кабинетке кіру",
+  logoAria: "Amare.kz — басты бетке",
   skipToContent: "Мазмұнға өту",
 };
