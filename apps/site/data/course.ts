@@ -1,93 +1,33 @@
-import { DOCTORS } from '@/data/doctors'
-import { CLINIC, PRICES } from '@/lib/clinic'
-
 export interface CourseStep {
+  /** Номер шага. Он же часть ключа в словаре course: `step.<n>.title`. */
   n: string
-  title: string
-  short: string
-  full: string
-  price?: string
+  /** Ключ цены в словаре prices. Без него шаг входит в стоимость курса. */
+  priceKey?: 'consultation' | 'course'
 }
 
-/** Пять шагов — как клиника описывает процесс на своём сайте. */
+/**
+ * Пять шагов — как клиника описывает процесс на своём сайте.
+ * Текст переехал в @amare/i18n (namespace course).
+ */
 export const COURSE_STEPS: CourseStep[] = [
-  {
-    n: '01',
-    title: 'Диагностика',
-    short: 'Осмотр МДГ, шкалы',
-    full: 'Осмотр мультидисциплинарной группы, международные шкалы, оценка реабилитационного потенциала.',
-    price: PRICES.consultation,
-  },
-  {
-    n: '02',
-    title: 'Программа',
-    short: 'Цели и расписание',
-    full: 'Цели по МКФ, расписание процедур на каждый день, состав специалистов под конкретные дефициты.',
-  },
-  {
-    n: '03',
-    title: 'Курс 10–20 дней',
-    short: 'Разбор динамики',
-    full: 'Занятия по расписанию и еженедельный разбор динамики с куратором. Родственники получают фото- и видеоотчёты.',
-    price: PRICES.course,
-  },
-  {
-    n: '04',
-    title: 'Оценка результата',
-    short: 'Заключение на руки',
-    full: 'Повторные шкалы, письменное заключение и рекомендации на руки — с ними можно идти дальше по маршруту.',
-  },
-  {
-    n: '05',
-    title: 'Поддержка после курса',
-    short: 'Программа и куратор',
-    full: 'Домашняя программа в кабинете, чат с куратором, видеоразбор упражнений и напоминание о переоценке.',
-  },
+  { n: '01', priceKey: 'consultation' },
+  { n: '02' },
+  { n: '03', priceKey: 'course' },
+  { n: '04' },
+  { n: '05' },
 ]
 
 export interface Format {
-  title: string
-  price: string
-  note: string
+  /** Он же часть ключа в словаре course: `format.<id>.title`. */
+  id: 'clinic' | 'dayHospital' | 'home' | 'online'
+  priceKey: 'course' | 'dayHospital' | 'homeVisit' | 'online'
   /** Какой формат приёма предвыбрать на странице записи. */
   bookingFormat: 'clinic' | 'online' | 'home'
 }
 
 export const FORMATS: Format[] = [
-  {
-    title: 'Амбулаторно',
-    price: PRICES.course,
-    note: 'Основной формат: приходите на занятия по расписанию.',
-    bookingFormat: 'clinic',
-  },
-  {
-    title: 'Дневной стационар',
-    price: PRICES.dayHospital,
-    note: 'Палата на день, если нужен отдых между процедурами.',
-    bookingFormat: 'clinic',
-  },
-  {
-    title: 'Выезд на дом',
-    price: PRICES.homeVisit,
-    note: 'Для лежачих пациентов и тех, кому тяжело добраться.',
-    bookingFormat: 'home',
-  },
-  {
-    title: 'Онлайн-консультация',
-    price: PRICES.online,
-    note: 'Для иногородних: оценка и домашняя программа.',
-    bookingFormat: 'online',
-  },
-]
-
-/** Короткие факты для полосы под первым экраном. */
-export const FACTS = [
-  {
-    value: `${CLINIC.rating.value} на ${CLINIC.rating.source}`,
-    note: `${CLINIC.rating.reviews} оценок`,
-  },
-  // Считаем по карточкам: цифра на главной не должна расходиться со страницей «Врачи»
-  { value: `${DOCTORS.length} специалистов`, note: 'одна команда' },
-  { value: PRICES.course, note: 'курс 10–14 дней' },
-  { value: 'ОСМС и ДМС', note: 'или платно' },
+  { id: 'clinic', priceKey: 'course', bookingFormat: 'clinic' },
+  { id: 'dayHospital', priceKey: 'dayHospital', bookingFormat: 'clinic' },
+  { id: 'home', priceKey: 'homeVisit', bookingFormat: 'home' },
+  { id: 'online', priceKey: 'online', bookingFormat: 'online' },
 ]

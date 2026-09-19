@@ -1,4 +1,7 @@
+'use client'
+
 import { ExternalLink, Quote, Star } from 'lucide-react'
+import { usePlural, useT } from '@amare/i18n/react'
 import { Reveal, SectionHeading } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
@@ -13,11 +16,15 @@ import { REVIEWS, REVIEWS_SUMMARY } from '@/data/reviews'
  * и ссылку на первоисточник — она делает её проверяемой.
  */
 export function Reviews() {
+  const t = useT('reviews')
+  const count = usePlural('reviews')
+  const source = useT('contacts')('ratingSource')
+
   return (
     <section className="container-content flex flex-col gap-7 py-16">
       <SectionHeading
-        title="Что говорят пациенты"
-        note="Рейтинг и оценки — из карточки клиники в 2ГИС, их можно проверить."
+        title={t('home.title')}
+        note={t('home.note', { source })}
         aside={
           <a
             href={REVIEWS_SUMMARY.sourceUrl}
@@ -25,7 +32,7 @@ export function Reviews() {
             rel="noopener noreferrer"
             className="tap-target inline-flex items-center gap-2 text-base font-semibold no-underline hover:text-accent"
           >
-            Все отзывы в {REVIEWS_SUMMARY.source}
+            {t('home.aside', { source })}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </a>
         }
@@ -37,15 +44,17 @@ export function Reviews() {
             {REVIEWS_SUMMARY.rating}
           </span>
 
-          <span className="flex gap-1" aria-label={`Рейтинг ${REVIEWS_SUMMARY.rating} из 5`}>
+          <span className="flex gap-1" aria-label={t('rating.aria', { value: REVIEWS_SUMMARY.rating })}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-5 w-5 fill-sky text-sky" aria-hidden="true" />
             ))}
           </span>
 
           <p className="m-0 text-base leading-relaxed text-white/75">
-            {REVIEWS_SUMMARY.count} оценок в {REVIEWS_SUMMARY.source}. Чаще всего хвалят
-            реабилитолога, массажиста, логопеда, оборудование и чистоту.
+            {t('home.summary', {
+              count: count('rating', REVIEWS_SUMMARY.count, { source }),
+              source,
+            })}
           </p>
         </div>
 
@@ -53,17 +62,15 @@ export function Reviews() {
           <div className="flex flex-col justify-center gap-3 rounded-3xl border border-line bg-surface p-7 lg:col-span-8">
             <Quote className="h-6 w-6 text-brand" aria-hidden="true" />
             <p className="m-0 max-w-[42em] text-lg leading-relaxed text-ink/85">
-              Тексты отзывов мы публикуем только с письменного согласия автора. Собранные истории
-              появятся здесь, а прямо сейчас все отзывы можно прочитать в карточке клиники в 2ГИС —
-              там их пишут сами пациенты, и подредактировать их мы не можем.
+              {t('home.empty', { source })}
             </p>
             <div className="flex flex-wrap gap-3">
               <Button href={REVIEWS_SUMMARY.sourceUrl} variant="deep">
-                Открыть отзывы в {REVIEWS_SUMMARY.source}
+                {t('home.open', { source })}
                 <ExternalLink className="h-4 w-4" aria-hidden="true" />
               </Button>
               <Button to={ROUTES.reviews} variant="ghost">
-                Про отзывы на сайте
+                {t('home.about')}
               </Button>
             </div>
           </div>
@@ -74,7 +81,7 @@ export function Reviews() {
                 <article className="flex h-full flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
                   <Quote className="h-6 w-6 text-brand" aria-hidden="true" />
 
-                  <span className="flex gap-0.5" aria-label={`Оценка ${review.rating} из 5`}>
+                  <span className="flex gap-0.5" aria-label={t('card.aria', { rating: review.rating })}>
                     {Array.from({ length: review.rating }).map((_, s) => (
                       <Star key={s} className="h-4 w-4 fill-accent text-accent" aria-hidden="true" />
                     ))}

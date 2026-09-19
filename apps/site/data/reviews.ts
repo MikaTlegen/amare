@@ -30,12 +30,14 @@ export interface Review {
  *   — официальный виджет отзывов 2ГИС (тянет реальные отзывы с их
  *     стороны, ничего копировать не нужно);
  *   — собственные отзывы, собранные клиникой с письменного согласия.
+ *
+ * Отзыв приходит на языке автора и не переводится: переводить чужую
+ * речь без его согласия нельзя.
  */
 export const REVIEWS: Review[] = []
 
 export const REVIEWS_SUMMARY = {
   rating: CLINIC.rating.value,
   count: CLINIC.rating.reviews,
-  source: CLINIC.rating.source,
   sourceUrl: CLINIC.address.mapUrl,
 }

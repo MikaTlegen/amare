@@ -1,8 +1,9 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { stripLocale } from '@amare/i18n/locales'
 import { Construction } from 'lucide-react'
+import { stripLocale } from '@amare/i18n/locales'
+import { useT } from '@amare/i18n/react'
 import { Button } from '@/components/Links'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
@@ -18,40 +19,25 @@ import { CLINIC, ROUTES } from '@/lib/clinic'
  * TODO: по мере готовности заменять на настоящие страницы, а запись
  * отсюда удалять.
  */
-const TITLES: Record<string, { title: string; note: string }> = {
-  [ROUTES.relatives]: {
-    title: 'Родственникам',
-    note: 'База знаний для тех, кто ухаживает: признаки инсульта, перемещение лежачего человека, питание при нарушении глотания, профилактика падений дома.',
-  },
-  [ROUTES.about]: {
-    title: 'О клинике',
-    note: 'История клиники, оборудование, подход мультидисциплинарной группы.',
-  },
-  [ROUTES.jobs]: {
-    title: 'Вакансии',
-    note: 'Клиника ищет специалистов по реабилитации. Пока резюме принимаем по телефону.',
-  },
-  [ROUTES.offer]: {
-    title: 'Публичная оферта',
-    note: 'Документ готовится юристом клиники. До публикации условия уточняйте у администратора.',
-  },
-  [ROUTES.privacy]: {
-    title: 'Политика обработки персональных данных',
-    note: 'Документ готовится. Персональные данные обрабатываются и хранятся на территории Республики Казахстан.',
-  },
-  [ROUTES.license]: {
-    title: 'Лицензия',
-    note: 'Скан лицензии на медицинскую деятельность будет опубликован здесь.',
-  },
+const NAMES: Record<string, string> = {
+  [ROUTES.relatives]: 'relatives',
+  [ROUTES.about]: 'about',
+  [ROUTES.jobs]: 'jobs',
+  [ROUTES.offer]: 'offer',
+  [ROUTES.privacy]: 'privacy',
+  [ROUTES.license]: 'license',
 }
 
 export function StubPage() {
   // Маршруты в ROUTES без префикса локали: на /kk/ его надо снять
   const pathname = stripLocale(usePathname())
-  const page = TITLES[pathname] ?? {
-    title: 'Раздел готовится',
-    note: 'Страница появится в ближайшее время.',
-  }
+  const t = useT('legal')
+  const meta = useT('meta')
+
+  const name = NAMES[pathname]
+  // Заголовок один и тот же на вкладке и на странице — берём из meta
+  const title = name ? meta(name as Parameters<typeof meta>[0]) : t('fallback.title')
+  const note = name ? t(`note.${name}` as Parameters<typeof t>[0]) : t('fallback.note')
 
   /** На странице о клинике карта уместна: человек ищет, как доехать. */
   const withMap = pathname === ROUTES.about
@@ -64,22 +50,22 @@ export function StubPage() {
         </span>
 
         <h1 className="m-0 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
-          {page.title}
+          {title}
         </h1>
 
-        <p className="m-0 text-lg leading-relaxed text-muted">{page.note}</p>
+        <p className="m-0 text-lg leading-relaxed text-muted">{note}</p>
 
         <p className="m-0 text-lg leading-relaxed">
-          Пока раздела нет — спросите у администратора:{' '}
+          {t('ask')}{' '}
           <a href={CLINIC.phones[0].href} className="font-semibold">
             {CLINIC.phones[0].label}
           </a>
         </p>
 
         <div className="flex flex-wrap gap-3">
-          <Button to={ROUTES.booking}>Записаться на консультацию</Button>
+          <Button to={ROUTES.booking}>{t('book')}</Button>
           <Button to={ROUTES.home} variant="outline">
-            На главную
+            {t('home')}
           </Button>
         </div>
       </div>

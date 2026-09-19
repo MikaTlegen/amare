@@ -1,3 +1,4 @@
+import { getContent, getT, type Locale } from '@amare/i18n'
 import { Link } from '@/components/Links'
 import { ArrowRight, MessageCircle } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
@@ -5,18 +6,23 @@ import { ParallaxBand } from '@amare/ui'
 import { Reveal } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { COURSE_STEPS, FORMATS } from '@/data/course'
-import { CLINIC, PRICES, ROUTES, whatsappLink } from '@/lib/clinic'
+import { CLINIC, ROUTES, whatsappLink } from '@/lib/clinic'
 
 /** Страница «Курс и цены»: пять шагов, форматы, иногородние. */
-export function CoursePage() {
+export function CoursePage({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'course')
+  const text = getContent(locale, 'course')
+  const price = getT(locale, 'prices')
+  const priceOf = getContent(locale, 'prices')
+
   return (
     <>
       <PageCover
-        crumb="Курс и цены"
-        title="Как проходит курс"
-        note="От первой консультации до домашней программы после выписки."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/fine-motor.jpg"
-        alt="Специалист клиники ведёт занятие на аппарате для мелкой моторики"
+        alt={t('cover.alt')}
         objectPosition="center 35%"
       />
 
@@ -39,18 +45,20 @@ export function CoursePage() {
                 </span>
 
                 <h2 className="font-display text-xl font-medium tracking-[-0.04em] text-ink lg:col-span-3">
-                  {step.title}
+                  {text(`step.${step.n}.title`)}
                 </h2>
 
-                <p className="text-base leading-relaxed text-ink/80 lg:col-span-6">{step.full}</p>
+                <p className="text-base leading-relaxed text-ink/80 lg:col-span-6">
+                  {text(`step.${step.n}.full`)}
+                </p>
 
                 <div className="flex items-center gap-2 lg:col-span-2 lg:justify-end">
-                  {step.price ? (
+                  {step.priceKey ? (
                     <span className="font-display text-xl font-semibold tracking-[-0.04em] text-ink">
-                      {step.price}
+                      {price(step.priceKey)}
                     </span>
                   ) : (
-                    <span className="text-base text-muted">входит в курс</span>
+                    <span className="text-base text-muted">{price('includedInCourse')}</span>
                   )}
                   <ArrowRight
                     className="h-5 w-5 shrink-0 text-brand opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
@@ -63,27 +71,23 @@ export function CoursePage() {
         </ol>
 
         <div className="flex flex-col items-start gap-4 rounded-3xl bg-deep p-7 sm:flex-row sm:items-center sm:gap-6">
-          <p className="m-0 flex-1 text-lg leading-relaxed text-white/85">
-            Не уверены, какой формат подойдёт? Опишите ситуацию — администратор ответит в рабочее
-            время, а при медицинских вопросах подключит врача.
-          </p>
+          <p className="m-0 flex-1 text-lg leading-relaxed text-white/85">{t('help.note')}</p>
           <div className="flex flex-wrap gap-3">
             <Button to={ROUTES.booking} variant="white">
-              Записаться
+              {t('help.book')}
             </Button>
-            <Button
-              href={whatsappLink('Здравствуйте! Хочу узнать про курс реабилитации.')}
-              variant="white"
-            >
+            <Button href={whatsappLink(t('help.whatsappText'))} variant="white">
               <MessageCircle className="h-5 w-5" aria-hidden="true" />
-              Обсудить в WhatsApp
+              {t('help.whatsapp')}
             </Button>
           </div>
         </div>
       </section>
 
       <section className="container-content flex flex-col gap-6 pb-14">
-        <h2 className="font-display text-3xl font-medium tracking-[-0.045em]">Форматы и цены</h2>
+        <h2 className="font-display text-3xl font-medium tracking-[-0.045em]">
+          {t('formats.title')}
+        </h2>
 
         {/*
           У каждого формата своя кнопка записи: человек, который дочитал
@@ -93,29 +97,28 @@ export function CoursePage() {
         */}
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FORMATS.map((format, i) => (
-            <Reveal as="li" key={format.title} delay={i * 0.05}>
+            <Reveal as="li" key={format.id} delay={i * 0.05}>
               <article className="flex h-full flex-col gap-2.5 rounded-3xl border border-line bg-surface p-6">
-                <h3 className="text-lg font-semibold">{format.title}</h3>
+                <h3 className="text-lg font-semibold">{text(`format.${format.id}.title`)}</h3>
                 <span className="font-display text-2xl font-semibold tracking-[-0.04em]">
-                  {format.price}
+                  {priceOf(format.priceKey)}
                 </span>
-                <p className="text-base leading-relaxed text-muted">{format.note}</p>
+                <p className="text-base leading-relaxed text-muted">
+                  {text(`format.${format.id}.note`)}
+                </p>
                 <Button
                   to={`${ROUTES.booking}?format=${format.bookingFormat}`}
                   variant="outline"
                   className="mt-auto w-full"
                 >
-                  Записаться
+                  {t('formats.book')}
                 </Button>
               </article>
             </Reveal>
           ))}
         </ul>
 
-        <p className="text-base text-muted">
-          Оплата — картой, Kaspi или в рассрочку. По ОСМС и ДМС условия уточняйте
-          у администратора. Актуальность цен подтвердит администратор при записи.
-        </p>
+        <p className="text-base text-muted">{price('payment')}</p>
       </section>
 
       <section className="container-content pb-14">
@@ -126,21 +129,18 @@ export function CoursePage() {
         */}
         <ParallaxBand
           image="/photos/facade-sign.png"
-          alt="Вывеска клиники нейрореабилитации Amare.kz на фасаде здания"
+          alt={t('remote.alt')}
           scrim="side"
           strength={0}
           className="rounded-3xl"
         >
           <div className="flex max-w-136 flex-col items-start gap-4 p-8 sm:p-10">
             <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em] text-white sm:text-3xl sm:leading-9">
-              Приезжаете из другого города
+              {t('remote.title')}
             </h2>
-            <p className="text-base leading-relaxed text-white/80">
-              Поможем с проживанием рядом с клиникой, соберём курс без простоев и продолжим
-              дистанционно после отъезда.
-            </p>
+            <p className="text-base leading-relaxed text-white/80">{t('remote.note')}</p>
             <Button href={CLINIC.whatsapp} variant="white">
-              Написать в WhatsApp
+              {t('remote.whatsapp')}
             </Button>
           </div>
         </ParallaxBand>
@@ -150,14 +150,14 @@ export function CoursePage() {
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
             <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">
-              Записаться на консультацию
+              {t('cta.title')}
             </h2>
             <p className="text-base text-ink/75">
-              Выберите формат, специалиста и время. {PRICES.freeIntro.toLowerCase()}.
+              {t('cta.note', { freeIntro: price('freeIntroInline') })}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.booking}>Выбрать время</Button>
+            <Button to={ROUTES.booking}>{t('cta.pick')}</Button>
             <Button href={CLINIC.phones[0].href} variant="outline">
               {CLINIC.phones[0].label}
             </Button>

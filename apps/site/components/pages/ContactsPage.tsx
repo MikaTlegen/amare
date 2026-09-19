@@ -1,19 +1,23 @@
 import { Camera, Clock, MapPin, MessageCircle, Phone } from 'lucide-react'
+import { getT, type Locale } from '@amare/i18n'
 import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
 /** Контакты (S-02 ТЗ): адрес, телефоны, график, каналы связи и карта. */
-export function ContactsPage() {
+export function ContactsPage({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'contacts')
+  const common = getT(locale, 'common')
+
   return (
     <>
       <PageCover
-        crumb="Контакты"
-        title="Как с нами связаться и как доехать"
-        note="Быстрее всего — позвонить в рабочее время. В WhatsApp отвечаем в порядке очереди."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/facade.jpg"
-        alt="Фасад здания, в котором находится клиника Amare"
+        alt={t('cover.alt')}
         objectPosition="center 60%"
       />
 
@@ -23,7 +27,9 @@ export function ContactsPage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <Phone className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
-            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">Телефоны</h2>
+            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+              {t('phones.title')}
+            </h2>
             {CLINIC.phones.map((phone) => (
               <a
                 key={phone.href}
@@ -37,10 +43,7 @@ export function ContactsPage() {
                 {phone.label}
               </a>
             ))}
-            <p className="m-0 text-base leading-relaxed text-muted">
-              Бесплатная 15-минутная первичная консультация по телефону — чтобы понять, нужен ли
-              очный приём.
-            </p>
+            <p className="m-0 text-base leading-relaxed text-muted">{t('phones.note')}</p>
           </article>
 
           <article className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
@@ -48,13 +51,10 @@ export function ContactsPage() {
               <Clock className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
             <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-              Режим работы
+              {t('hours.title')}
             </h2>
-            <p className="m-0 text-lg leading-relaxed">{CLINIC.hours}</p>
-            <p className="m-0 text-base leading-relaxed text-muted">
-              В нерабочее время заявка через анкету попадает администратору первой же утренней
-              сменой.
-            </p>
+            <p className="m-0 text-lg leading-relaxed">{t('hours')}</p>
+            <p className="m-0 text-base leading-relaxed text-muted">{t('hours.note')}</p>
           </article>
         </div>
 
@@ -63,21 +63,21 @@ export function ContactsPage() {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
-            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">Адрес</h2>
-            <p className="m-0 text-lg leading-relaxed">{CLINIC.address.full}</p>
-            <p className="m-0 text-base leading-relaxed text-muted">
-              Если человек в коляске или ему тяжело идти — предупредите при записи, встретим.
-            </p>
+            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+              {t('address.title')}
+            </h2>
+            <p className="m-0 text-lg leading-relaxed">{t('addressFull')}</p>
+            <p className="m-0 text-base leading-relaxed text-muted">{t('address.note')}</p>
             <div className="flex flex-wrap gap-3 pt-1">
               <Button href={CLINIC.whatsapp} variant="outline">
                 <MessageCircle className="h-5 w-5" aria-hidden="true" />
-                WhatsApp
+                {common('contact.whatsapp')}
               </Button>
               <Button href={CLINIC.instagram} variant="outline">
                 <Camera className="h-5 w-5" aria-hidden="true" />
-                Instagram
+                {common('contact.instagram')}
               </Button>
-              <Button to={ROUTES.booking}>Записаться</Button>
+              <Button to={ROUTES.booking}>{t('address.book')}</Button>
             </div>
           </article>
         </div>

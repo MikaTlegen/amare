@@ -1,8 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { getMessages } from '@amare/i18n'
-import { CLINIC } from '../lib/clinic'
 
 /*
  * Сторож перевода.
@@ -46,23 +44,5 @@ describe('ссылки', () => {
   // Префикс локали добавляет только обёртка: прямой next/link уводит из /kk/
   it.each(TRANSLATED)('%s не импортирует next/link напрямую', (name) => {
     expect(read(name)).not.toMatch(/from ['"]next\/link['"]/)
-  })
-})
-
-/*
- * Пока контакты живут и в словаре, и в lib/clinic.ts: страницы переедут
- * на словарь следующим шагом. До тех пор значения обязаны совпадать,
- * иначе в подвале окажется один адрес, а на странице контактов другой.
- */
-describe('контакты клиники', () => {
-  const contacts = getMessages('ru', 'contacts')
-
-  it('совпадают со словарём', () => {
-    expect(contacts.addressFull).toBe(CLINIC.address.full)
-    expect(contacts.addressStreet).toBe(CLINIC.address.street)
-    expect(contacts.addressCity).toBe(CLINIC.address.city)
-    expect(contacts.hours).toBe(CLINIC.hours)
-    expect(contacts.legalName).toBe(CLINIC.legalName)
-    expect(contacts.ratingSource).toBe(CLINIC.rating.source)
   })
 })

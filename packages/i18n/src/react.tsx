@@ -101,3 +101,29 @@ export function usePlural<N extends Namespace>(
     [dictionary, locale],
   );
 }
+
+/** Клиентский вариант getContent: ключ собирается из данных. */
+export function useContent<N extends Namespace>(ns: N): (key: string, vars?: Vars) => string {
+  const dictionary = useDictionary(ns);
+
+  return useMemo(
+    () => (key: string, vars?: Vars) => {
+      const value = dictionary[key];
+      return format(typeof value === "string" ? value : key, vars);
+    },
+    [dictionary],
+  );
+}
+
+/** Клиентский вариант getContentList. */
+export function useContentList<N extends Namespace>(ns: N): (key: string) => readonly string[] {
+  const dictionary = useDictionary(ns);
+
+  return useMemo(
+    () => (key: string) => {
+      const value = dictionary[key];
+      return Array.isArray(value) ? (value as readonly string[]) : [];
+    },
+    [dictionary],
+  );
+}

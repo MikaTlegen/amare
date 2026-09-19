@@ -1,5 +1,7 @@
 import { Suspense } from 'react'
 import type { ReactNode } from 'react'
+import type { Locale } from '@amare/i18n'
+import { PageMessages } from '@/components/PageMessages'
 import { BookingPage } from '@/components/pages/BookingPage'
 import { CabinetRedirect } from '@/components/pages/CabinetRedirect'
 import { ContactsPage } from '@/components/pages/ContactsPage'
@@ -29,7 +31,7 @@ import { ROUTES } from './clinic'
  * страница видна сразу, а не после жалобы на битую ссылку.
  */
 export interface PageEntry {
-  render: () => ReactNode
+  render: (locale: Locale) => ReactNode
 }
 
 /** TeamPage и BookingPage читают параметры адреса — Next требует границу Suspense. */
@@ -37,18 +39,18 @@ const withSuspense = (node: ReactNode): ReactNode => <Suspense>{node}</Suspense>
 
 export const PAGES: Record<string, PageEntry> = {
   [ROUTES.home]: { render: () => <HomePage /> },
-  [ROUTES.directions]: { render: () => <DirectionsPage /> },
-  [ROUTES.course]: { render: () => <CoursePage /> },
+  [ROUTES.directions]: { render: (locale) => <DirectionsPage locale={locale} /> },
+  [ROUTES.course]: { render: (locale) => <CoursePage locale={locale} /> },
   [ROUTES.team]: { render: () => withSuspense(<TeamPage />) },
   [ROUTES.login]: { render: () => <CabinetRedirect /> },
-  [ROUTES.booking]: { render: () => withSuspense(<BookingPage />) },
+  [ROUTES.booking]: { render: (locale) => withSuspense(<BookingPage locale={locale} />) },
   [ROUTES.form]: { render: () => <IntakeFormPage /> },
-  [ROUTES.remote]: { render: () => <RemotePage /> },
-  [ROUTES.knowledge]: { render: () => <KnowledgePage /> },
-  [ROUTES.faq]: { render: () => <FaqPage /> },
-  [ROUTES.reviews]: { render: () => <ReviewsPage /> },
-  [ROUTES.contacts]: { render: () => <ContactsPage /> },
-  [ROUTES.results]: { render: () => <ResultsPage /> },
+  [ROUTES.remote]: { render: (locale) => <RemotePage locale={locale} /> },
+  [ROUTES.knowledge]: { render: (locale) => <KnowledgePage locale={locale} /> },
+  [ROUTES.faq]: { render: (locale) => <FaqPage locale={locale} /> },
+  [ROUTES.reviews]: { render: (locale) => <ReviewsPage locale={locale} /> },
+  [ROUTES.contacts]: { render: (locale) => <ContactsPage locale={locale} /> },
+  [ROUTES.results]: { render: (locale) => <ResultsPage locale={locale} /> },
 
   // Страницы-заглушки: содержимого ещё нет, но ссылка не должна быть битой
   [ROUTES.relatives]: { render: () => <StubPage /> },
@@ -82,5 +84,19 @@ export function resolvePage(path: string): PageEntry | null {
   if (entry) return entry
 
   const doctorId = doctorIdFromPath(path)
-  return doctorId ? { render: () => <DoctorProfilePage doctorId={doctorId} /> } : null
+  return doctorId
+    ? { render: (locale) => <DoctorProfilePage doctorId={doctorId} locale={locale} /> }
+    : null
+}
+
+/** Страница вместе со словарями для её клиентских компонентов. */
+export function renderPage(path: string, locale: Locale): ReactNode | null {
+  const page = resolvePage(path)
+  if (!page) return null
+
+  return (
+    <PageMessages path={path} locale={locale}>
+      {page.render(locale)}
+    </PageMessages>
+  )
 }

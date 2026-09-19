@@ -6,9 +6,11 @@ import { cn } from '@amare/ui'
 import type { Slot } from '@/lib/booking'
 import { BOOKING_HORIZON_DAYS } from '@/lib/booking'
 import { DOCTORS } from '@/data/doctors'
+import type { Locale } from '@amare/i18n'
+import { useContent, useT } from '@amare/i18n/react'
 
-const MONTH_DAY = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' })
-const WEEKDAY = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' })
+/** Локаль форматирования дат: у Intl свои теги, у нас — коды локалей. */
+const INTL_TAG: Record<Locale, string> = { ru: 'ru-RU', kk: 'kk-KZ' }
 
 /** «2026-09-25T10:30» → Date по локальному времени, без сдвига часового пояса. */
 function slotDate(at: string): Date {
@@ -28,6 +30,7 @@ interface Props {
   slots: Slot[]
   selectedId: string | null
   onSelect: (slotId: string) => void
+  locale: Locale
 }
 
 /**
@@ -42,7 +45,19 @@ interface Props {
  * поэтому выбор дня сбрасывает выбранное время: иначе можно отправить
  * заявку на время из другого дня.
  */
-export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
+export function AppointmentPicker({ slots, selectedId, onSelect, locale }: Props) {
+  const t = useT('booking')
+  const doctorName = useContent('doctors')
+
+  const monthDay = useMemo(
+    () => new Intl.DateTimeFormat(INTL_TAG[locale], { day: 'numeric', month: 'long' }),
+    [locale],
+  )
+  const weekday = useMemo(
+    () => new Intl.DateTimeFormat(INTL_TAG[locale], { weekday: 'long' }),
+    [locale],
+  )
+
   const today = useMemo(() => {
     const date = new Date()
     date.setHours(0, 0, 0, 0)
@@ -84,6 +99,7 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
     <div className="grid overflow-hidden rounded-3xl border border-line bg-surface lg:grid-cols-12">
       <div className="flex justify-center border-line p-4 sm:p-6 lg:col-span-7 lg:border-r">
         <Calendar
+          lang={locale}
           mode="single"
           selected={activeDay}
           month={activeDay}
@@ -99,9 +115,9 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
           <>
             <div className="flex flex-col">
               <span className="font-display text-lg font-medium tracking-[-0.03em]">
-                {MONTH_DAY.format(activeDay)}
+                {monthDay.format(activeDay)}
               </span>
-              <span className="text-base text-muted">{WEEKDAY.format(activeDay)}</span>
+              <span className="text-base text-muted">{weekday.format(activeDay)}</span>
             </div>
 
             <ul className="m-0 grid max-h-96 list-none grid-cols-2 gap-2 overflow-y-auto p-0 pr-1 sm:grid-cols-3 lg:grid-cols-2">
@@ -116,7 +132,7 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
                       disabled={slot.taken}
                       aria-pressed={chosen}
                       aria-label={
-                        slot.taken ? `${slot.at.slice(11, 16)} — время занято` : undefined
+                        slot.taken ? t('slot.taken', { time: slot.at.slice(11, 16) }) : undefined
                       }
                       className={cn(
                         'flex min-h-14 w-full flex-col items-center justify-center rounded-xl border-[1.5px] px-2 py-2 transition-colors',
@@ -135,7 +151,7 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
                             chosen && !slot.taken ? 'text-white/75' : 'text-muted',
                           )}
                         >
-                          {doctor.name.split(' ')[0]}
+                          {doctorName(`${doctor.id}.name`).split(' ')[0]}
                         </span>
                       )}
                     </button>
@@ -145,20 +161,18 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
             </ul>
 
             {daySlots.length === 0 ? (
-              <p className="m-0 text-base text-muted">На этот день свободного времени нет.</p>
+              <p className="m-0 text-base text-muted">{t('slot.dayEmpty')}</p>
             ) : (
               daySlots.some((slot) => slot.taken) && (
                 <p className="m-0 text-sm text-muted">
-                  <span className="line-through">Перечёркнутое</span> время уже занято.
+                  <span className="line-through">{t('slot.crossedWord')}</span>{' '}
+                  {t('slot.crossedNote')}
                 </p>
               )
             )}
           </>
         ) : (
-          <p className="m-0 text-base text-muted">
-            Свободного времени в этом формате сейчас нет. Позвоните — администратор подберёт время
-            вручную.
-          </p>
+          <p className="m-0 text-base text-muted">{t('slot.formatEmpty')}</p>
         )}
       </div>
     </div>

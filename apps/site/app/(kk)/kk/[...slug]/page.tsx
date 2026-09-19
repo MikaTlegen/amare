@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { t } from '@amare/i18n'
 import { ROUTES } from '@/lib/clinic'
-import { allPaths, resolvePage } from '@/lib/pages'
+import { allPaths, renderPage } from '@/lib/pages'
 import { DOCTORS } from '@/data/doctors'
 import { entityMetadata, pageMetadata } from '@/lib/seo'
 
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const doctor = doctorFromSlug(slug)
 
   return doctor
-    ? entityMetadata(path, doctor.name, 'kk')
+    ? entityMetadata(path, t('kk', 'doctors', `${doctor.id}.name` as never), 'kk')
     : slug.length > 1
       ? entityMetadata(path, t('kk', 'meta', 'doctorNotFound'), 'kk')
       : pageMetadata(path, 'kk')
@@ -48,8 +48,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params
-  const page = resolvePage(`/${slug.join('/')}`)
+  const page = renderPage(`/${slug.join('/')}`, 'kk')
   if (!page) notFound()
 
-  return page.render()
+  return page
 }

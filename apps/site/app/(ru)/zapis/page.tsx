@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import { PageMessages } from '@/components/PageMessages'
 import { BookingPage } from '@/components/pages/BookingPage'
 import { ROUTES } from '@/lib/clinic'
 import { pageMetadata } from '@/lib/seo'
@@ -10,7 +11,9 @@ export const metadata: Metadata = pageMetadata(ROUTES.booking, 'ru')
 export default function Page() {
   return (
     <Suspense>
-      <BookingPage />
+      <PageMessages path={ROUTES.booking} locale="ru">
+        <BookingPage locale="ru" />
+      </PageMessages>
     </Suspense>
   )
 }

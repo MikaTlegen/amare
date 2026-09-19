@@ -5,5 +5,5 @@ import { NotFoundPage } from '@/components/pages/NotFoundPage'
 export const metadata: Metadata = { title: t('ru', 'meta', 'notFound') }
 
 export default function NotFound() {
-  return <NotFoundPage />
+  return <NotFoundPage locale="ru" />
 }

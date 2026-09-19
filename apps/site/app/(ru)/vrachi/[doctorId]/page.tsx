@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return entityMetadata(
     doctorPath(doctorId),
-    doctor ? doctor.name : t('ru', 'meta', 'doctorNotFound'),
+    doctor ? t('ru', 'doctors', `${doctorId}.name` as never) : t('ru', 'meta', 'doctorNotFound'),
     'ru',
   )
 }
@@ -24,5 +24,5 @@ export function generateStaticParams() {
 
 export default async function Page({ params }: Props) {
   const { doctorId } = await params
-  return <DoctorProfilePage doctorId={doctorId} />
+  return <DoctorProfilePage doctorId={doctorId} locale="ru" />
 }

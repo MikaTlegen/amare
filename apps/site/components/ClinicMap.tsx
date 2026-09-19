@@ -1,4 +1,7 @@
+'use client'
+
 import { MapPin, Clock, Phone, ExternalLink } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { MapFrame } from '@/components/MapFrame'
 import { CLINIC } from '@/lib/clinic'
 import { cn } from '@amare/ui'
@@ -11,10 +14,11 @@ import { cn } from '@amare/ui'
  * куки, поэтому в проекте есть баннер согласия (components/CookieBanner),
  * и упоминание 2ГИС обязано попасть в политику обработки данных.
  *
- * Сам фрейм вынесен в MapFrame: ему нужно состояние «карта включена»,
- * а этот блок остаётся серверным.
+ * Сам фрейм вынесен в MapFrame: ему нужно состояние «карта включена».
  */
 export function ClinicMap({ className }: { className?: string }) {
+  const t = useT('contacts')
+
   return (
     <div className={cn('grid gap-6 lg:grid-cols-12', className)}>
       <aside className="flex flex-col gap-6 rounded-3xl border border-line bg-surface p-8 lg:col-span-4">
@@ -26,12 +30,12 @@ export function ClinicMap({ className }: { className?: string }) {
           <h3 className="m-0 font-display text-xl font-medium leading-snug tracking-[-0.035em]">
             {CLINIC.name}
           </h3>
-          <p className="m-0 text-base leading-relaxed text-muted">{CLINIC.address.full}</p>
+          <p className="m-0 text-base leading-relaxed text-muted">{t('addressFull')}</p>
         </div>
 
         <p className="m-0 flex items-start gap-3 text-base leading-relaxed">
           <Clock className="mt-1 h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
-          {CLINIC.hours}
+          {t('hours')}
         </p>
 
         <p className="m-0 flex flex-col gap-2">
@@ -56,13 +60,13 @@ export function ClinicMap({ className }: { className?: string }) {
           rel="noopener noreferrer"
           className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white no-underline"
         >
-          Маршрут в 2ГИС
+          {t('mapRoute')}
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </a>
       </aside>
 
       <div className="lg:col-span-8">
-        <MapFrame title={`Карта: ${CLINIC.name}, ${CLINIC.address.full}`} />
+        <MapFrame title={t('mapFrameTitle', { clinic: CLINIC.name, address: t('addressFull') })} />
       </div>
     </div>
   )

@@ -130,3 +130,27 @@ export function pickMessages(locale: Locale, namespaces: readonly Namespace[]): 
   for (const ns of namespaces) picked[ns] = getMessages(locale, ns);
   return picked as ProvidedMessages;
 }
+
+/**
+ * Перевод по ключу, который собирается в рантайме из данных: `<id>.<поле>`,
+ * где id — запись из apps/site/data. Типы такой ключ проверить не могут,
+ * поэтому полноту связки «данные ↔ словарь» сторожит тест content.test.ts,
+ * а отсутствующий ключ виден на экране как есть.
+ */
+export function getContent<N extends Namespace>(
+  locale: Locale,
+  ns: N,
+): (key: string, vars?: Vars) => string {
+  return (key, vars) => format(read(locale, ns, key), vars);
+}
+
+/** Списковое значение по собранному ключу — тезисы статьи, подписи под карточкой. */
+export function getContentList<N extends Namespace>(
+  locale: Locale,
+  ns: N,
+  key: string,
+): readonly string[] {
+  const messages = getMessages(locale, ns) as Record<string, unknown>;
+  const value = messages[key];
+  return Array.isArray(value) ? (value as readonly string[]) : [];
+}

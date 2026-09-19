@@ -8,20 +8,11 @@ import { Button } from '@/components/Links'
 import { submitLead, readUtm, type LeadPayload } from '@/lib/crm'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
+import { useContent, useT } from '@amare/i18n/react'
 
-const WHEN = [
-  { id: '<1m', label: 'Меньше месяца' },
-  { id: '1-6m', label: '1–6 месяцев' },
-  { id: '6-12m', label: '6–12 месяцев' },
-  { id: '>12m', label: 'Больше года' },
-] as const
-
-const MOBILITY = [
-  { id: 'bedridden', label: 'Лежит, не садится' },
-  { id: 'wheelchair', label: 'Сидит, коляска' },
-  { id: 'assisted', label: 'Ходит с поддержкой' },
-  { id: 'independent', label: 'Ходит сам' },
-] as const
+// Подписи вариантов лежат в словаре forms по ключу `<группа>.<id>`
+const WHEN = ['<1m', '1-6m', '6-12m', '>12m'] as const
+const MOBILITY = ['bedridden', 'wheelchair', 'assisted', 'independent'] as const
 
 /**
  * Предварительная анкета (требование S-04 ТЗ).
@@ -32,6 +23,10 @@ const MOBILITY = [
  * чтобы было видно место в сценарии.
  */
 export function IntakeFormPage() {
+  const t = useT('forms')
+  const text = useContent('forms')
+  const contacts = useT('contacts')
+
   const [filledBy, setFilledBy] = useState<'patient' | 'relative'>('relative')
   const [when, setWhen] = useState<string>('')
   const [mobility, setMobility] = useState<string>('')
@@ -64,11 +59,11 @@ export function IntakeFormPage() {
   return (
     <>
       <PageCover
-        crumb="Анкета"
-        title="Расскажите о состоянии"
-        note="Пять вопросов. Врач-реабилитолог посмотрит ответы и перезвонит с предварительным планом."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/intake-desk.jpg"
-        alt="Заполнение медицинских документов"
+        alt={t('cover.alt')}
       />
 
       <section className="container-content py-12">
@@ -76,25 +71,25 @@ export function IntakeFormPage() {
           <div className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
-              Анкета отправлена
+              {t('done.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed text-muted">
-              Врач перезвонит в рабочее время: {CLINIC.hours}.
+              {t('done.note', { hours: contacts('hours') })}
             </p>
             <div className="flex flex-wrap gap-3">
               <Button href={CLINIC.phones[0].href}>{CLINIC.phones[0].label}</Button>
               <Button to={ROUTES.home} variant="outline">
-                На главную
+                {t('done.home')}
               </Button>
             </div>
           </div>
         ) : (
           <form onSubmit={submit} className="mx-auto flex max-w-3xl flex-col gap-8">
-            <Group legend="Кто заполняет анкету">
+            <Group legend={t('filledBy.legend')}>
               <Choice
                 options={[
-                  { id: 'relative', label: 'Родственник' },
-                  { id: 'patient', label: 'Сам пациент' },
+                  { id: 'relative', label: t('filledBy.relative') },
+                  { id: 'patient', label: t('filledBy.patient') },
                 ]}
                 value={filledBy}
                 onChange={(v) => setFilledBy(v as 'patient' | 'relative')}
@@ -102,17 +97,16 @@ export function IntakeFormPage() {
               />
             </Group>
 
-            <Group legend="Сколько времени прошло после инсульта или травмы">
+            <Group legend={t('when.legend')}>
               <Choice
-                options={WHEN.map((w) => ({ id: w.id, label: w.label }))}
+                options={WHEN.map((id) => ({ id, label: text(`when.${id}`) }))}
                 value={when}
                 onChange={setWhen}
                 name="when"
               />
               {when === '<1m' && (
                 <p className="m-0 rounded-2xl border-[1.5px] border-accent bg-[rgb(253,238,237)] px-5 py-4 text-base leading-relaxed">
-                  Это острый период — программу назначает врач по выписке из стационара. Анкету
-                  можно не заполнять, быстрее позвонить:{' '}
+                  {t('when.acute')}{' '}
                   <a href={CLINIC.phones[0].href} className="font-semibold">
                     {CLINIC.phones[0].label}
                   </a>
@@ -121,41 +115,39 @@ export function IntakeFormPage() {
               )}
             </Group>
 
-            <Group legend="Как человек сейчас передвигается">
+            <Group legend={t('mobility.legend')}>
               <Choice
-                options={MOBILITY.map((m) => ({ id: m.id, label: m.label }))}
+                options={MOBILITY.map((id) => ({ id, label: text(`mobility.${id}`) }))}
                 value={mobility}
                 onChange={setMobility}
                 name="mobility"
               />
             </Group>
 
-            <Group legend="Что ещё нарушено">
+            <Group legend={t('other.legend')}>
               <div className="flex flex-col gap-2.5">
-                <Toggle label="Трудности с речью" checked={speech} onChange={setSpeech} />
-                <Toggle label="Трудности с глотанием" checked={swallow} onChange={setSwallow} />
+                <Toggle label={t('other.speech')} checked={speech} onChange={setSpeech} />
+                <Toggle label={t('other.swallow')} checked={swallow} onChange={setSwallow} />
               </div>
             </Group>
 
-            <Group legend="Выписка из стационара">
+            <Group legend={t('discharge.legend')}>
               <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-line bg-bg p-6">
                 <span className="flex items-center gap-3 text-base font-medium text-muted">
                   <Upload className="h-5 w-5" aria-hidden="true" />
-                  Загрузка файла появится вместе с защищённым хранилищем
+                  {t('discharge.disabled')}
                 </span>
                 <p className="m-0 text-base leading-relaxed text-muted">
-                  Выписка — медицинский документ. Принимать её можно только на собственный сервер
-                  в РК и только после согласия на обработку. Пока опишите главное в разговоре
-                  с врачом.
+                  {t('discharge.note')}
                 </p>
               </div>
             </Group>
 
-            <Group legend="Контакты">
+            <Group legend={t('contacts.legend')}>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="f-name" className="text-base font-medium">
-                    Как к вам обращаться
+                    {t('contacts.name')}
                   </label>
                   <input
                     id="f-name"
@@ -167,7 +159,7 @@ export function IntakeFormPage() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="f-phone" className="text-base font-medium">
-                    Телефон
+                    {t('contacts.phone')}
                   </label>
                   <input
                     id="f-phone"
@@ -175,7 +167,7 @@ export function IntakeFormPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     autoComplete="tel"
-                    placeholder="+7 ___ ___ __ __"
+                    placeholder={t('contacts.phonePlaceholder')}
                     required
                     className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-surface px-4 py-3 text-base"
                   />
@@ -192,8 +184,7 @@ export function IntakeFormPage() {
                 className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
               />
               <span className="text-base leading-relaxed text-muted">
-                Согласен на обработку персональных данных, включая сведения о здоровье, и на звонок
-                от клиники. Данные хранятся на территории Республики Казахстан.
+                {t('contacts.consent')}
               </span>
             </label>
 
@@ -202,7 +193,7 @@ export function IntakeFormPage() {
               disabled={!consent || sending}
               className="min-h-[3.4rem] self-start rounded-xl bg-accent px-8 py-4 text-lg font-semibold text-accent-ink disabled:opacity-50"
             >
-              {sending ? 'Отправляем…' : 'Отправить анкету'}
+              {sending ? t('submit.sending') : t('submit.label')}
             </button>
           </form>
         )}

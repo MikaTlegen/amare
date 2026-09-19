@@ -1,8 +1,11 @@
+'use client'
+
 import { ParallaxBand } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { Reveal } from '@amare/ui'
 import { BarthelChart } from '@amare/ui'
-import { DEMO_PROGRESS, PROGRESS_SUMMARY } from '@/data/progress'
+import { DEMO_PROGRESS_VALUES, PROGRESS_SUMMARY } from '@/data/progress'
+import { useContentList, useT } from '@amare/i18n/react'
 import { ROUTES } from '@/lib/clinic'
 
 /**
@@ -17,31 +20,36 @@ import { ROUTES } from '@/lib/clinic'
  * «+[X] баллов» на публичной странице выглядит как сломанный шаблон.
  */
 export function ResultsBand() {
+  const t = useT('progress')
+  const list = useContentList('progress')
+
+  // Подписи дней переводятся, значения остаются демонстрационными
+  const data = list('days').map((day, i) => ({ day, barthel: DEMO_PROGRESS_VALUES[i] ?? 0 }))
+
   const hasAggregates = PROGRESS_SUMMARY.averageGain || PROGRESS_SUMMARY.completionRate
 
   return (
     <ParallaxBand
       id="results"
       image="/photos/lobby.jpg"
-      alt="Зона ожидания клиники Amare"
+      alt={t('band.alt')}
       scrim="strong"
       strength={22}
     >
       <div className="container-content grid items-center gap-10 py-16 lg:grid-cols-12">
         <Reveal className="flex flex-col gap-5 lg:col-span-5">
           <h2 className="font-display text-3xl font-medium leading-[1.15] tracking-[-0.045em] text-white sm:text-4xl sm:leading-10">
-            Прогресс видно в цифрах
+            {t('band.title')}
           </h2>
           <p className="text-lg leading-relaxed text-white/75">
-            Индекс Бартел показывает бытовую самостоятельность: 0 — полная зависимость от
-            посторонней помощи, 100 — человек справляется сам.
+            {t('band.note')}
           </p>
 
           {hasAggregates && (
             <dl className="flex flex-wrap gap-8">
               {PROGRESS_SUMMARY.averageGain && (
                 <div>
-                  <dt className="text-sm text-white/60">Средний рост за курс</dt>
+                  <dt className="text-sm text-white/60">{t('band.averageGain')}</dt>
                   <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
                     {PROGRESS_SUMMARY.averageGain}
                   </dd>
@@ -49,7 +57,7 @@ export function ResultsBand() {
               )}
               {PROGRESS_SUMMARY.completionRate && (
                 <div>
-                  <dt className="text-sm text-white/60">Доходят до конца курса</dt>
+                  <dt className="text-sm text-white/60">{t('band.completionRate')}</dt>
                   <dd className="font-display text-2xl font-semibold tracking-[-0.04em] text-white">
                     {PROGRESS_SUMMARY.completionRate}
                   </dd>
@@ -59,26 +67,26 @@ export function ResultsBand() {
           )}
 
           <Button to={ROUTES.results} size="lg" className="self-start">
-            Истории восстановления
+            {t('band.stories')}
           </Button>
         </Reveal>
 
         <Reveal delay={0.1} className="flex flex-col gap-5 lg:col-span-7">
           <div className="flex items-baseline justify-between">
-            <span className="text-base font-semibold text-white">Индекс Бартел за 20 дней</span>
-            <span className="text-sm text-white/55">демонстрационные данные</span>
+            <span className="text-base font-semibold text-white">{t('band.chartTitle')}</span>
+            <span className="text-sm text-white/55">{t('band.demo')}</span>
           </div>
 
-          <BarthelChart onDark data={DEMO_PROGRESS} />
+          <BarthelChart onDark data={data} />
 
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/20 px-5 py-4">
-              <span className="text-sm text-white/60">Было</span>
-              <p className="m-0 text-base font-semibold text-white">{PROGRESS_SUMMARY.before}</p>
+              <span className="text-sm text-white/60">{t('band.beforeLabel')}</span>
+              <p className="m-0 text-base font-semibold text-white">{t('before')}</p>
             </div>
             <div className="rounded-2xl border border-accent/50 bg-accent/10 px-5 py-4">
-              <span className="text-sm text-[rgb(248,180,175)]">Стало</span>
-              <p className="m-0 text-base font-semibold text-white">{PROGRESS_SUMMARY.after}</p>
+              <span className="text-sm text-[rgb(248,180,175)]">{t('band.afterLabel')}</span>
+              <p className="m-0 text-base font-semibold text-white">{t('after')}</p>
             </div>
           </div>
         </Reveal>

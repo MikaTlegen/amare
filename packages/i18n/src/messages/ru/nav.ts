@@ -16,4 +16,6 @@ export const nav = {
   cabinetEnter: "Войти в кабинет",
   logoAria: "Amare.kz — на главную",
   skipToContent: "Перейти к содержанию",
+  breadcrumbs: "Хлебные крошки",
+  home: "Главная",
 } as const;

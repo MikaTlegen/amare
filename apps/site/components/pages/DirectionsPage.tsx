@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element -- перенос 1:1 из набросков; next/image — отдельная задача */
+import { getContent, getContentList, getPlural, getT, type Locale } from '@amare/i18n'
 import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
 import { Button } from '@/components/Links'
@@ -10,15 +11,20 @@ import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 /** Страница «Направления»: сюда ушли развёрнутые описания с главной. */
-export function DirectionsPage() {
+export function DirectionsPage({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'directions')
+  const text = getContent(locale, 'directions')
+  const condition = getContent(locale, 'doctors')
+  const doctorCount = getPlural(locale, 'doctors')
+
   return (
     <>
       <PageCover
-        crumb="Направления"
-        title="Что именно мы восстанавливаем"
-        note="Каждое направление — бытовой навык, а не процедура. Прогресс по нему замеряется шкалой и виден в кабинете."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/equipment.jpg"
-        alt="Реабилитационное оборудование в зале клиники"
+        alt={t('cover.alt')}
       />
 
       <section className="container-content flex flex-col gap-5 py-14">
@@ -27,6 +33,7 @@ export function DirectionsPage() {
           /* Чередуем сторону фото: иначе десять одинаковых карточек подряд
              читаются как таблица и взгляд по ним не цепляется. */
           const photoRight = i % 2 === 1
+          const tags = getContentList(locale, 'directions', `${direction.id}.tags`)
 
           return (
             <Reveal
@@ -39,7 +46,7 @@ export function DirectionsPage() {
               {direction.photo && (
                 <img
                   src={direction.photo}
-                  alt={direction.photoAlt ?? ''}
+                  alt={text(`${direction.id}.photoAlt`)}
                   loading="lazy"
                   decoding="async"
                   className={cn(
@@ -57,21 +64,23 @@ export function DirectionsPage() {
               >
                 <span className="flex items-center gap-2 font-display text-sm font-semibold text-accent">
                   <Icon className="h-5 w-5" aria-hidden="true" />
-                  {direction.method}
+                  {text(`${direction.id}.method`)}
                 </span>
 
                 <h2 className="font-display text-2xl font-medium tracking-[-0.04em] sm:text-[1.7rem] leading-8">
-                  {direction.title}
+                  {text(`${direction.id}.title`)}
                 </h2>
 
-                <p className="max-w-[44em] text-lg leading-relaxed text-ink/80">{direction.full}</p>
+                <p className="max-w-[44em] text-lg leading-relaxed text-ink/80">
+                  {text(`${direction.id}.full`)}
+                </p>
 
                 {/*
                   Раньше здесь были чипы с фоном и скруглением. Это подписи
                   «чем меряем и кто ведёт», а не действия — вид кнопки заставлял
                   по ним кликать. Теперь просто строка через точки.
                 */}
-                <p className="m-0 text-base text-muted">{direction.tags.join(' · ')}</p>
+                <p className="m-0 text-base text-muted">{tags.join(' · ')}</p>
               </div>
             </Reveal>
           )
@@ -85,20 +94,22 @@ export function DirectionsPage() {
       */}
       <section className="container-content flex flex-col gap-5 pb-14">
         <h2 className="font-display text-3xl font-medium tracking-[-0.045em]">
-          С какими состояниями работаем
+          {t('conditions.title')}
         </h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {CONDITION_LIST.map((condition) => {
-            const count = DOCTORS.filter((d) => d.conditions.includes(condition.id)).length
+          {CONDITION_LIST.map((id) => {
+            const count = DOCTORS.filter((d) => d.conditions.includes(id)).length
             return (
-              <li key={condition.id}>
+              <li key={id}>
                 <Link
-                  href={`${ROUTES.team}?condition=${condition.id}`}
+                  href={`${ROUTES.team}?condition=${id}`}
                   className="group flex h-full flex-col justify-between gap-3 rounded-2xl border border-line bg-surface px-5 py-5 no-underline transition-colors hover:border-brand"
                 >
-                  <span className="text-base font-medium text-ink">{condition.label}</span>
+                  <span className="text-base font-medium text-ink">
+                    {condition(`condition.${id}`)}
+                  </span>
                   <span className="inline-flex items-center gap-2 text-base font-semibold text-brand">
-                    {count} специалиста
+                    {doctorCount('count', count)}
                     <ArrowRight
                       className="h-4 w-4 transition-transform group-hover:translate-x-1"
                       aria-hidden="true"
@@ -115,14 +126,12 @@ export function DirectionsPage() {
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
             <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">
-              Не знаете, с чего начать?
+              {t('cta.title')}
             </h2>
-            <p className="text-base text-ink/75">
-              Опишите состояние в анкете — врач-реабилитолог предложит направление.
-            </p>
+            <p className="text-base text-ink/75">{t('cta.note')}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.form}>Заполнить анкету</Button>
+            <Button to={ROUTES.form}>{t('cta.form')}</Button>
             <Button href={CLINIC.phones[0].href} variant="outline">
               {CLINIC.phones[0].label}
             </Button>

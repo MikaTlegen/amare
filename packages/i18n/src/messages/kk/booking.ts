@@ -1,0 +1,45 @@
+import type { Translation } from "../../types";
+
+/** Черновик перевода. Вычитывает клиника — см. docs/DECISIONS.md. */
+export const booking: Translation<"booking"> = {
+  "cover.crumb": "Жазылу",
+  "cover.title": "Консультацияға жазылу",
+  "cover.note": "{freeIntro}. Әрі қарай дәрігер жоспар құрып, курс қажет пе, соны айтады.",
+  "cover.alt": "Әкімші тұғыры: қабылдау уақыты осында расталады",
+
+  "format.legend": "1. Қабылдау форматы",
+  "format.clinic": "Клиникада",
+  "format.online": "Онлайн",
+  "format.home": "Үйге шығумен",
+
+  "time.legend": "2. Күні және уақыты",
+  "time.onlyDoctor": "Тек мына маманға уақыт көрсетілді: {name}, {role}",
+  "time.showAll": "Барлығын көрсету",
+  "time.chosen": "Таңдалды: {date}, {time}",
+  "time.chosenDoctor": "Таңдалды: {date}, {time} · {name}, {role}",
+
+  "slot.taken": "{time} — уақыт бос емес",
+  "slot.dayEmpty": "Бұл күні бос уақыт жоқ.",
+  "slot.crossedWord": "Сызылған",
+  "slot.crossedNote": "уақыт бос емес.",
+  "slot.formatEmpty":
+    "Бұл форматта қазір бос уақыт жоқ. Қоңырау шалыңыз — әкімші уақытты қолмен таңдайды.",
+
+  "contacts.legend": "3. Сіздің байланыстарыңыз",
+  "contacts.name": "Сізге қалай жүгінейік",
+  "contacts.phone": "Телефон",
+  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.comment": "Дәрігердің білгені маңызды нәрсе",
+  "contacts.commentPlaceholder": "Инсульт қашан болды, адам қалай қозғалады",
+  "contacts.consent":
+    "Дербес деректерді, оның ішінде денсаулық туралы мәліметтерді өңдеуге келісемін.",
+
+  "submit.sending": "Жіберілуде…",
+  "submit.label": "Жазылу",
+  "submit.note": "Төлем талап етілмейді: әкімші уақытты телефон арқылы растайды.",
+
+  "done.title": "Өтінім қабылданды",
+  "done.note":
+    "Әкімші қайта қоңырау шалып, уақытты растайды. Жылдамырақ керек болса — өзіңіз қоңырау шалыңыз.",
+  "done.home": "Басты бетке",
+};
