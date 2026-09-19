@@ -57,7 +57,7 @@ export function VideoReviewPanel() {
   return (
     <div className="flex flex-col gap-5">
       <p className="m-0 text-base text-muted">
-        Непроверенных видео: {pending.length} из {items.length}
+          {t('video.pending', { pending: pending.length, total: items.length })}
       </p>
 
       <ul className="m-0 flex list-none flex-col gap-3 p-0">

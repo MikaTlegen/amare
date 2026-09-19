@@ -194,7 +194,7 @@ export function DiaryPanel({
                 <span className="font-display text-xl font-semibold tracking-[-0.04em]">
                   {entry.systolic}/{entry.diastolic}
                 </span>
-                <span className="text-base text-muted">пульс {entry.pulse}</span>
+                <span className="text-base text-muted">{t('diary.pulseValue', { value: entry.pulse })}</span>
                 <span className="text-base text-muted">{entry.at}</span>
                 {entry.byGuardian && (
                   <span className="rounded-full bg-tint px-3 py-1 text-sm font-medium text-deep">

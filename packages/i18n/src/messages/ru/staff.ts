@@ -40,6 +40,9 @@ export const staff = {
   "status.red": "Критический сигнал",
   "status.orange": "Требует внимания",
   "status.green": "По плану",
+  "board.courseDay": "день {day}/{total}",
+  "board.weekMinutes": "{count} мин",
+  "video.pending": "Непроверенных видео: {pending} из {total}",
   "board.empty": "В этой группе сейчас никого нет.",
   "board.open": "Открыть карточку",
 

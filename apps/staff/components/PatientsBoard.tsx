@@ -111,7 +111,7 @@ export function PatientsBoard({
                     <span className="text-base text-muted">{text(STATUS_KEY[status])}</span>
                   </div>
                   <span className="shrink-0 rounded-full bg-tint px-3 py-1.5 text-sm font-medium text-deep">
-                    день {patient.courseDay}/{patient.courseLength}
+                    {t('board.courseDay', { day: patient.courseDay, total: patient.courseLength })}
                   </span>
                 </div>
 
@@ -120,7 +120,7 @@ export function PatientsBoard({
                   <Metric label={t('board.gain')} value={`+${gain}`} accent />
                   <Metric
                     label={t('board.practice')}
-                    value={`${patient.weekMinutes.reduce((a, b) => a + b, 0)} мин`}
+                    value={t('board.weekMinutes', { count: patient.weekMinutes.reduce((a, b) => a + b, 0) })}
                   />
                 </div>
 

@@ -35,6 +35,12 @@ export const cabinet: Translation<"cabinet"> = {
   "plan.loading": "Жоспар жүктелуде…",
   "plan.marking": "Белгіленуде…",
   "plan.done": "Орындалды",
+  "plan.day": "{total} күннің {day}-күні",
+  "plan.minutes": "{total} минуттың {done} минуты",
+  "plan.exerciseMinutes": "{count} мин",
+  "diary.pulseValue": "тамыр соғуы {value}",
+  "care.progress": "{total} ішінен {done} белгіленді",
+  "progress.weekMinutes": "{count} мин",
   "plan.allDone": "Бүгінгі жоспар орындалды. Демалыңыз — мұнда шамадан тыс жүктеме көмектеспейді.",
   "plan.percent": "Жоспардың {percent} пайызы орындалды",
   "plan.patientOnly":
@@ -117,6 +123,7 @@ export const cabinet: Translation<"cabinet"> = {
   "school.title": "Қамқоршы мектебі",
   "school.passed": "Өтілді",
   "school.mark": "Белгілеу",
+  "school.lessonMinutes": "{count} мин",
   "school.checklist": "Қауіпсіз пәтер тізімі",
   "school.checklistNote":
     "Үйде құлау — адамның стационарға қайта түсіп, курс ішінде жинағанынан айырылуының ең жиі себебі.",

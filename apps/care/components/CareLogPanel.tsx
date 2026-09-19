@@ -46,7 +46,7 @@ export function CareLogPanel() {
           {t('care.title')}
         </h2>
         <span className="text-base text-muted">
-          отмечено {done} из {tasks.length}
+          {t('care.progress', { done, total: tasks.length })}
         </span>
       </div>
 

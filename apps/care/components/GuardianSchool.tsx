@@ -83,7 +83,7 @@ export function GuardianSchool() {
               <div className="flex flex-1 flex-col gap-0.5">
                 <span className="text-lg font-semibold">{lesson.title}</span>
                 <span className="text-base leading-relaxed text-muted">{lesson.summary}</span>
-                <span className="text-base text-muted">{lesson.minutes} мин</span>
+                <span className="text-base text-muted">{t('school.lessonMinutes', { count: lesson.minutes })}</span>
               </div>
 
               <button

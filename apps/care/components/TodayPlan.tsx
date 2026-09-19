@@ -44,10 +44,10 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
       <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="font-display text-xl font-medium tracking-[-0.035em]">
-            День {plan.day} из {plan.courseLength}
+            {t('plan.day', { day: plan.day, total: plan.courseLength })}
           </span>
           <span className="text-base text-muted">
-            {doneMinutes} из {plan.planMinutes} минут
+            {t('plan.minutes', { done: doneMinutes, total: plan.planMinutes })}
           </span>
         </div>
 
@@ -114,7 +114,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
               </div>
 
               <span className="text-base text-muted sm:w-20 sm:text-right">
-                {exercise.minutes} мин
+                {t('plan.exerciseMinutes', { count: exercise.minutes })}
               </span>
 
               {!readOnly && !done && (

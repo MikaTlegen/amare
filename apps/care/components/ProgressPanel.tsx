@@ -46,7 +46,7 @@ export function ProgressPanel() {
             {t('progress.week')}
           </h2>
           <span className="font-display text-xl font-semibold tracking-[-0.04em]">
-            {weekTotal} мин
+            {t('progress.weekMinutes', { count: weekTotal })}
           </span>
         </div>
 

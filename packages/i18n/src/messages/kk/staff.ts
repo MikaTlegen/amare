@@ -32,6 +32,9 @@ export const staff: Translation<"staff"> = {
   "status.red": "Дабыл сигналы",
   "status.orange": "Назар аударуды қажет етеді",
   "status.green": "Жоспар бойынша",
+  "board.courseDay": "{total} күннің {day}-күні",
+  "board.weekMinutes": "{count} мин",
+  "video.pending": "Тексерілмеген бейне: {total} ішінен {pending}",
   "board.empty": "Бұл топта қазір ешкім жоқ.",
   "board.open": "Карточканы ашу",
 

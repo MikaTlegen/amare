@@ -32,6 +32,12 @@ export const cabinet = {
   "plan.loading": "Загружаем план…",
   "plan.marking": "Отмечаем…",
   "plan.done": "Выполнено",
+  "plan.day": "День {day} из {total}",
+  "plan.minutes": "{done} из {total} минут",
+  "plan.exerciseMinutes": "{count} мин",
+  "diary.pulseValue": "пульс {value}",
+  "care.progress": "отмечено {done} из {total}",
+  "progress.weekMinutes": "{count} мин",
   "plan.allDone": "План на сегодня выполнен. Отдыхайте — переработка здесь не помогает.",
   "plan.percent": "Выполнено {percent} процентов плана",
   "plan.patientOnly":
@@ -115,6 +121,7 @@ export const cabinet = {
   "school.title": "Школа опекуна",
   "school.passed": "Пройден",
   "school.mark": "Отметить",
+  "school.lessonMinutes": "{count} мин",
   "school.checklist": "Чек-лист безопасной квартиры",
   "school.checklistNote":
     "Падение дома — самая частая причина, по которой человек возвращается в стационар и теряет набранное за курс.",
