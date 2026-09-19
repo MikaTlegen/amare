@@ -89,9 +89,9 @@ export function useAuth() {
   return context
 }
 
-/** Человекочитаемое название роли — используется в шапке кабинета. */
-export const STAFF_ROLE_LABEL: Record<StaffRole, string> = {
-  curator: 'Куратор',
-  admin: 'Администратор',
-  moderator: 'Модератор контента',
+/** Ключ названия роли в словаре staff — подпись рисует шапка кабинета. */
+export const STAFF_ROLE_KEY: Record<StaffRole, string> = {
+  curator: 'role.curator',
+  admin: 'role.admin',
+  moderator: 'role.moderator',
 }

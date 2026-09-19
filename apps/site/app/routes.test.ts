@@ -14,8 +14,9 @@ const CABINET_ROUTES = new Set<string>([
   ROUTES.cabinetGuardian,
 ]);
 
+// Русские страницы лежат в группе (ru): у каждой локали свой корневой макет
 function pageFile(route: string): string {
-  return `${appDir}${route === "/" ? "" : route.slice(1)}/page.tsx`;
+  return `${appDir}(ru)/${route === "/" ? "" : `${route.slice(1)}/`}page.tsx`;
 }
 
 describe("маршруты сайта", () => {
@@ -26,13 +27,15 @@ describe("маршруты сайта", () => {
     expect(existsSync(pageFile(path)), pageFile(path)).toBe(true);
   });
 
-  it("пути кабинетов перенаправляются в care", async () => {
+  it("пути кабинетов перенаправляются в care в обеих локалях", async () => {
     const redirects = (await nextConfig.redirects?.()) ?? [];
     const sources = redirects.map((redirect) => redirect.source);
 
-    expect(sources).toContain(ROUTES.login);
-    expect(sources).toContain(ROUTES.cabinet);
-    expect(sources).toContain(`${ROUTES.cabinet}/:path*`);
+    for (const prefix of ["", "/kk"]) {
+      expect(sources).toContain(`${prefix}${ROUTES.login}`);
+      expect(sources).toContain(`${prefix}${ROUTES.cabinet}`);
+      expect(sources).toContain(`${prefix}${ROUTES.cabinet}/:path*`);
+    }
     for (const redirect of redirects) {
       expect(redirect.destination.startsWith("http"), redirect.destination).toBe(true);
     }

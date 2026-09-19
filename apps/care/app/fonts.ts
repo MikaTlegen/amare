@@ -6,13 +6,13 @@ import { Inter, Manrope } from "next/font/google";
  * Переменные подхватывает тема @amare/ui (font-display, font-sans).
  */
 export const manrope = Manrope({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
   variable: "--font-manrope",
   display: "swap",
 });
 
 export const inter = Inter({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
   variable: "--font-inter",
   display: "swap",
 });

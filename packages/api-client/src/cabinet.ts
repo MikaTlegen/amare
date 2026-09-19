@@ -575,10 +575,15 @@ export interface VideoReview {
   comment: string;
 }
 
-export const VERDICT_LABEL: Record<VideoVerdict, string> = {
-  ok: "Техника верная",
-  partial: "Частично верно",
-  wrong: "Неверно, переделать",
+/**
+ * Подписи вердиктов — это интерфейс, а не демо-данные: они переехали
+ * в @amare/i18n (namespace staff, ключи verdictLabel.*). Здесь остаётся
+ * только ключ, чтобы связь «вердикт → подпись» была в одном месте.
+ */
+export const VERDICT_KEY: Record<VideoVerdict, string> = {
+  ok: "verdictLabel.ok",
+  partial: "verdictLabel.partial",
+  wrong: "verdictLabel.wrong",
 };
 
 /** Черновик еженедельного разбора (W-05). */

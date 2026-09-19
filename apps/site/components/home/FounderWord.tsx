@@ -1,5 +1,8 @@
 /* eslint-disable @next/next/no-img-element -- один портрет; next/image — отдельная задача */
+'use client'
+
 import { Quote } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { Reveal } from '@amare/ui'
 import { FOUNDER } from '@/data/founder'
 
@@ -11,6 +14,8 @@ import { FOUNDER } from '@/data/founder'
  * который отвечает за клинику, чем ещё один список регалий.
  */
 export function FounderWord() {
+  const t = useT('progress')
+
   return (
     <section className="bg-bg px-4 py-20 sm:px-8 lg:px-20">
       <Reveal className="mx-auto grid max-w-content items-center gap-10 lg:grid-cols-12">
@@ -18,7 +23,7 @@ export function FounderWord() {
           {FOUNDER.photo ? (
             <img
               src={FOUNDER.photo}
-              alt={FOUNDER.photoAlt}
+              alt={t('founder.photoAlt')}
               loading="lazy"
               decoding="async"
               className="mx-auto w-full max-w-sm rounded-3xl object-cover"
@@ -39,11 +44,11 @@ export function FounderWord() {
           <Quote className="h-8 w-8 text-brand" aria-hidden="true" />
 
           <p className="m-0 font-display text-2xl font-medium leading-[1.3] tracking-[-0.035em] text-ink sm:text-3xl">
-            {FOUNDER.quote}
+            {t('founder.quote')}
           </p>
 
           <p className="m-0 text-base leading-relaxed text-muted">
-            {FOUNDER.name} — {FOUNDER.role.toLowerCase()}
+            {t('founder.credit', { name: t('founder.name'), role: t('founder.roleInline') })}
           </p>
         </div>
       </Reveal>

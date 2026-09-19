@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import type { PatientCard, StaffTask } from "@amare/api-client"
 import { CabinetShell, DemoNotice, type Tab } from "@amare/ui"
-import { STAFF_ROLE_LABEL, useAuth } from "@/auth/AuthContext"
+import { useContent, useT } from "@amare/i18n/react"
+import { STAFF_ROLE_KEY, useAuth } from "@/auth/AuthContext"
 import { getStaffPatients, getStaffTasks } from "@/lib/mock"
 import { AdminOperationsPanel } from "./AdminOperationsPanel"
 import { ContentApprovalPanel } from "./ContentApprovalPanel"
@@ -13,16 +14,20 @@ import { PatientsBoard } from "./PatientsBoard"
 import { TaskQueue } from "./TaskQueue"
 import { VideoReviewPanel } from "./VideoReviewPanel"
 
-const CURATOR_TABS: Tab[] = [{ id: "queue", label: "Очередь задач" }, { id: "patients", label: "Мои пациенты" }, { id: "video", label: "Видео на проверку" }, { id: "content-review", label: "Контент на утверждение" }]
+/** Вкладки куратора: подписи берутся из словаря staff. */
+const CURATOR_TAB_KEYS = [["queue", "tab.queue"], ["patients", "tab.patients"], ["video", "tab.video"], ["content-review", "tab.contentReview"]] as const
 const MODERATOR_TABS: Tab[] = [{ id: "dashboard", label: "Сводка" }, { id: "library", label: "Контент и шаблоны" }, { id: "review", label: "На проверке" }, { id: "archive", label: "Архив" }]
 const ADMIN_TABS: Tab[] = [{ id: "dashboard", label: "Дашборд" }, { id: "patients", label: "Пациенты и кураторы" }, { id: "operations", label: "Оплаты" }]
 
 export function StaffCabinetPage() {
+  const t = useT("staff")
+  const text = useContent("staff")
   const { user, signOut } = useAuth()
   const role = user?.staffRole ?? "curator"
   const isAdmin = role === "admin"
   const isModerator = role === "moderator"
-  const tabs = isAdmin ? ADMIN_TABS : isModerator ? MODERATOR_TABS : CURATOR_TABS
+  const curatorTabs: Tab[] = CURATOR_TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
+  const tabs = isAdmin ? ADMIN_TABS : isModerator ? MODERATOR_TABS : curatorTabs
   const [tab, setTab] = useState(tabs[0]?.id ?? "queue")
   const [tasks, setTasks] = useState<StaffTask[]>([])
   const [patients, setPatients] = useState<PatientCard[]>([])
@@ -30,8 +35,12 @@ export function StaffCabinetPage() {
   useEffect(() => { if (!isAdmin && !isModerator) { void getStaffPatients().then(setPatients); void getStaffTasks().then(setTasks) } }, [isAdmin, isModerator])
   const selected = patients.find((patient) => patient.id === selectedId) ?? null
   const openPatient = (id: string) => { setSelectedId(id); setTab("patients") }
-  const subtitle = isModerator ? "Упражнения, материалы и версии шаблонов" : isAdmin ? "Пациенты, кураторы, расписание и оплаты" : `Открытых задач: ${tasks.filter((task) => !task.done).length} · пациентов: ${patients.length}`
-  return <CabinetShell title={isModerator ? "Модерация курсов и контента" : isAdmin ? "Операционное управление клиникой" : "Рабочее место врача-куратора"} subtitle={subtitle} tabs={tabs} active={tab} onTabChange={setTab} userName={user?.name ?? ""} roleLabel={STAFF_ROLE_LABEL[role]} homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"} onSignOut={signOut}>
+  const subtitle = isModerator
+    ? t("subtitle.moderator")
+    : isAdmin
+      ? t("subtitle.admin")
+      : t("subtitle.curator", { tasks: tasks.filter((task) => !task.done).length, patients: patients.length })
+  return <CabinetShell title={t(isModerator ? "title.moderator" : isAdmin ? "title.admin" : "title.curator")} subtitle={subtitle} tabs={tabs} active={tab} onTabChange={setTab} userName={user?.name ?? ""} roleLabel={text(STAFF_ROLE_KEY[role])} homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"} onSignOut={signOut}>
     <DemoNotice />
     {isModerator && tab === "dashboard" && <ModeratorDashboard />}
     {isModerator && tab !== "dashboard" && <ModeratorContentPanel view={tab as "library" | "review" | "archive"} />}

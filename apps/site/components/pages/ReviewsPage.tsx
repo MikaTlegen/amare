@@ -1,5 +1,6 @@
 import { ExternalLink, ShieldCheck, Star } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { getPlural, getT, type Locale } from '@amare/i18n'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { REVIEWS, REVIEWS_SUMMARY } from '@/data/reviews'
 import { CLINIC, ROUTES } from '@/lib/clinic'
@@ -12,15 +13,19 @@ import { CLINIC, ROUTES } from '@/lib/clinic'
  * рейтинг, ссылка на первоисточник и объяснение, почему мы не
  * перепечатываем чужие тексты.
  */
-export function ReviewsPage() {
+export function ReviewsPage({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'reviews')
+  const rating = getPlural(locale, 'reviews')
+  const source = getT(locale, 'contacts')('ratingSource')
+
   return (
     <>
       <PageCover
-        crumb="Отзывы"
-        title="Отзывы о клинике"
-        note="Рейтинг и оценки берём из 2ГИС: их пишут сами пациенты, и мы не можем их отредактировать."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/team.jpg"
-        alt="Команда клиники Amare"
+        alt={t('cover.alt')}
       />
 
       <section className="container-content grid gap-5 py-14 lg:grid-cols-12">
@@ -28,16 +33,16 @@ export function ReviewsPage() {
           <span className="font-display text-6xl font-semibold tracking-tighter text-white">
             {REVIEWS_SUMMARY.rating}
           </span>
-          <span className="flex gap-1" aria-label={`Рейтинг ${REVIEWS_SUMMARY.rating} из 5`}>
+          <span className="flex gap-1" aria-label={t('rating.aria', { value: REVIEWS_SUMMARY.rating })}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} className="h-5 w-5 fill-sky text-sky" aria-hidden="true" />
             ))}
           </span>
           <p className="m-0 text-lg leading-relaxed text-white/75">
-            {REVIEWS_SUMMARY.count} оценок в {REVIEWS_SUMMARY.source}
+            {rating('rating', REVIEWS_SUMMARY.count, { source })}
           </p>
           <Button href={REVIEWS_SUMMARY.sourceUrl} variant="white" className="mt-3 self-start">
-            Читать отзывы в {REVIEWS_SUMMARY.source}
+            {t('rating.read', { source })}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
@@ -47,17 +52,10 @@ export function ReviewsPage() {
             <ShieldCheck className="h-6 w-6 text-deep" aria-hidden="true" />
           </span>
           <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
-            Почему здесь нет стены цитат
+            {t('why.title')}
           </h2>
-          <p className="m-0 max-w-[44em] text-lg leading-relaxed text-ink/80">
-            Отзыв принадлежит человеку, который его написал. Переносить чужой текст с 2ГИС на
-            коммерческий сайт без разрешения нельзя, а сочинять отзывы за пациентов — тем более:
-            в медицине это ещё и риск раскрыть факт лечения конкретного человека.
-          </p>
-          <p className="m-0 max-w-[44em] text-lg leading-relaxed text-ink/80">
-            Поэтому мы собираем отзывы сами и публикуем их только с письменного согласия автора.
-            Раздел наполняется медленно — зато каждому тексту здесь можно верить.
-          </p>
+          <p className="m-0 max-w-[44em] text-lg leading-relaxed text-ink/80">{t('why.first')}</p>
+          <p className="m-0 max-w-[44em] text-lg leading-relaxed text-ink/80">{t('why.second')}</p>
         </div>
       </section>
 
@@ -68,11 +66,12 @@ export function ReviewsPage() {
               key={review.id}
               className="flex h-full flex-col gap-3 rounded-3xl border border-line bg-surface p-6"
             >
-              <span className="flex gap-0.5" aria-label={`Оценка ${review.rating} из 5`}>
+              <span className="flex gap-0.5" aria-label={t('card.aria', { rating: review.rating })}>
                 {Array.from({ length: review.rating }).map((_, s) => (
                   <Star key={s} className="h-4 w-4 fill-accent text-accent" aria-hidden="true" />
                 ))}
               </span>
+              {/* Отзыв остаётся на языке автора: переводить чужую речь нельзя */}
               <p className="m-0 flex-1 text-base leading-relaxed text-ink/85">{review.text}</p>
               <footer className="text-base text-muted">
                 {review.author} · {review.relation}
@@ -87,18 +86,13 @@ export function ReviewsPage() {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">
-              Проходили курс у нас?
-            </h2>
-            <p className="text-base text-ink/75">
-              Расскажите, что получилось, а что нет. Критику читаем первой — она меняет работу
-              быстрее похвалы.
-            </p>
+            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">{t('cta.title')}</h2>
+            <p className="text-base text-ink/75">{t('cta.note')}</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button href={CLINIC.whatsapp}>Написать в WhatsApp</Button>
+            <Button href={CLINIC.whatsapp}>{t('cta.whatsapp')}</Button>
             <Button to={ROUTES.results} variant="outline">
-              Истории восстановления
+              {t('cta.stories')}
             </Button>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Check, Clock, Play, Info } from 'lucide-react'
 import type { DayPlan } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useT } from '@amare/i18n/react'
 import { completeExercise, getDayPlan } from '@/lib/mock'
 
 /**
@@ -15,6 +16,7 @@ import { completeExercise, getDayPlan } from '@/lib/mock'
  * кто занимался.
  */
 export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
+  const t = useT('cabinet')
   const [plan, setPlan] = useState<DayPlan | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -23,7 +25,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
   }, [])
 
   if (!plan) {
-    return <p className="text-lg text-muted">Загружаем план…</p>
+    return <p className="text-lg text-muted">{t('plan.loading')}</p>
   }
 
   const doneMinutes = plan.exercises
@@ -42,10 +44,10 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
       <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="font-display text-xl font-medium tracking-[-0.035em]">
-            День {plan.day} из {plan.courseLength}
+            {t('plan.day', { day: plan.day, total: plan.courseLength })}
           </span>
           <span className="text-base text-muted">
-            {doneMinutes} из {plan.planMinutes} минут
+            {t('plan.minutes', { done: doneMinutes, total: plan.planMinutes })}
           </span>
         </div>
 
@@ -55,7 +57,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
           aria-valuenow={percent}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`Выполнено ${percent} процентов плана`}
+          aria-label={t('plan.percent', { percent })}
         >
           <div
             className="h-full rounded-full bg-accent transition-[width] duration-500"
@@ -65,7 +67,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
 
         {percent >= 100 && (
           <p className="m-0 text-base font-medium text-brand">
-            План на сегодня выполнен. Отдыхайте — переработка здесь не помогает.
+            {t('plan.allDone')}
           </p>
         )}
       </div>
@@ -112,7 +114,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
               </div>
 
               <span className="text-base text-muted sm:w-20 sm:text-right">
-                {exercise.minutes} мин
+                {t('plan.exerciseMinutes', { count: exercise.minutes })}
               </span>
 
               {!readOnly && !done && (
@@ -122,7 +124,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                   disabled={busy === exercise.id}
                   className="min-h-[3rem] shrink-0 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white disabled:opacity-60"
                 >
-                  {busy === exercise.id ? 'Отмечаем…' : 'Выполнено'}
+                  {busy === exercise.id ? t('plan.marking') : t('plan.done')}
                 </button>
               )}
             </li>
@@ -132,7 +134,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
 
       {readOnly && (
         <p className="m-0 text-base text-muted">
-          Отмечать упражнения может только сам пациент — так запись о занятии остаётся достоверной.
+          {t('plan.patientOnly')}
         </p>
       )}
     </div>

@@ -1,21 +1,17 @@
 export interface KnowledgeArticle {
+  /** Ключи текста в словаре knowledge — `<id>.title`, `<id>.summary`. */
   id: string
-  title: string
-  /** Короткая выжимка — её же используем как анонс в кабинете пациента. */
-  summary: string
-  /** Готовые к публикации тезисы. Пусто — материал ещё пишется. */
-  points?: string[]
+  /** Есть готовые к публикации тезисы: ключ `<id>.points`. */
+  hasPoints?: boolean
   /** Требует утверждения мультидисциплинарной группой клиники. */
   needsReview?: boolean
   /** Иллюстрация к теме. Не медицинская схема — просто якорь для взгляда. */
   photo: string
-  photoAlt: string
 }
 
 export interface KnowledgeSection {
+  /** Ключи текста — `section.<id>.title` и `section.<id>.note`. */
   id: string
-  title: string
-  note: string
   articles: KnowledgeArticle[]
 }
 
@@ -34,111 +30,33 @@ export interface KnowledgeSection {
  *    к специалисту, а не пересказываем интернет.
  *
  * TODO CMS: статьи ведутся в админке (M2), оттуда же приходят в кабинет
- * пациента (P-11).
+ * пациента (P-11). Текст переехал в @amare/i18n (namespace knowledge).
  */
 export const KNOWLEDGE: KnowledgeSection[] = [
   {
     id: 'emergency',
-    title: 'Неотложное',
-    note: 'То, что нужно знать до приезда скорой.',
-    articles: [
-      {
-        id: 'be-fast',
-        title: 'Признаки инсульта: УДАР и BE FAST',
-        summary:
-          'Инсульт лечится временем. Чем раньше человек попадёт в больницу, тем больше мозга удастся сохранить.',
-        points: [
-          'У — улыбка: попросите улыбнуться. Один угол рта не поднимается.',
-          'Д — движение: попросите поднять обе руки. Одна опускается или не поднимается.',
-          'А — артикуляция: попросите повторить простую фразу. Речь невнятная или человек не понимает вопрос.',
-          'Р — решение: звоните 103. Не ждите, пока пройдёт, не давайте лекарств и воды.',
-          'Дополнительно: внезапная потеря равновесия и внезапное нарушение зрения на один или оба глаза.',
-          'Запомните время, когда человека последний раз видели здоровым, — от него врачи считают срок для лечения.',
-        ],
-        photo: '/photos/hospital-drip.jpg',
-        photoAlt: 'Стойка с капельницей в больничной палате',
-      },
-    ],
+    articles: [{ id: 'be-fast', hasPoints: true, photo: '/photos/hospital-drip.jpg' }],
   },
   {
     id: 'care',
-    title: 'Уход дома',
-    note: 'Для родственников и сиделок. Материалы готовит мультидисциплинарная группа клиники.',
     articles: [
-      {
-        id: 'moving',
-        title: 'Как пересадить и повернуть лежачего человека',
-        summary:
-          'Техника перемещения без травм для пациента и для спины ухаживающего, позиционирование в постели.',
-        needsReview: true,
-        photo: '/photos/hospital-ward.jpg',
-        photoAlt: 'Кровати в больничной палате',
-      },
-      {
-        id: 'pressure-sores',
-        title: 'Профилактика пролежней',
-        summary: 'График поворотов, осмотр кожи, что считать тревожным признаком.',
-        needsReview: true,
-        photo: '/photos/equipment.jpg',
-        photoAlt: 'Реабилитационное оборудование клиники',
-      },
-      {
-        id: 'falls',
-        title: 'Профилактика падений дома',
-        summary:
-          'Что убрать из квартиры, где нужны поручни и освещение, как безопасно ходить с поддержкой.',
-        needsReview: true,
-        photo: '/photos/walk-bars.jpg',
-        photoAlt: 'Пациент идёт вдоль поручней вместе со специалистом',
-      },
+      { id: 'moving', needsReview: true, photo: '/photos/hospital-ward.jpg' },
+      { id: 'pressure-sores', needsReview: true, photo: '/photos/equipment.jpg' },
+      { id: 'falls', needsReview: true, photo: '/photos/walk-bars.jpg' },
     ],
   },
   {
     id: 'nutrition',
-    title: 'Питание и глотание',
-    note: 'Дисфагия после инсульта — частая и опасная проблема.',
     articles: [
-      {
-        id: 'dysphagia',
-        title: 'Как безопасно кормить при нарушении глотания',
-        summary:
-          'Поза при кормлении, консистенция пищи и жидкости, признаки поперхивания и что делать.',
-        needsReview: true,
-        photo: '/photos/healthy-plate.jpg',
-        photoAlt: 'Тарелка с приготовленной едой',
-      },
-      {
-        id: 'diet',
-        title: 'Питание для вторичной профилактики',
-        summary:
-          'Давление, холестерин, соль и вода — что реально влияет на риск повторного инсульта.',
-        needsReview: true,
-        photo: '/photos/vegetables.jpg',
-        photoAlt: 'Свежие овощи и зелень',
-      },
+      { id: 'dysphagia', needsReview: true, photo: '/photos/healthy-plate.jpg' },
+      { id: 'diet', needsReview: true, photo: '/photos/vegetables.jpg' },
     ],
   },
   {
     id: 'communication',
-    title: 'Общение и настроение',
-    note: 'Афазия и подавленность мешают восстановлению не меньше, чем парез.',
     articles: [
-      {
-        id: 'aphasia',
-        title: 'Как разговаривать с человеком при афазии',
-        summary: 'Простые фразы, время на ответ, карточки и жесты. Чего делать не нужно.',
-        needsReview: true,
-        photo: '/photos/doctor-patient.jpg',
-        photoAlt: 'Врач разговаривает с пожилой пациенткой',
-      },
-      {
-        id: 'mood',
-        title: 'Подавленность после инсульта',
-        summary: 'Почему это ожидаемо и когда это уже повод к специалисту.',
-        needsReview: true,
-        photo: '/photos/lobby.jpg',
-        photoAlt: 'Спокойная зона ожидания клиники',
-      },
+      { id: 'aphasia', needsReview: true, photo: '/photos/doctor-patient.jpg' },
+      { id: 'mood', needsReview: true, photo: '/photos/lobby.jpg' },
     ],
   },
 ]

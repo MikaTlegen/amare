@@ -2,8 +2,12 @@
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { DayPicker, type DayPickerProps } from 'react-day-picker'
-import { ru } from 'react-day-picker/locale'
+import { kk, ru } from 'react-day-picker/locale'
+import type { Locale } from '@amare/i18n'
 import { cn } from '@amare/ui'
+
+// В date-fns есть казахская локаль, react-day-picker добавляет к ней подписи кнопок
+const DAY_PICKER_LOCALE = { ru, kk } as const
 
 /**
  * Календарь на react-day-picker в токенах проекта.
@@ -17,7 +21,12 @@ import { cn } from '@amare/ui'
  * семь ячеек фиксированной ширины не помещались в экран 375 px и
  * обрезались родителем, крайние дни недели нельзя было нажать.
  */
-export function Calendar({ className, classNames, ...props }: DayPickerProps) {
+export function Calendar({
+  lang,
+  className,
+  classNames,
+  ...props
+}: DayPickerProps & { lang: Locale }) {
   const base = {
     months: 'relative flex flex-col gap-4',
     month: 'w-full',
@@ -60,7 +69,7 @@ export function Calendar({ className, classNames, ...props }: DayPickerProps) {
 
   return (
     <DayPicker
-      locale={ru}
+      locale={DAY_PICKER_LOCALE[lang]}
       showOutsideDays
       className={cn('mx-auto w-full max-w-[22rem]', className)}
       classNames={merged}

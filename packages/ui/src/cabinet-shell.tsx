@@ -2,7 +2,10 @@
 
 import type { ReactNode } from 'react'
 import { House, LogOut, UserRound } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { AccessibilityMenu } from './accessibility-menu'
+import { useSetCabinetLocale } from './cabinet-locale'
+import { LanguageSwitch } from './language-switch'
 import { cn } from './cn'
 
 export interface Tab {
@@ -57,6 +60,9 @@ export function CabinetShell({
   onSignOut,
   children,
 }: Props) {
+  const t = useT('ui')
+  const setLocale = useSetCabinetLocale()
+
   return (
     <div className="flex min-h-dvh flex-col bg-bg">
       <div className="border-b border-line bg-surface">
@@ -67,16 +73,18 @@ export function CabinetShell({
               {subtitle && <p className="m-0 text-base text-muted">{subtitle}</p>}
             </div>
 
-            {/* Размер шрифта и контраст нужны в кабинете не меньше, чем на сайте:
-                этим кабинетом пользуется сам пациент после инсульта (S-13) */}
-            <div className="shrink-0">
+            {/* Размер шрифта, контраст и язык нужны в кабинете не меньше, чем на
+                сайте: этим кабинетом пользуется сам пациент после инсульта (S-13).
+                Язык здесь переключается без смены адреса — кабинет за логином. */}
+            <div className="flex shrink-0 items-center gap-2">
+              <LanguageSwitch onChange={setLocale} />
               <AccessibilityMenu />
             </div>
 
             {/* min-w-0 и truncate: без них карточка не сжимается ниже своего
                 содержимого и выталкивает страницу вбок на экране 360 px */}
             <div className="flex w-full min-w-0 items-center gap-2 rounded-2xl border border-line px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3 lg:w-auto">
-            <a href={homeHref} className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:border-ink" aria-label="Вернуться на главную страницу">
+            <a href={homeHref} className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink transition-colors hover:border-ink" aria-label={t('cabinet.home')}>
               <House className="h-5 w-5" aria-hidden="true" />
             </a>
               {/* Аватар декоративный: на телефоне уступает место имени, роль написана словами */}
@@ -90,7 +98,7 @@ export function CabinetShell({
               <button
                 type="button"
                 onClick={onSignOut}
-                aria-label="Выйти из кабинета"
+                aria-label={t('cabinet.signOut')}
                 className="ml-auto inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line transition-colors hover:border-ink sm:ml-2"
               >
                 <LogOut className="h-5 w-5" aria-hidden="true" />
@@ -100,7 +108,7 @@ export function CabinetShell({
 
           <div
             role="tablist"
-            aria-label="Разделы кабинета"
+            aria-label={t('cabinet.tabs')}
             className="-mx-4 flex snap-x gap-2 overflow-x-auto scroll-px-4 px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden"
           >
             {tabs.map((tab) => {
@@ -135,10 +143,11 @@ export function CabinetShell({
 
 /** Демо-полоса: чтобы никто не принял мок-данные за настоящие. */
 export function DemoNotice() {
+  const t = useT('ui')
+
   return (
     <p className="m-0 mb-6 rounded-2xl border border-accent bg-[rgb(253,238,237)] px-5 py-4 text-base leading-relaxed text-ink">
-      Демонстрационный режим. Все данные вымышлены, ничего никуда не отправляется. Реальные
-      медицинские сведения появятся только после подключения бэкенда с хранением в РК.
+      {t('cabinet.demoNotice')}
     </p>
   )
 }

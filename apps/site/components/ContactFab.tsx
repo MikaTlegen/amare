@@ -3,13 +3,14 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Camera, MessageCircle, Phone, X } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { CLINIC } from '@/lib/clinic'
 
 const CHANNELS = [
-  { id: 'whatsapp', label: 'WhatsApp', href: CLINIC.whatsapp, Icon: MessageCircle },
-  { id: 'instagram', label: 'Instagram', href: CLINIC.instagram, Icon: Camera },
-  { id: 'call', label: 'Позвонить', href: CLINIC.phones[0].href, Icon: Phone },
-]
+  { id: 'contact.whatsapp', href: CLINIC.whatsapp, Icon: MessageCircle },
+  { id: 'contact.instagram', href: CLINIC.instagram, Icon: Camera },
+  { id: 'call', href: CLINIC.phones[0].href, Icon: Phone },
+] as const
 
 /**
  * Плавающая кнопка связи.
@@ -22,6 +23,7 @@ const CHANNELS = [
  * при prefers-reduced-motion вместе с раскрытием меню.
  */
 export function ContactFab() {
+  const t = useT('common')
   const [open, setOpen] = useState(false)
   const reduced = useReducedMotion()
 
@@ -36,7 +38,7 @@ export function ContactFab() {
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             className="flex origin-bottom-right flex-col gap-1.5 rounded-2xl border border-line bg-surface p-2.5 shadow-2xl"
           >
-            {CHANNELS.map(({ id, label, href, Icon }) => (
+            {CHANNELS.map(({ id, href, Icon }) => (
               <a
                 key={id}
                 href={href}
@@ -45,7 +47,7 @@ export function ContactFab() {
                 className="flex min-h-12 items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-ink no-underline transition-colors hover:bg-tint"
               >
                 <Icon className="h-5 w-5 text-brand" aria-hidden="true" />
-                {label}
+                {t(id)}
               </a>
             ))}
           </motion.div>
@@ -56,7 +58,7 @@ export function ContactFab() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-label={open ? 'Закрыть меню связи' : 'Связаться с клиникой'}
+        aria-label={t(open ? 'contact.close' : 'contact.open')}
         className="relative flex h-16 w-16 items-center justify-center rounded-full bg-accent text-accent-ink shadow-[0_14px_34px_rgba(200,53,46,0.4)] transition-transform hover:scale-105"
       >
         {!open && !reduced && (

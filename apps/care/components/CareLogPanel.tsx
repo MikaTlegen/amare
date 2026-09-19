@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react'
 import { Check, Clock } from 'lucide-react'
 import type { CareTask } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import type { Locale } from '@amare/i18n/locales'
+import { useLocale, useT } from '@amare/i18n/react'
+import { INTL_TAG } from '@/lib/intl'
 import { getCareTasks, toggleCareTask } from '@/lib/mock'
 
 /** Время отметки. В бою его ставит сервер — здесь показываем локальное. */
-function nowLabel(): string {
-  return new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+function nowLabel(locale: Locale): string {
+  return new Date().toLocaleTimeString(INTL_TAG[locale], { hour: '2-digit', minute: '2-digit' })
 }
 
 /**
@@ -19,6 +22,8 @@ function nowLabel(): string {
  * образуется за часы, поэтому чек-лист смены важнее красивой ленты.
  */
 export function CareLogPanel() {
+  const t = useT('cabinet')
+  const locale = useLocale()
   const [tasks, setTasks] = useState<CareTask[]>([])
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -28,7 +33,7 @@ export function CareLogPanel() {
 
   const toggle = async (id: string) => {
     setBusy(id)
-    setTasks(await toggleCareTask(id, nowLabel()))
+    setTasks(await toggleCareTask(id, nowLabel(locale)))
     setBusy(null)
   }
 
@@ -38,10 +43,10 @@ export function CareLogPanel() {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3 rounded-3xl border border-line bg-surface px-6 py-5">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-          Уход за сегодня
+          {t('care.title')}
         </h2>
         <span className="text-base text-muted">
-          отмечено {done} из {tasks.length}
+          {t('care.progress', { done, total: tasks.length })}
         </span>
       </div>
 
@@ -75,7 +80,7 @@ export function CareLogPanel() {
                 </span>
                 <span className="text-base text-muted">
                   {task.period}
-                  {task.doneAt ? ` · отмечено в ${task.doneAt}` : ''}
+                  {task.doneAt ? t('care.markedAt', { time: task.doneAt }) : ''}
                 </span>
               </div>
 
@@ -90,7 +95,7 @@ export function CareLogPanel() {
                     : 'bg-deep text-white',
                 )}
               >
-                {isDone ? 'Снять отметку' : 'Отметить'}
+                {isDone ? t('care.unmark') : t('care.mark')}
               </button>
             </li>
           )
@@ -98,8 +103,7 @@ export function CareLogPanel() {
       </ul>
 
       <p className="m-0 text-base leading-relaxed text-muted">
-        Отметки видит лечащая команда. Если что-то сделать не удалось — не ставьте отметку: пустая
-        строка честнее и полезнее, чем закрытый для вида чек-лист.
+        {t('care.note')}
       </p>
     </div>
   )

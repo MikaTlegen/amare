@@ -4,8 +4,9 @@ import { useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 import type { PatientCard } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useContent, useT } from '@amare/i18n/react'
 import {
-  STATUS_LABEL,
+  STATUS_KEY,
   STATUS_ORDER,
   STATUS_STYLE,
   patientStatus,
@@ -14,11 +15,12 @@ import {
 
 type Filter = PatientStatus | 'all'
 
-const FILTERS: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'Все' },
-  { id: 'red', label: STATUS_LABEL.red },
-  { id: 'orange', label: STATUS_LABEL.orange },
-  { id: 'green', label: STATUS_LABEL.green },
+/** Фильтры светофора. Подписи берутся из словаря staff. */
+const FILTERS: { id: Filter; key: string }[] = [
+  { id: 'all', key: 'board.all' },
+  { id: 'red', key: STATUS_KEY.red },
+  { id: 'orange', key: STATUS_KEY.orange },
+  { id: 'green', key: STATUS_KEY.green },
 ]
 
 /**
@@ -35,6 +37,8 @@ export function PatientsBoard({
   patients: PatientCard[]
   onOpen: (id: string) => void
 }) {
+  const t = useT('staff')
+  const text = useContent('staff')
   const [filter, setFilter] = useState<Filter>('all')
 
   const rows = patients
@@ -44,7 +48,7 @@ export function PatientsBoard({
 
   return (
     <div className="flex flex-col gap-5">
-      <div role="group" aria-label="Фильтр по состоянию" className="flex flex-wrap gap-2">
+      <div role="group" aria-label={t('board.filter')} className="flex flex-wrap gap-2">
         {FILTERS.map((item) => {
           const count =
             item.id === 'all'
@@ -69,7 +73,7 @@ export function PatientsBoard({
                   className={cn('h-2.5 w-2.5 rounded-full', STATUS_STYLE[item.id].dot)}
                 />
               )}
-              {item.label} · {count}
+              {text(item.key)} · {count}
             </button>
           )
         })}
@@ -77,7 +81,7 @@ export function PatientsBoard({
 
       {rows.length === 0 ? (
         <p className="m-0 rounded-3xl border border-line bg-surface p-6 text-lg text-muted">
-          В этой группе сейчас никого нет.
+          {t('board.empty')}
         </p>
       ) : (
         <ul className="m-0 grid list-none gap-4 p-0 lg:grid-cols-2">
@@ -104,19 +108,19 @@ export function PatientsBoard({
                       {patient.name}, {patient.age}
                     </span>
                     <span className="text-base text-muted">{patient.diagnosis}</span>
-                    <span className="text-base text-muted">{STATUS_LABEL[status]}</span>
+                    <span className="text-base text-muted">{text(STATUS_KEY[status])}</span>
                   </div>
                   <span className="shrink-0 rounded-full bg-tint px-3 py-1.5 text-sm font-medium text-deep">
-                    день {patient.courseDay}/{patient.courseLength}
+                    {t('board.courseDay', { day: patient.courseDay, total: patient.courseLength })}
                   </span>
                 </div>
 
                 <div className="flex flex-wrap gap-6">
-                  <Metric label="Бартел сейчас" value={String(last?.barthel ?? '—')} />
-                  <Metric label="Прирост за курс" value={`+${gain}`} accent />
+                  <Metric label={t('board.barthel')} value={String(last?.barthel ?? '—')} />
+                  <Metric label={t('board.gain')} value={`+${gain}`} accent />
                   <Metric
-                    label="Практика за неделю"
-                    value={`${patient.weekMinutes.reduce((a, b) => a + b, 0)} мин`}
+                    label={t('board.practice')}
+                    value={t('board.weekMinutes', { count: patient.weekMinutes.reduce((a, b) => a + b, 0) })}
                   />
                 </div>
 
@@ -138,7 +142,7 @@ export function PatientsBoard({
                   onClick={() => onOpen(patient.id)}
                   className="mt-auto min-h-[3rem] rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white"
                 >
-                  Открыть карточку
+                  {t('board.open')}
                 </button>
               </li>
             )

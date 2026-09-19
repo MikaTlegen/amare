@@ -1,12 +1,7 @@
 export interface RecoveryStory {
+  /** Ключи текста в словаре stories — `<id>.name`, `<id>.before`, `<id>.after`. */
   id: string
-  name: string
   age: number
-  diagnosis: string
-  /** Что было при поступлении — словами, понятными родственнику. */
-  before: string
-  /** Что стало после курса. */
-  after: string
   beforePhoto: string
   afterPhoto: string
 }
@@ -23,36 +18,25 @@ export interface RecoveryStory {
  * врачебной тайны, а не маркетинг.
  *
  * Формулировки результата не обещают того же другим: результат зависит
- * от объёма поражения, срока и сопутствующих болезней.
+ * от объёма поражения, срока и сопутствующих болезней. Текст переехал
+ * в @amare/i18n (namespace stories) и требует вычитки врачом на каждом языке.
  */
 export const RECOVERY_STORIES: RecoveryStory[] = [
   {
     id: 'dusenov',
-    name: 'Ермек Г. Дюсенов',
     age: 72,
-    diagnosis: 'Ишемический инсульт',
-    before: 'Не ходил и не разговаривал, правая рука была парализована.',
-    after: 'Ходит самостоятельно, вернулись речь и движения руки.',
     beforePhoto: '/stories/dusenov-before.webp',
     afterPhoto: '/stories/dusenov-after.webp',
   },
   {
     id: 'tankishev',
-    name: 'Ермек А. Танкишев',
     age: 51,
-    diagnosis: 'Ишемический инсульт',
-    before: 'Асимметрия лица, нарушение речи, рука не слушалась.',
-    after: 'Восстановились походка и речь, асимметрия ушла.',
     beforePhoto: '/stories/tankishev-before.webp',
     afterPhoto: '/stories/tankishev-after.webp',
   },
   {
     id: 'baymagambetov',
-    name: 'Галымжан Баймагамбетов',
     age: 39,
-    diagnosis: 'Геморрагический инсульт',
-    before: 'Паралич правых конечностей, потеря памяти и мотивации.',
-    after: 'Уверенная походка, контроль руки, вернулась память.',
     beforePhoto: '/stories/baymagambetov-before.webp',
     afterPhoto: '/stories/baymagambetov-after.webp',
   },

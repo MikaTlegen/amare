@@ -4,20 +4,22 @@ import { useEffect, useState } from 'react'
 import { Pill, ShoppingCart } from 'lucide-react'
 import type { Medication, MedicationState } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import type { MessageKey } from '@amare/i18n'
+import { useT } from '@amare/i18n/react'
 import { getMedications, setMedicationState } from '@/lib/mock'
 
 /** Положения переключателя. Порядок — от «всё хорошо» к «не принял». */
-const STATES: { id: MedicationState; label: string }[] = [
-  { id: 'taken', label: 'Принял' },
-  { id: 'postponed', label: 'Позже' },
-  { id: 'missed', label: 'Пропустил' },
+const STATES: { id: MedicationState; key: MessageKey<'cabinet'> }[] = [
+  { id: 'taken', key: 'meds.taken' },
+  { id: 'postponed', key: 'meds.later' },
+  { id: 'missed', key: 'meds.skipped' },
 ]
 
-const STATE_NOTE: Record<MedicationState, string> = {
-  pending: 'ещё не отмечено',
-  taken: 'принято',
-  postponed: 'отложено на 15 минут',
-  missed: 'пропущено',
+const STATE_NOTE: Record<MedicationState, MessageKey<'cabinet'>> = {
+  pending: 'meds.pending',
+  taken: 'meds.doneTaken',
+  postponed: 'meds.donePostponed',
+  missed: 'meds.doneSkipped',
 }
 
 /** Меньше этого остатка — пора покупать, иначе перерыв в приёме. */
@@ -36,6 +38,7 @@ const REFILL_DAYS = 7
  * этом подписывается — кто именно её поставил (G-03 ТЗ).
  */
 export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
+  const t = useT('cabinet')
   const [items, setItems] = useState<Medication[]>([])
   const [busy, setBusy] = useState<string | null>(null)
 
@@ -56,8 +59,7 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
       {refill.length > 0 && (
         <p className="m-0 flex items-start gap-3 rounded-2xl border border-accent bg-[rgb(253,238,237)] px-5 py-4 text-base leading-relaxed">
           <ShoppingCart className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
-          Заканчивается: {refill.map((item) => item.title).join(', ')}. Купите заранее — перерыв в
-          приёме опаснее, чем кажется.
+          {t('meds.refill', { list: refill.map((item) => item.title).join(', ') })}
         </p>
       )}
 
@@ -87,18 +89,18 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
                 {item.at} · {item.title}
               </span>
               <span className="text-base text-muted">
-                {item.dose} · осталось на {item.daysLeft} дн. · {STATE_NOTE[item.state]}
+                {t('meds.dose', { dose: item.dose, days: item.daysLeft })} · {t(STATE_NOTE[item.state])}
               </span>
               {item.critical && (
                 <span className="text-base font-medium text-accent">
-                  Пропускать нельзя: препарат против повторного инсульта
+                  {t('meds.critical')}
                 </span>
               )}
             </div>
 
             <div
               role="group"
-              aria-label={`Отметка приёма: ${item.title}`}
+              aria-label={t('meds.aria', { title: item.title })}
               className="flex w-full overflow-hidden rounded-xl border-[1.5px] border-line lg:w-auto lg:shrink-0"
             >
               {STATES.map((state) => {
@@ -115,7 +117,7 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
                       active ? 'bg-deep text-white' : 'bg-surface text-muted hover:text-ink',
                     )}
                   >
-                    {state.label}
+                    {t(state.key)}
                   </button>
                 )
               })}
@@ -126,8 +128,8 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
 
       <p className="m-0 text-base leading-relaxed text-muted">
         {byGuardian
-          ? 'Ваши отметки уходят куратору с пометкой «введено опекуном». Отмечайте только то, что видели сами.'
-          : 'Отмечайте честно. «Пропустил» — это не двойка, а сигнал куратору разобраться, почему не получилось.'}
+          ? t('meds.guardianNote')
+          : t('meds.patientNote')}
       </p>
     </div>
   )

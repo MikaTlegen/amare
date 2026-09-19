@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { ArrowLeft, Upload, ClipboardPlus, TriangleAlert, Check } from 'lucide-react'
-import { AttachmentChip, BarthelChart, ChatPanel, KIND_LABEL, cn } from '@amare/ui'
+import { AttachmentChip, BarthelChart, ChatPanel, useKindLabel, cn } from '@amare/ui'
 import type { AssignedProgram, Attachment, PatientCard, ProgramTemplate } from '@amare/api-client'
 import {
   assignProgram,
@@ -326,6 +326,7 @@ function ProgramSection({ patient, canAssign }: { patient: PatientCard; canAssig
 
 /** Документы конкретного пациента: то, что прислали, и то, что выдала клиника. */
 function DocumentsSection({ patient }: { patient: PatientCard }) {
+  const kindLabel = useKindLabel()
   const [docs, setDocs] = useState<Attachment[]>([])
   const [busy, setBusy] = useState(false)
 
@@ -366,7 +367,7 @@ function DocumentsSection({ patient }: { patient: PatientCard }) {
               <li key={item.id} className="flex flex-col gap-1">
                 <AttachmentChip attachment={item} />
                 <span className="pl-1 text-sm text-muted">
-                  {KIND_LABEL[item.kind]} · {item.at}
+                  {kindLabel[item.kind]} · {item.at}
                 </span>
               </li>
             ))}
@@ -400,6 +401,8 @@ function DocumentList({
   items: Attachment[]
   empty: string
 }) {
+  const kindLabel = useKindLabel()
+
   return (
     <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
       <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{title}</h3>
@@ -412,7 +415,7 @@ function DocumentList({
             <li key={item.id} className="flex flex-col gap-1">
               <AttachmentChip attachment={item} />
               <span className="pl-1 text-sm text-muted">
-                {KIND_LABEL[item.kind]} · {item.at}
+                {kindLabel[item.kind]} · {item.at}
               </span>
             </li>
           ))}

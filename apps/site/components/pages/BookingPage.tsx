@@ -2,33 +2,28 @@
 
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import Link from 'next/link'
+import { Button, Link } from '@/components/Links'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle2, MapPin, Video, Home, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { AppointmentPicker } from '@/components/booking/AppointmentPicker'
-import { Button } from '@amare/ui'
 import { getSlots, createBooking, type Slot } from '@/lib/booking'
 import { DOCTORS } from '@/data/doctors'
-import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
+import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
+import type { Locale } from '@amare/i18n'
+import { useContent, useT } from '@amare/i18n/react'
 
-const FORMATS: { id: Slot['format']; label: string; price: string; Icon: LucideIcon }[] = [
-  { id: 'clinic', label: 'В клинике', price: PRICES.consultation, Icon: MapPin },
-  { id: 'online', label: 'Онлайн', price: PRICES.online, Icon: Video },
-  { id: 'home', label: 'С выездом на дом', price: PRICES.homeVisit, Icon: Home },
+/** Форматы приёма: подписи и цены лежат в словарях по ключу формата. */
+const FORMATS: { id: Slot['format']; priceKey: 'consultation' | 'online' | 'homeVisit'; Icon: LucideIcon }[] = [
+  { id: 'clinic', priceKey: 'consultation', Icon: MapPin },
+  { id: 'online', priceKey: 'online', Icon: Video },
+  { id: 'home', priceKey: 'homeVisit', Icon: Home },
 ]
 
-const WEEKDAYS = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб']
-
-function formatSlot(at: string) {
-  const date = new Date(at)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const time = at.slice(11, 16)
-  return { date: `${day}.${month}, ${WEEKDAYS[date.getDay()]}`, time }
-}
+/** Локаль форматирования дат: у Intl свои теги, у нас — коды локалей. */
+const INTL_TAG: Record<Locale, string> = { ru: 'ru-RU', kk: 'kk-KZ' }
 
 /**
  * Онлайн-запись на консультацию (требование S-03 ТЗ).
@@ -37,7 +32,19 @@ function formatSlot(at: string) {
  * это серверный сценарий с подтверждением платежа и фискальным чеком,
  * имитировать её на фронте вредно, легко принять мок за работающую оплату.
  */
-export function BookingPage() {
+export function BookingPage({ locale }: { locale: Locale }) {
+  const t = useT('booking')
+  const price = useT('prices')
+  const doctorText = useContent('doctors')
+
+  // Дата выбранного окна: день и месяц берёт Intl, время — из самой строки
+  const slotFormat = new Intl.DateTimeFormat(INTL_TAG[locale], {
+    day: '2-digit',
+    month: '2-digit',
+    weekday: 'short',
+  })
+  const formatSlot = (at: string) => ({ date: slotFormat.format(new Date(at)), time: at.slice(11, 16) })
+
   const params = useSearchParams()
   const [format, setFormat] = useState<Slot['format']>(
     (params.get('format') as Slot['format']) || 'clinic',
@@ -93,11 +100,11 @@ export function BookingPage() {
   return (
     <>
       <PageCover
-        crumb="Запись"
-        title="Записаться на консультацию"
-        note={`${PRICES.freeIntro}. Дальше врач составит план и скажет, нужен ли курс.`}
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note', { freeIntro: price('freeIntro') })}
         image="/photos/reception-desk.jpg"
-        alt="Стойка администратора: здесь подтверждают время приёма"
+        alt={t('cover.alt')}
         objectPosition="center 40%"
       />
 
@@ -106,15 +113,15 @@ export function BookingPage() {
           <div className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
-              Заявка принята
+              {t('done.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed text-muted">
-              Администратор перезвонит и подтвердит время. Если нужно быстрее — позвоните сами.
+              {t('done.note')}
             </p>
             <div className="flex flex-wrap gap-3">
               <Button href={CLINIC.phones[0].href}>{CLINIC.phones[0].label}</Button>
               <Button to="/" variant="outline">
-                На главную
+                {t('done.home')}
               </Button>
             </div>
           </div>
@@ -123,10 +130,10 @@ export function BookingPage() {
             <div className="flex flex-col gap-7 lg:col-span-7">
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
                 <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
-                  1. Формат приёма
+                  {t('format.legend')}
                 </legend>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {FORMATS.map(({ id, label, price, Icon }) => (
+                  {FORMATS.map(({ id, priceKey, Icon }) => (
                     <label
                       key={id}
                       className={cn(
@@ -146,8 +153,8 @@ export function BookingPage() {
                         className="sr-only"
                       />
                       <Icon className="h-5 w-5 text-deep" aria-hidden="true" />
-                      <span className="text-base font-semibold">{label}</span>
-                      <span className="text-base text-muted">{price}</span>
+                      <span className="text-base font-semibold">{t(`format.${id}`)}</span>
+                      <span className="text-base text-muted">{price(priceKey)}</span>
                     </label>
                   ))}
                 </div>
@@ -155,28 +162,41 @@ export function BookingPage() {
 
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
                 <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
-                  2. Дата и время
+                  {t('time.legend')}
                 </legend>
 
                 {doctor && (
                   <p className="m-0 flex flex-wrap items-center gap-3 text-base text-muted">
-                    Показано время только к специалисту: {doctor.name}, {doctor.role.toLowerCase()}
+                    {t('time.onlyDoctor', {
+                      name: doctorText(`${doctor.id}.name`),
+                      role: doctorText(`${doctor.id}.role`).toLocaleLowerCase(locale),
+                    })}
                     <Link
                       href={ROUTES.booking}
                       className="inline-flex min-h-[2.6rem] items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-base font-medium text-ink no-underline"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
-                      Показать всех
+                      {t('time.showAll')}
                     </Link>
                   </p>
                 )}
 
-                <AppointmentPicker slots={visible} selectedId={slotId} onSelect={setSlotId} />
+                <AppointmentPicker
+                  slots={visible}
+                  selectedId={slotId}
+                  onSelect={setSlotId}
+                  locale={locale}
+                />
 
                 {chosen && (
                   <p className="m-0 rounded-2xl bg-tint px-5 py-4 text-base leading-relaxed text-deep">
-                    Выбрано: {formatSlot(chosen.at).date}, {formatSlot(chosen.at).time}
-                    {chosenDoctor ? ` · ${chosenDoctor.name}, ${chosenDoctor.role}` : ''}
+                    {chosenDoctor
+                      ? t('time.chosenDoctor', {
+                          ...formatSlot(chosen.at),
+                          name: doctorText(`${chosenDoctor.id}.name`),
+                          role: doctorText(`${chosenDoctor.id}.role`),
+                        })
+                      : t('time.chosen', formatSlot(chosen.at))}
                   </p>
                 )}
               </fieldset>
@@ -184,12 +204,12 @@ export function BookingPage() {
 
             <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
               <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-                3. Ваши контакты
+                {t('contacts.legend')}
               </h2>
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="b-name" className="text-base font-medium">
-                  Как к вам обращаться
+                  {t('contacts.name')}
                 </label>
                 <input
                   id="b-name"
@@ -203,7 +223,7 @@ export function BookingPage() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="b-phone" className="text-base font-medium">
-                  Телефон
+                  {t('contacts.phone')}
                 </label>
                 <input
                   id="b-phone"
@@ -211,7 +231,7 @@ export function BookingPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   autoComplete="tel"
-                  placeholder="+7 ___ ___ __ __"
+                  placeholder={t('contacts.phonePlaceholder')}
                   required
                   className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
                 />
@@ -219,14 +239,14 @@ export function BookingPage() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="b-comment" className="text-base font-medium">
-                  Что важно знать врачу
+                  {t('contacts.comment')}
                 </label>
                 <textarea
                   id="b-comment"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={3}
-                  placeholder="Когда был инсульт, как человек передвигается"
+                  placeholder={t('contacts.commentPlaceholder')}
                   className="rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
                 />
               </div>
@@ -240,13 +260,13 @@ export function BookingPage() {
                   className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
                 />
                 <span className="text-base leading-relaxed text-muted">
-                  Согласен на обработку персональных данных, включая сведения о здоровье.
+                  {t('contacts.consent')}
                 </span>
               </label>
 
               {chosen && (
                 <p className="m-0 rounded-2xl bg-tint px-4 py-3 text-base text-deep">
-                  Выбрано: {formatSlot(chosen.at).date}, {formatSlot(chosen.at).time}
+                  {t('time.chosen', formatSlot(chosen.at))}
                 </p>
               )}
 
@@ -255,11 +275,11 @@ export function BookingPage() {
                 disabled={!slotId || !consent || sending}
                 className="min-h-[3.4rem] rounded-xl bg-accent px-8 py-4 text-lg font-semibold text-accent-ink disabled:opacity-50"
               >
-                {sending ? 'Отправляем…' : 'Записаться'}
+                {sending ? t('submit.sending') : t('submit.label')}
               </button>
 
               <p className="m-0 text-base leading-relaxed text-muted">
-                Оплата не требуется: администратор подтвердит время по телефону.
+                {t('submit.note')}
               </p>
             </div>
           </form>

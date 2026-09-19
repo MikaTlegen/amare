@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { MousePointerClick } from 'lucide-react'
+import { useT } from '@amare/i18n/react'
 import { MAP } from '@/lib/clinic'
 
 /**
@@ -20,6 +21,7 @@ import { MAP } from '@/lib/clinic'
  * а увести пользователя со страницы он может только по его же действию.
  */
 export function MapFrame({ title }: { title: string }) {
+  const t = useT('contacts')
   const [active, setActive] = useState(false)
   const src = `https://makemap.2gis.ru/widget?data=${MAP.widgetData}`
 
@@ -42,7 +44,7 @@ export function MapFrame({ title }: { title: string }) {
         >
           <span className="inline-flex items-center gap-2 rounded-xl bg-deep/90 px-5 py-3 text-base font-semibold text-white shadow-lg">
             <MousePointerClick className="h-5 w-5" aria-hidden="true" />
-            Нажмите, чтобы двигать и масштабировать карту
+            {t('mapUnlock')}
           </span>
         </button>
       )}

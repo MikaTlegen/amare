@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@amare/api-client": "workspace:*",
+    "@amare/i18n": "workspace:*",
     "@radix-ui/react-popover": "^1.1.23",
     "clsx": "^2.1.1",
     "lucide-react": "^1.46.0",

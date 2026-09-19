@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element -- иллюстрации статей; next/image — отдельная задача */
 import { AlertTriangle, Phone } from 'lucide-react'
-import { Button, cn } from '@amare/ui'
+import { cn } from '@amare/ui'
+import { getContent, getContentList, getT, type Locale } from '@amare/i18n'
+import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { KNOWLEDGE } from '@/data/knowledge'
 import { CLINIC, ROUTES } from '@/lib/clinic'
@@ -14,15 +16,20 @@ import { CLINIC, ROUTES } from '@/lib/clinic'
  * советов — в реабилитации неправильная техника переворота или кормления
  * заканчивается травмой и аспирацией.
  */
-export function KnowledgePage() {
+const EMERGENCY_PHONE = '103'
+
+export function KnowledgePage({ locale }: { locale: Locale }) {
+  const t = getT(locale, 'knowledge')
+  const text = getContent(locale, 'knowledge')
+
   return (
     <>
       <PageCover
-        crumb="База знаний"
-        title="Что делать дома и чего делать нельзя"
-        note="Материалы для пациентов и родственников. Клинические тексты выходят после утверждения мультидисциплинарной группой клиники."
+        crumb={t('cover.crumb')}
+        title={t('cover.title')}
+        note={t('cover.note')}
         image="/photos/library.jpg"
-        alt="Полки с книгами: подборка материалов для пациентов и родственников"
+        alt={t('cover.alt')}
       />
 
       <section className="container-content flex flex-col gap-12 py-14">
@@ -38,9 +45,9 @@ export function KnowledgePage() {
           <div key={section.id} id={section.id} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <h2 className="m-0 font-display text-3xl font-medium tracking-[-0.045em]">
-                {section.title}
+                {text(`section.${section.id}.title`)}
               </h2>
-              <p className="m-0 text-lg leading-relaxed text-muted">{section.note}</p>
+              <p className="m-0 text-lg leading-relaxed text-muted">{text(`section.${section.id}.note`)}</p>
             </div>
 
             <div className={cn('grid gap-4', !single && 'lg:grid-cols-2')}>
@@ -55,7 +62,7 @@ export function KnowledgePage() {
                 >
                   <img
                     src={article.photo}
-                    alt={article.photoAlt}
+                    alt={text(`${article.id}.photoAlt`)}
                     loading="lazy"
                     decoding="async"
                     className={cn(
@@ -65,17 +72,17 @@ export function KnowledgePage() {
                   />
 
                   <div className={cn('flex flex-1 flex-col gap-3 px-6 pb-6', single && 'lg:p-7')}>
-                    <h3 className="m-0 text-xl font-semibold leading-snug">{article.title}</h3>
-                    <p className="m-0 text-base leading-relaxed text-muted">{article.summary}</p>
+                    <h3 className="m-0 text-xl font-semibold leading-snug">{text(`${article.id}.title`)}</h3>
+                    <p className="m-0 text-base leading-relaxed text-muted">{text(`${article.id}.summary`)}</p>
 
-                    {article.points && (
+                    {article.hasPoints && (
                       <ul
                         className={cn(
                           'm-0 flex list-none flex-col gap-2.5 p-0',
                           single && 'lg:grid lg:grid-cols-2',
                         )}
                       >
-                        {article.points.map((point) => (
+                        {getContentList(locale, 'knowledge', `${article.id}.points`).map((point) => (
                           <li
                             key={point}
                             className="flex gap-3 rounded-2xl bg-bg px-4 py-3 text-base leading-relaxed"
@@ -95,8 +102,7 @@ export function KnowledgePage() {
                           className="mt-0.5 h-5 w-5 shrink-0 text-accent"
                           aria-hidden="true"
                         />
-                        Текст готовится и проходит проверку врачами клиники. Пока спросите у своего
-                        специалиста или на консультации — показать технику безопаснее, чем описать.
+                        {t('needsReview')}
                       </p>
                     )}
                   </div>
@@ -112,17 +118,16 @@ export function KnowledgePage() {
         <div className="flex flex-col items-start gap-5 rounded-3xl bg-deep p-8 text-white sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
-              Если прямо сейчас плохо — звоните 103
+              {t('emergency.title', { phone: EMERGENCY_PHONE })}
             </h2>
             <p className="m-0 text-base leading-relaxed text-white/75">
-              Клиника не оказывает экстренную помощь. По вопросам курса и ухода — наш телефон в
-              рабочее время.
+              {t('emergency.note')}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button href="tel:103" variant="white">
+            <Button href={`tel:${EMERGENCY_PHONE}`} variant="white">
               <Phone className="h-5 w-5" aria-hidden="true" />
-              103
+              {EMERGENCY_PHONE}
             </Button>
             <Button to={ROUTES.contacts} variant="white">
               {CLINIC.phones[0].label}

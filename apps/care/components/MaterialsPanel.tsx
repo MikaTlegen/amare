@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { FileText, PlayCircle } from 'lucide-react'
 import type { Material } from '@amare/api-client'
+import { useT } from '@amare/i18n/react'
 import { getMaterials } from '@/lib/mock'
 
 /**
@@ -17,6 +18,7 @@ import { getMaterials } from '@/lib/mock'
  * админку модуля M2, а не лежат в моке.
  */
 export function MaterialsPanel() {
+  const t = useT('cabinet')
   const [items, setItems] = useState<Material[]>([])
 
   useEffect(() => {
@@ -41,7 +43,8 @@ export function MaterialsPanel() {
               <p className="m-0 text-base leading-relaxed text-muted">{item.note}</p>
 
               <span className="mt-auto text-base text-muted">
-                {item.kind === 'video' ? 'Видео' : 'Статья'} · {item.minutes} мин ·{' '}
+                {item.kind === 'video' ? t('materials.video') : t('materials.article')} ·{' '}
+                {t('materials.minutes', { count: item.minutes })} ·{' '}
                 {item.assignedBy}
               </span>
 
@@ -50,7 +53,7 @@ export function MaterialsPanel() {
                 disabled
                 className="min-h-[3.2rem] rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white opacity-50"
               >
-                {item.kind === 'video' ? 'Смотреть' : 'Читать'}
+                {item.kind === 'video' ? t('materials.watch') : t('materials.read')}
               </button>
             </li>
           )
@@ -58,8 +61,7 @@ export function MaterialsPanel() {
       </ul>
 
       <p className="m-0 text-base leading-relaxed text-muted">
-        Кнопки выключены: содержимое материалов подключается вместе с базой знаний. Заголовки
-        показывают, что именно назначил специалист.
+        {t('materials.note')}
       </p>
     </div>
   )

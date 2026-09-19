@@ -4,16 +4,8 @@ import { useEffect, useState } from 'react'
 import { Check, GraduationCap, PlayCircle } from 'lucide-react'
 import type { GuardianLesson } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import { useContentList, useT } from '@amare/i18n/react'
 import { getGuardianLessons, toggleLesson } from '@/lib/mock'
-
-const HOME_CHECKLIST = [
-  'Убраны ковры, провода и пороги на пути в туалет',
-  'Поручень у кровати и в ванной',
-  'Ночник в коридоре, выключатель у кровати',
-  'Телефон и вода в пределах руки',
-  'Нескользящая обувь с задником, а не тапки',
-  'Список лекарств и выписка лежат на видном месте',
-]
 
 /**
  * Школа опекуна (G-06 ТЗ).
@@ -28,6 +20,9 @@ const HOME_CHECKLIST = [
  * готов забирать человека домой.
  */
 export function GuardianSchool() {
+  const t = useT('cabinet')
+  // Чек-лист безопасной квартиры живёт в словаре: это текст, а не данные
+  const checklist = useContentList('cabinet')('school.items')
   const [lessons, setLessons] = useState<GuardianLesson[]>([])
   const [busy, setBusy] = useState<string | null>(null)
   const [checked, setChecked] = useState<string[]>([])
@@ -56,10 +51,10 @@ export function GuardianSchool() {
         <div className="flex flex-wrap items-baseline justify-between gap-3 rounded-3xl border border-line bg-surface px-6 py-5">
           <h2 className="m-0 flex items-center gap-2 font-display text-xl font-medium tracking-[-0.035em]">
             <GraduationCap className="h-5 w-5 text-brand" aria-hidden="true" />
-            Школа опекуна
+            {t('school.title')}
           </h2>
           <span className="text-base text-muted">
-            пройдено {done} из {lessons.length}
+            {t('school.progress', { done, total: lessons.length })}
           </span>
         </div>
 
@@ -88,7 +83,7 @@ export function GuardianSchool() {
               <div className="flex flex-1 flex-col gap-0.5">
                 <span className="text-lg font-semibold">{lesson.title}</span>
                 <span className="text-base leading-relaxed text-muted">{lesson.summary}</span>
-                <span className="text-base text-muted">{lesson.minutes} мин</span>
+                <span className="text-base text-muted">{t('school.lessonMinutes', { count: lesson.minutes })}</span>
               </div>
 
               <button
@@ -100,7 +95,7 @@ export function GuardianSchool() {
                   lesson.done ? 'border-[1.5px] border-line' : 'bg-deep text-white',
                 )}
               >
-                {lesson.done ? 'Пройден' : 'Отметить'}
+                {lesson.done ? t('school.passed') : t('school.mark')}
               </button>
             </li>
           ))}
@@ -110,15 +105,15 @@ export function GuardianSchool() {
       <section className="flex h-fit flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-            Чек-лист безопасной квартиры
+            {t('school.checklist')}
           </h2>
           <span className="text-base text-muted">
-            сделано {checked.length} из {HOME_CHECKLIST.length}
+            {t('school.checked', { done: checked.length, total: checklist.length })}
           </span>
         </div>
 
         <ul className="m-0 flex list-none flex-col gap-2 p-0">
-          {HOME_CHECKLIST.map((item) => {
+          {checklist.map((item) => {
             const isDone = checked.includes(item)
             return (
               <li key={item}>
@@ -142,13 +137,12 @@ export function GuardianSchool() {
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
-          Падение дома — самая частая причина, по которой человек возвращается в стационар и теряет
-          набранное за курс.
+          {t('school.checklistNote')}
         </p>
 
         <p className="m-0 text-sm leading-relaxed text-muted">
           {/* TODO BACKEND: отметки чек-листа уходят на сервер и видны куратору */}
-          Отметки живут до перезагрузки страницы: сохранять их пока некуда.
+          {t('school.localNote')}
         </p>
       </section>
     </div>

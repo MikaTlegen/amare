@@ -1,5 +1,8 @@
+'use client'
+
 import { Reveal } from '@amare/ui'
-import { Button } from '@amare/ui'
+import { useT } from '@amare/i18n/react'
+import { Button } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
 
 /**
@@ -11,6 +14,8 @@ import { ROUTES } from '@/lib/clinic'
  * о преимуществах клиники.
  */
 export function TwoDoors() {
+  const t = useT('progress')
+
   return (
     <section className="container-content grid gap-5 py-12 lg:grid-cols-2">
       <Reveal
@@ -19,14 +24,14 @@ export function TwoDoors() {
       >
         <div className="flex flex-1 flex-col gap-2">
           <span className="text-sm font-semibold uppercase tracking-widest text-accent">
-            Впервые
+            {t('doors.newLabel')}
           </span>
           <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em]">
-            Анкета за 3 минуты — врач ответит с планом
+            {t('doors.newTitle')}
           </h2>
         </div>
         <Button to={ROUTES.form} variant="deep">
-          Заполнить
+          {t('doors.newAction')}
         </Button>
       </Reveal>
 
@@ -37,14 +42,14 @@ export function TwoDoors() {
       >
         <div className="flex flex-1 flex-col gap-2">
           <span className="text-sm font-semibold uppercase tracking-widest text-deep">
-            Уже на курсе
+            {t('doors.currentLabel')}
           </span>
           <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em]">
-            Кабинет пациента, опекуна и сотрудника
+            {t('doors.currentTitle')}
           </h2>
         </div>
         <Button to={ROUTES.login} variant="deep">
-          Войти
+          {t('doors.currentAction')}
         </Button>
       </Reveal>
     </section>

@@ -5,12 +5,14 @@ import type { FormEvent } from 'react'
 import { Check, TriangleAlert } from 'lucide-react'
 import { VITALS_SANITY, type VitalEntry } from '@amare/api-client'
 import { cn } from '@amare/ui'
+import type { MessageKey } from '@amare/i18n'
+import { useT } from '@amare/i18n/react'
 import { addVital, getVitals } from '@/lib/mock'
 
-const MOODS = [
-  { value: 2, face: '🙁', label: 'плохо' },
-  { value: 3, face: '😐', label: 'обычно' },
-  { value: 4, face: '🙂', label: 'хорошо' },
+const MOODS: { value: number; face: string; key: MessageKey<'cabinet'> }[] = [
+  { value: 2, face: '🙁', key: 'diary.bad' },
+  { value: 3, face: '😐', key: 'diary.normal' },
+  { value: 4, face: '🙂', key: 'diary.good' },
 ]
 
 /** Целевой коридор давления. TODO M8: индивидуальные цели задаёт врач. */
@@ -47,6 +49,7 @@ export function DiaryPanel({
   readOnly?: boolean
   byGuardian?: boolean
 }) {
+  const t = useT('cabinet')
   const [entries, setEntries] = useState<VitalEntry[]>([])
   const [systolic, setSystolic] = useState('')
   const [diastolic, setDiastolic] = useState('')
@@ -90,17 +93,17 @@ export function DiaryPanel({
           className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5"
         >
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-            Новое измерение
+            {t('diary.title')}
           </h2>
 
           <div className="grid grid-cols-2 gap-3">
-            <NumberField id="sys" label="Верхнее" value={systolic} onChange={setSystolic} />
-            <NumberField id="dia" label="Нижнее" value={diastolic} onChange={setDiastolic} />
+            <NumberField id="sys" label={t('diary.systolic')} value={systolic} onChange={setSystolic} />
+            <NumberField id="dia" label={t('diary.diastolic')} value={diastolic} onChange={setDiastolic} />
           </div>
-          <NumberField id="pulse" label="Пульс" value={pulse} onChange={setPulse} />
+          <NumberField id="pulse" label={t('diary.pulse')} value={pulse} onChange={setPulse} />
 
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-            <legend className="mb-1 p-0 text-base font-medium">Как самочувствие</legend>
+            <legend className="mb-1 p-0 text-base font-medium">{t('diary.wellbeing')}</legend>
             <div className="flex gap-2.5">
               {MOODS.map((item) => (
                 <button
@@ -116,7 +119,7 @@ export function DiaryPanel({
                   <span className="text-2xl leading-none" aria-hidden="true">
                     {item.face}
                   </span>
-                  {item.label}
+                  {t(item.key)}
                 </button>
               ))}
             </div>
@@ -126,7 +129,11 @@ export function DiaryPanel({
             <div className="flex flex-col gap-3 rounded-2xl border-[1.5px] border-accent bg-[rgb(253,238,237)] p-5">
               <p className="m-0 flex items-start gap-2.5 text-base leading-relaxed">
                 <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
-                Вы ввели {draft.systolic}/{draft.diastolic}, пульс {draft.pulse}. Всё верно?
+                {t('diary.check', {
+                  systolic: draft.systolic,
+                  diastolic: draft.diastolic,
+                  pulse: draft.pulse,
+                })}
               </p>
               <div className="flex flex-wrap gap-2.5">
                 <button
@@ -135,14 +142,14 @@ export function DiaryPanel({
                   disabled={saving}
                   className="min-h-[3.2rem] rounded-xl bg-deep px-6 py-3 text-base font-semibold text-white disabled:opacity-60"
                 >
-                  {saving ? 'Сохраняем…' : 'Да, верно'}
+                  {saving ? t('diary.saving') : t('diary.confirm')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirming(false)}
                   className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line px-6 py-3 text-base font-semibold"
                 >
-                  Исправить
+                  {t('diary.fix')}
                 </button>
               </div>
             </div>
@@ -152,7 +159,7 @@ export function DiaryPanel({
               disabled={!filled || saving}
               className="min-h-[3.4rem] rounded-xl bg-deep px-6 py-3 text-lg font-semibold text-white disabled:opacity-50"
             >
-              {saving ? 'Сохраняем…' : 'Записать'}
+              {saving ? t('diary.saving') : t('diary.save')}
             </button>
           )}
         </form>
@@ -166,10 +173,10 @@ export function DiaryPanel({
       >
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-            Последние записи
+            {t('diary.recent')}
           </h2>
           <span className="text-base text-muted">
-            цель — не выше {TARGET.systolic}/{TARGET.diastolic}
+            {t('diary.target', { systolic: TARGET.systolic, diastolic: TARGET.diastolic })}
           </span>
         </div>
 
@@ -187,17 +194,17 @@ export function DiaryPanel({
                 <span className="font-display text-xl font-semibold tracking-[-0.04em]">
                   {entry.systolic}/{entry.diastolic}
                 </span>
-                <span className="text-base text-muted">пульс {entry.pulse}</span>
+                <span className="text-base text-muted">{t('diary.pulseValue', { value: entry.pulse })}</span>
                 <span className="text-base text-muted">{entry.at}</span>
                 {entry.byGuardian && (
                   <span className="rounded-full bg-tint px-3 py-1 text-sm font-medium text-deep">
-                    введено опекуном
+                    {t('diary.byGuardian')}
                   </span>
                 )}
                 {high ? (
-                  <TriangleAlert className="ml-auto h-5 w-5 text-accent" aria-label="выше цели" />
+                  <TriangleAlert className="ml-auto h-5 w-5 text-accent" aria-label={t('diary.aboveTarget')} />
                 ) : (
-                  <Check className="ml-auto h-5 w-5 text-brand" aria-label="в пределах цели" />
+                  <Check className="ml-auto h-5 w-5 text-brand" aria-label={t('diary.withinTarget')} />
                 )}
               </li>
             )
@@ -205,8 +212,7 @@ export function DiaryPanel({
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
-          Три подряд повышенных измерения — повод написать куратору, не дожидаясь следующего
-          приёма.
+          {t('diary.note')}
         </p>
       </section>
     </div>

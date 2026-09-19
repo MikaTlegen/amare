@@ -4,36 +4,20 @@ import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Phone, Info, CheckCircle2, ArrowLeft } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button } from '@/components/Links'
 import { CLINIC } from '@/lib/clinic'
 import { readUtm, submitLead, type LeadPayload } from '@/lib/crm'
 import { cn } from '@amare/ui'
+import { useContent, useT } from '@amare/i18n/react'
 
 type Step = 'when' | 'mobility' | 'contacts' | 'urgent' | 'done'
 
-const WHEN_OPTIONS = [
-  { id: '<1m', label: 'Меньше месяца' },
-  { id: '1-6m', label: '1–6 месяцев' },
-  { id: '6-12m', label: '6–12 месяцев' },
-  { id: '>12m', label: 'Больше года' },
-] as const
+// Подписи вариантов и пояснения периодов лежат в словаре quiz
+const WHEN_OPTIONS = ['<1m', '1-6m', '6-12m', '>12m'] as const
+const MOBILITY_OPTIONS = ['bedridden', 'wheelchair', 'assisted', 'independent'] as const
 
-const MOBILITY_OPTIONS = [
-  { id: 'bedridden', label: 'Лежит, не садится' },
-  { id: 'wheelchair', label: 'Сидит, передвигается в коляске' },
-  { id: 'assisted', label: 'Ходит с поддержкой' },
-  { id: 'independent', label: 'Ходит сам, но неуверенно' },
-] as const
-
-/** Пояснение периода восстановления — без диагнозов и обещаний. */
-const PERIOD_NOTE: Record<string, string> = {
-  '1-6m':
-    'Ранний восстановительный период — окно максимальной нейропластичности. Занятия сейчас дают больший прирост, чем те же занятия через год.',
-  '6-12m':
-    'Поздний восстановительный период. Прогресс идёт медленнее, но продолжается — особенно по бытовым навыкам и речи.',
-  '>12m':
-    'Период остаточных явлений. Задача смещается к поддержанию достигнутого и к самостоятельности в быту.',
-}
+/** У острого периода пояснения нет: эта ветка ведёт на экран со звонком. */
+const PERIOD_KEYS = ['1-6m', '6-12m', '>12m'] as const
 
 /**
  * Квиз «Оценка потребности в реабилитации» (S-05 ТЗ).
@@ -48,6 +32,9 @@ const PERIOD_NOTE: Record<string, string> = {
  * в каком периоде находится человек.
  */
 export function Quiz() {
+  const t = useT('quiz')
+  const text = useContent('quiz')
+  const contacts = useT('contacts')
   const reduced = useReducedMotion()
   const [step, setStep] = useState<Step>('when')
   /** История шагов — чтобы можно было вернуться и исправить ответ. */
@@ -73,12 +60,12 @@ export function Quiz() {
     setHistory(history.slice(0, -1))
   }
 
-  const chooseWhen = (id: (typeof WHEN_OPTIONS)[number]['id']) => {
+  const chooseWhen = (id: (typeof WHEN_OPTIONS)[number]) => {
     setAnswers((a) => ({ ...a, strokeAgo: id }))
     go(id === '<1m' ? 'urgent' : 'mobility')
   }
 
-  const chooseMobility = (id: (typeof MOBILITY_OPTIONS)[number]['id']) => {
+  const chooseMobility = (id: (typeof MOBILITY_OPTIONS)[number]) => {
     setAnswers((a) => ({ ...a, mobility: id }))
     go('contacts')
   }
@@ -117,14 +104,13 @@ export function Quiz() {
       <div className="grid gap-10 rounded-3xl border border-line bg-surface p-7 sm:p-10 lg:grid-cols-12">
         <div className="flex flex-col gap-4 lg:col-span-5">
           <span className="text-sm font-semibold uppercase tracking-widest text-accent">
-            Оценка потребности
+            {t('label')}
           </span>
           <h2 className="font-display text-2xl font-medium leading-[1.24] sm:text-3xl sm:leading-[1.18] tracking-[-0.04em]">
-            Насколько срочно нужна реабилитация?
+            {t('title')}
           </h2>
           <p className="text-base leading-relaxed text-muted">
-            Несколько вопросов о состоянии. Покажем, в каком периоде восстановления вы находитесь,
-            и что это значит. Это не диагноз — решение принимает врач.
+            {t('note')}
           </p>
         </div>
 
@@ -135,7 +121,7 @@ export function Quiz() {
             aria-valuenow={progress}
             aria-valuemin={0}
             aria-valuemax={100}
-            aria-label="Прогресс опроса"
+            aria-label={t('progress')}
           >
             {[20, 40, 60, 80, 100].map((mark) => (
               <span
@@ -156,7 +142,7 @@ export function Quiz() {
               className="inline-flex min-h-[2.8rem] w-fit items-center gap-2 rounded-xl px-3 py-2 text-base font-medium text-muted transition-colors hover:text-ink"
             >
               <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-              Назад
+              {t('back')}
             </button>
           )}
 
@@ -169,13 +155,13 @@ export function Quiz() {
             >
               {step === 'when' && (
                 <>
-                  <h3 className="text-2xl font-semibold">Сколько времени прошло после инсульта?</h3>
+                  <h3 className="text-2xl font-semibold">{t('when.title')}</h3>
                   <div className="grid gap-2.5 sm:grid-cols-2">
-                    {WHEN_OPTIONS.map((option) => (
+                    {WHEN_OPTIONS.map((id) => (
                       <OptionButton
-                        key={option.id}
-                        label={option.label}
-                        onClick={() => chooseWhen(option.id)}
+                        key={id}
+                        label={text(`when.${id}`)}
+                        onClick={() => chooseWhen(id)}
                       />
                     ))}
                   </div>
@@ -184,29 +170,28 @@ export function Quiz() {
 
               {step === 'mobility' && (
                 <>
-                  <h3 className="text-2xl font-semibold">Как человек сейчас передвигается?</h3>
+                  <h3 className="text-2xl font-semibold">{t('mobility.title')}</h3>
                   <div className="grid gap-2.5 sm:grid-cols-2">
-                    {MOBILITY_OPTIONS.map((option) => (
+                    {MOBILITY_OPTIONS.map((id) => (
                       <OptionButton
-                        key={option.id}
-                        label={option.label}
-                        onClick={() => chooseMobility(option.id)}
+                        key={id}
+                        label={text(`mobility.${id}`)}
+                        onClick={() => chooseMobility(id)}
                       />
                     ))}
                   </div>
-                  {answers.strokeAgo && PERIOD_NOTE[answers.strokeAgo] && (
-                    <Note>{PERIOD_NOTE[answers.strokeAgo]}</Note>
-                  )}
+                  {answers.strokeAgo &&
+                    (PERIOD_KEYS as readonly string[]).includes(answers.strokeAgo) && (
+                      <Note>{text(`period.${answers.strokeAgo}`)}</Note>
+                    )}
                 </>
               )}
 
               {step === 'urgent' && (
                 <div className="flex flex-col gap-4 rounded-2xl border-[1.5px] border-accent bg-[rgb(253,238,237)] p-6">
-                  <h3 className="text-2xl font-semibold">Позвоните нам — это острый период</h3>
+                  <h3 className="text-2xl font-semibold">{t('urgent.title')}</h3>
                   <p className="text-base leading-relaxed text-ink/80">
-                    В первый месяц после инсульта программу назначает врач по выписке из
-                    стационара: могут быть противопоказания. Форму заполнять не нужно — быстрее
-                    поговорить.
+                    {t('urgent.note')}
                   </p>
                   <Button href={CLINIC.phones[0].href} size="lg" className="self-start">
                     <Phone className="h-5 w-5" aria-hidden="true" />
@@ -217,24 +202,24 @@ export function Quiz() {
 
               {step === 'contacts' && (
                 <form onSubmit={send} className="flex flex-col gap-4">
-                  <h3 className="text-2xl font-semibold">Куда отправить предварительный план?</h3>
+                  <h3 className="text-2xl font-semibold">{t('contacts.title')}</h3>
 
                   <div className="grid gap-3 sm:grid-cols-2">
                     <Field
                       id="quiz-name"
-                      label="Как к вам обращаться"
+                      label={t('contacts.name')}
                       value={name}
                       onChange={setName}
                       autoComplete="name"
                     />
                     <Field
                       id="quiz-phone"
-                      label="Телефон"
+                      label={t('contacts.phone')}
                       type="tel"
                       value={phone}
                       onChange={setPhone}
                       autoComplete="tel"
-                      placeholder="+7 ___ ___ __ __"
+                      placeholder={t('contacts.phonePlaceholder')}
                       required
                     />
                   </div>
@@ -252,13 +237,12 @@ export function Quiz() {
                       required
                     />
                     <span className="text-base leading-relaxed text-muted">
-                      Согласен на обработку персональных данных, включая сведения о здоровье, и на
-                      звонок от клиники.
+                      {t('contacts.consent')}
                     </span>
                   </label>
 
                   <Button onClick={() => undefined} type="submit" size="lg" className="self-start">
-                    {sending ? 'Отправляем…' : 'Получить план'}
+                    {sending ? t('contacts.sending') : t('contacts.submit')}
                   </Button>
                 </form>
               )}
@@ -266,10 +250,9 @@ export function Quiz() {
               {step === 'done' && (
                 <div className="flex flex-col gap-3 rounded-2xl bg-tint p-6">
                   <CheckCircle2 className="h-8 w-8 text-brand" aria-hidden="true" />
-                  <h3 className="text-2xl font-semibold">Заявка принята</h3>
+                  <h3 className="text-2xl font-semibold">{t('done.title')}</h3>
                   <p className="text-base leading-relaxed text-ink/80">
-                    Врач-реабилитолог перезвонит в рабочее время: {CLINIC.hours}. Если нужно
-                    быстрее — позвоните сами.
+                    {t('done.note', { hours: contacts('hours') })}
                   </p>
                   <Button href={CLINIC.phones[0].href} variant="outline" className="self-start">
                     {CLINIC.phones[0].label}

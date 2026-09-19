@@ -1,4 +1,7 @@
-import Link from 'next/link'
+'use client'
+
+import { useT } from '@amare/i18n/react'
+import { Link } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
 
 interface Props {
@@ -15,8 +18,21 @@ interface Props {
 /**
  * Обложка внутренней страницы: фоновое фото, крошки и заголовок.
  * Затемнение сохраняет читаемость текста на любом кадре.
+ *
+ * Заголовок и подпись приходят пропами — их переводит сама страница.
+ * Свои две строки берёт из контекста: компонент рисуется и на серверных,
+ * и на клиентских страницах, а импорт словарей утянул бы их в бандл.
  */
-export function PageCover({ title, note, image, alt, crumb, objectPosition = "center" }: Props) {
+export function PageCover({
+  title,
+  note,
+  image,
+  alt,
+  crumb,
+  objectPosition = 'center',
+}: Props) {
+  const t = useT('nav')
+
   return (
     <section
       aria-label={alt}
@@ -25,8 +41,8 @@ export function PageCover({ title, note, image, alt, crumb, objectPosition = "ce
     >
       <div className="mx-auto max-w-content px-4 py-20 sm:px-8 lg:px-20 lg:py-28">
         <div className="flex max-w-2xl flex-col justify-center gap-4">
-          <nav aria-label="Хлебные крошки" className="flex items-center gap-2 text-base text-white/70">
-            <Link href={ROUTES.home} className="tap-target text-white/70 no-underline hover:text-white">Главная</Link>
+          <nav aria-label={t('breadcrumbs')} className="flex items-center gap-2 text-base text-white/70">
+            <Link href={ROUTES.home} className="tap-target text-white/70 no-underline hover:text-white">{t('home')}</Link>
             <span aria-hidden="true">/</span>
             <span className="text-white">{crumb}</span>
           </nav>

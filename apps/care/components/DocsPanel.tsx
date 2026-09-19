@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Eye, FileSignature, ShieldCheck } from 'lucide-react'
 import type { AccessLogEntry, Consent } from '@amare/api-client'
+import { useT } from '@amare/i18n/react'
 import { getAccessLog, getConsents } from '@/lib/mock'
 
 /**
@@ -19,6 +20,7 @@ import { getAccessLog, getConsents } from '@/lib/mock'
  * обращение к администратору.
  */
 export function DocsPanel() {
+  const t = useT('cabinet')
   const [consents, setConsents] = useState<Consent[]>([])
   const [log, setLog] = useState<AccessLogEntry[]>([])
 
@@ -32,7 +34,7 @@ export function DocsPanel() {
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-6">
         <h2 className="m-0 flex items-center gap-2 font-display text-xl font-medium tracking-[-0.035em]">
           <FileSignature className="h-5 w-5 text-brand" aria-hidden="true" />
-          Согласия
+          {t('docs.consents')}
         </h2>
 
         <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
@@ -40,24 +42,22 @@ export function DocsPanel() {
             <li key={consent.id} className="flex flex-col gap-1 rounded-2xl bg-bg px-5 py-4">
               <span className="text-base font-medium leading-relaxed">{consent.title}</span>
               <span className="text-base text-muted">
-                Подписано {consent.at}
-                {consent.required ? ' · обязательное для лечения' : ''}
+                {t('docs.signedAt', { date: consent.at })}
+                {consent.required ? ` ${t('docs.required')}` : ''}
               </span>
             </li>
           ))}
         </ul>
 
         <p className="m-0 text-base leading-relaxed text-muted">
-          Отозвать согласие можно заявлением у администратора клиники. Обязательное согласие на
-          обработку медданных отозвать без прекращения лечения нельзя — это требование закона, а не
-          настройка приложения.
+          {t('docs.note')}
         </p>
       </section>
 
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-6">
         <h2 className="m-0 flex items-center gap-2 font-display text-xl font-medium tracking-[-0.035em]">
           <Eye className="h-5 w-5 text-brand" aria-hidden="true" />
-          Кто смотрел мои данные
+          {t('docs.access')}
         </h2>
 
         <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
@@ -74,7 +74,7 @@ export function DocsPanel() {
         <p className="m-0 flex items-start gap-2.5 rounded-2xl border border-line px-5 py-4 text-base leading-relaxed text-muted">
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-deep" aria-hidden="true" />
           {/* TODO BACKEND: журнал пишется на сервере, клиент его только читает */}
-          Записи в журнал вносит сервер, изменить их из кабинета нельзя — ни вам, ни клинике.
+          {t('docs.logNote')}
         </p>
       </section>
     </div>

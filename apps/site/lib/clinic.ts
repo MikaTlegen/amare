@@ -2,40 +2,35 @@
  * Единственная точка правды по клинике: контакты, режим работы, цены.
  * Всё, что может измениться, правится здесь, а не в разметке.
  *
+ * Текст (адрес словами, режим работы, название ТОО, цены) переехал
+ * в @amare/i18n: он переводится, а телефоны и координаты — нет.
+ *
  * TODO CMS: после подключения админки (модуль M2 ТЗ) эти данные приходят
  * из API, а файл остаётся фолбэком на случай недоступности бэкенда.
  */
 
 export const CLINIC = {
   name: 'Amare.kz',
-  legalName: 'ТОО «AMARE.KZ»',
   bin: '', // TODO: подставить реальный БИН перед публикацией
   license: '', // TODO: номер, дата и орган выдачи
   address: {
-    full: 'Астана, проспект Мәңгілік Ел 21, НП 31',
-    city: 'Астана',
-    street: 'проспект Мәңгілік Ел 21, НП 31',
     mapUrl: 'https://2gis.kz/astana/geo/70030076192243869',
   },
-  hours: 'Пн–Пт 9:00–18:00 · Сб 9:00–14:00 по записи',
   phones: [
     { label: '+7 700 525 25 77', href: 'tel:+77005252577', primary: true },
     { label: '+7 7172 25 25 77', href: 'tel:+77172252577', primary: false },
   ],
   whatsapp: 'https://wa.me/77005252577',
   instagram: 'https://instagram.com/', // TODO: реальный аккаунт клиники
-  rating: { value: '5,0', source: '2ГИС', reviews: 87 },
+  rating: { value: '5,0', reviews: 87 },
 } as const
 
-/** Цены. Держим строками: валюта и «от» — часть смысла, а не форматирование. */
-export const PRICES = {
-  consultation: '18 000 ₸',
-  course: 'от 250 000 ₸',
-  homeVisit: '41 000 ₸',
-  online: '18 000 ₸',
-  dayHospital: 'по запросу', // TODO: уточнить у клиники
-  freeIntro: 'Первые 15 минут консультации — бесплатно',
-} as const
+/*
+ * Цены живут в словаре @amare/i18n (namespace prices): валюта и «от» —
+ * часть смысла, а в казахском «от 250 000 ₸» строится иначе.
+ *
+ * TODO: дневной стационар — уточнить цену у клиники.
+ */
 
 /**
  * Адреса кабинетов.
@@ -102,8 +97,6 @@ export const MAP = {
   lat: 51.1073,
   lon: 71.430416,
   zoom: 17,
-  title: 'Amare.kz',
-  description: 'Клиника нейрореабилитации, Мәңгілік Ел 21, НП 31',
   widgetData:
     'eJxFUFtvgjAU_i_d44gpASWS7IGVyDRIbNziZfGBQad1hUNKUYH431fAZX0657ul52sRyJRJlgYMMqYkZyVyP1uk6oIhF81YrCrJkIEKCQWTqudblIAAqfmn2WziWb7mFVeic9CNeUqyjyq24EXDKSsTyQvFIdfk6s17xgtJqymxcWjRKiITHHrHblYpGeOdTy8q8HC4pWVEbjg8D9pdqPcg6Hf_xpOzQ3-i4HXAyVRnlPOIJHicr2FKGrz_0r5gg0M44sWWVrVXL9dXPVs0r71m-X69JL7dfbCZ5ym7IdfEf-9uoONQRt2d-mhiBTxXWp-ALoznseqLcsyRbWHbnBhjc2RixzpoN0913P1goCwuVlDy4fgWiVgh96EzkOjAfz9qADLtc3SArgyE2JwYE_se_Y5Fye6_bDKGMw',
 } as const

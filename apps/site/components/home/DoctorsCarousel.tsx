@@ -1,10 +1,11 @@
 'use client'
 
 import { useCallback, useEffect, useRef } from 'react'
-import Link from 'next/link'
+import { Link } from '@/components/Links'
 import { useReducedMotion } from 'motion/react'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
+import { useContent, useT } from '@amare/i18n/react'
 import { ROUTES } from '@/lib/clinic'
 
 /** Первый сдвиг — через секунду после загрузки, дальше раз в три секунды. */
@@ -13,6 +14,9 @@ const AUTO_SCROLL_INTERVAL = 3_000
 
 /** Компактная бесконечная лента специалистов с ручным управлением. */
 export function DoctorsCarousel() {
+  const t = useT('doctors')
+  const text = useContent('doctors')
+  const carousel = useT('progress')
   const trackRef = useRef<HTMLDivElement>(null)
   const delayRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -73,7 +77,7 @@ export function DoctorsCarousel() {
       <div
         ref={trackRef}
         className='-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden'
-        aria-label='Карточки специалистов'
+        aria-label={carousel('carousel.label')}
         onPointerEnter={stopAutoScroll}
         onPointerLeave={startAutoScroll}
         onTouchStart={stopAutoScroll}
@@ -92,20 +96,27 @@ export function DoctorsCarousel() {
               {doctor.photo ? (
                 <img
                   src={doctor.photo}
-                  alt={index < DOCTORS.length ? `${doctor.role} ${doctor.name}` : ''}
+                  alt={
+                    index < DOCTORS.length
+                      ? t('card.photoAlt', {
+                          role: text(`${doctor.id}.role`),
+                          name: text(`${doctor.id}.name`),
+                        })
+                      : ''
+                  }
                   loading={index > 2 ? 'lazy' : 'eager'}
                   decoding='async'
                   className='h-full w-full object-cover object-top transition duration-700 ease-out motion-reduce:transition-none group-hover:scale-105'
                 />
               ) : (
-                <div className='flex h-full items-center justify-center px-4 text-center text-sm text-muted'>Фото специалиста</div>
+                <div className='flex h-full items-center justify-center px-4 text-center text-sm text-muted'>{carousel('carousel.noPhoto')}</div>
               )}
             </div>
 
             <div className='flex flex-1 flex-col gap-1.5 p-5'>
-              <h3 className='m-0 text-lg font-semibold leading-snug'>{doctor.name}</h3>
-              <span className='text-base text-muted'>{doctor.role}</span>
-              <span className='text-base font-medium text-accent'>{doctor.experience}</span>
+              <h3 className='m-0 text-lg font-semibold leading-snug'>{text(`${doctor.id}.name`)}</h3>
+              <span className='text-base text-muted'>{text(`${doctor.id}.role`)}</span>
+              <span className='text-base font-medium text-accent'>{text(`${doctor.id}.experience`)}</span>
 
               {/* Растянутая ссылка: нажатие в любом месте карточки ведёт на страницу врача. */}
               <Link
@@ -114,7 +125,7 @@ export function DoctorsCarousel() {
                 className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline after:absolute after:inset-0 after:content-['']"
               >
                 <CalendarDays className='h-4 w-4' aria-hidden='true' />
-                Записаться
+                {t('card.book')}
               </Link>
             </div>
           </article>
@@ -122,10 +133,10 @@ export function DoctorsCarousel() {
       </div>
 
       <div className='mt-2 flex justify-end gap-2'>
-        <button type='button' onClick={() => move(-1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Предыдущий врач'>
+        <button type='button' onClick={() => move(-1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label={carousel('carousel.prev')}>
           <ChevronLeft className='h-5 w-5' aria-hidden='true' />
         </button>
-        <button type='button' onClick={() => move(1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Следующий врач'>
+        <button type='button' onClick={() => move(1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label={carousel('carousel.next')}>
           <ChevronRight className='h-5 w-5' aria-hidden='true' />
         </button>
       </div>

@@ -9,7 +9,8 @@ import { MedsPanel } from './MedsPanel'
 import { MaterialsPanel } from './MaterialsPanel'
 import { DocsPanel } from './DocsPanel'
 import { SosButton } from './SosButton'
-import { useAuth, ROLE_LABEL } from '@/auth/AuthContext'
+import { useT } from '@amare/i18n/react'
+import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
 import { getMessages, sendMessage } from '@/lib/mock'
 
 /**
@@ -17,35 +18,41 @@ import { getMessages, sendMessage } from '@/lib/mock'
  * Сначала то, что нужно сделать (план, дневник, лекарства), потом то,
  * на что смотрят (прогресс, материалы, документы), и в конце связь.
  */
-const TABS: Tab[] = [
-  { id: 'plan', label: 'Сегодня' },
-  { id: 'diary', label: 'Дневник' },
-  { id: 'meds', label: 'Лекарства' },
-  { id: 'progress', label: 'Мой прогресс' },
-  { id: 'materials', label: 'Материалы' },
-  { id: 'docs', label: 'Документы и доступ' },
-  { id: 'chat', label: 'Куратор' },
-]
+const TAB_KEYS = [
+  ['plan', 'tab.today'],
+  ['diary', 'tab.diary'],
+  ['meds', 'tab.meds'],
+  ['progress', 'tab.myProgress'],
+  ['materials', 'tab.materials'],
+  ['docs', 'tab.docsAccess'],
+  ['chat', 'tab.chat'],
+] as const
 
 // Модульная константа: getMessages/sendMessage стабильны, ChatPanel не перезапрашивает
 // сообщения на каждый ре-рендер родителя (объект-литерал внутри JSX пересоздавался бы).
 const CHAT_API = { getMessages, sendMessage }
 
+// TODO CRM: имя куратора придёт из карточки пациента вместе с бэкендом
+const CURATOR_NAME = 'Индира Жумабекова'
+
 /** Кабинет пациента (модуль M5 ТЗ). */
 export function PatientCabinetPage() {
+  const t = useT('cabinet')
   const { user, signOut } = useAuth()
   const [tab, setTab] = useState('plan')
+
+  const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
 
   return (
     <>
       <CabinetShell
-        title="Кабинет пациента"
-        subtitle="Курс реабилитации · куратор Индира Жумабекова"
-        tabs={TABS}
+        title={t('patient.title')}
+        subtitle={t('patient.subtitle', { curator: CURATOR_NAME })}
+        tabs={tabs}
         active={tab}
         onTabChange={setTab}
         userName={user?.name ?? ''}
-        roleLabel={ROLE_LABEL.patient}
+        roleLabel={t(ROLE_KEY.patient)}
     homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
         onSignOut={signOut}
       >

@@ -1,11 +1,13 @@
 'use client'
 
-import Link from 'next/link'
+import { Button, Link } from '@/components/Links'
 import { motion, useReducedMotion } from 'motion/react'
 import { ArrowDownRight, ArrowRight, Phone } from 'lucide-react'
-import { Button, Reveal } from '@amare/ui'
-import { COURSE_STEPS, FACTS } from '@/data/course'
+import { Reveal } from '@amare/ui'
+import { COURSE_STEPS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
+import { DOCTORS } from '@/data/doctors'
+import { useContent, useContentList, usePlural, useT } from '@amare/i18n/react'
 import { DoctorsCarousel } from '@/components/home/DoctorsCarousel'
 import { TwoDoors } from '@/components/home/TwoDoors'
 import { Quiz } from '@/components/home/Quiz'
@@ -16,7 +18,6 @@ import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
 const VIDEO_URL = 'https://videos.pexels.com/video-files/6111018/6111018-sd_640_360_25fps.mp4'
-const MARQUEE_ITEMS = ['Нейрореабилитация', 'Индивидуальный план', 'Команда специалистов', 'Астана']
 
 /** Главная в редакционном стиле: крупный ритм, живая типографика и минимум оболочек. */
 export function HomePage() {
@@ -42,6 +43,8 @@ export function HomePage() {
 }
 
 function Hero() {
+  const t = useT('home')
+  const price = useT('prices')
   const reduced = useReducedMotion()
 
   return (
@@ -59,20 +62,20 @@ function Hero() {
           className='min-w-0 lg:col-span-8'
         >
           <motion.p variants={fadeUp} className='m-0 text-sm font-medium uppercase tracking-[0.1em] text-white/65'>
-            Клиника нейрореабилитации в Астане
+            {t('hero.label')}
           </motion.p>
           <motion.h1 variants={fadeUp} className='mt-5 max-w-none font-display sm:max-w-[11em] text-2xl font-semibold leading-[1.12] sm:leading-[1.08] tracking-[-0.055em] sm:text-6xl lg:text-7xl'>
-            Возвращаем движение, речь и самостоятельность
+            {t('hero.title')}
           </motion.h1>
           <motion.p variants={fadeUp} className='mt-7 max-w-[34em] text-lg leading-relaxed text-white/80'>
-            От первой консультации до понятного плана восстановления — рядом команда, которая видит человека, а не диагноз.
+            {t('hero.note')}
           </motion.p>
           <motion.div variants={fadeUp} className='mt-8 flex flex-wrap items-center gap-5'>
             <Button to={ROUTES.booking} size='lg'>
-              Записаться на консультацию
+              {t('hero.book')}
               <ArrowDownRight className='h-5 w-5' aria-hidden='true' />
             </Button>
-            <span className='text-sm text-white/65'>Первые 15 минут консультации — бесплатно</span>
+            <span className='text-sm text-white/65'>{price('freeIntro')}</span>
           </motion.div>
         </motion.div>
         <motion.p
@@ -81,7 +84,7 @@ function Hero() {
           transition={{ delay: reduced ? 0 : 0.7, duration: 0.5 }}
           className='hidden border-l border-white/30 pl-6 text-sm leading-relaxed text-white/75 lg:col-span-3 lg:block'
         >
-          План занятий, личный куратор и поддержка семьи на каждом этапе курса.
+          {t('hero.aside')}
         </motion.p>
       </div>
     </section>
@@ -89,8 +92,10 @@ function Hero() {
 }
 
 function Marquee() {
+  const list = useContentList('home')
   const reduced = useReducedMotion()
-  const items = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS]
+  const marquee = list('marquee')
+  const items = [...marquee, ...marquee, ...marquee]
 
   return (
     <div className='overflow-hidden bg-accent py-4 text-accent-ink'>
@@ -111,9 +116,29 @@ function Marquee() {
 }
 
 function Facts() {
+  const t = useT('home')
+  const plural = usePlural('home')
+  const price = useT('prices')
+  const source = useT('contacts')('ratingSource')
+
+  // Число специалистов считаем по карточкам: цифра на главной не должна
+  // расходиться со страницей «Врачи»
+  const facts = [
+    {
+      value: t('facts.rating.value', { value: CLINIC.rating.value, source }),
+      note: plural('facts.rating.note', CLINIC.rating.reviews),
+    },
+    {
+      value: plural('facts.doctors.value', DOCTORS.length),
+      note: t('facts.doctors.note'),
+    },
+    { value: price('course'), note: t('facts.price.note') },
+    { value: t('facts.insurance.value'), note: t('facts.insurance.note') },
+  ]
+
   return (
-    <section aria-label='Коротко о клинике' className='mx-auto grid max-w-content gap-x-8 gap-y-10 px-4 py-20 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-20'>
-      {FACTS.map((fact, index) => (
+    <section aria-label={t('facts.label')} className='mx-auto grid max-w-content gap-x-8 gap-y-10 px-4 py-20 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-20'>
+      {facts.map((fact, index) => (
         <Reveal key={fact.value} delay={index * 0.08} className='border-t border-line pt-5'>
           <p className='m-0 font-display text-3xl font-semibold tracking-[-0.045em] text-ink'>{fact.value}</p>
           <p className='mt-2 text-base leading-relaxed text-muted'>{fact.note}</p>
@@ -134,19 +159,22 @@ function EntryPoints() {
 }
 
 function Directions() {
+  const t = useT('home')
+  const text = useContent('directions')
+
   return (
     <section className='bg-deep px-4 py-20 text-white sm:px-8 lg:px-20'>
       <div className='mx-auto grid max-w-content gap-16 lg:grid-cols-12'>
         <Reveal className='lg:col-span-5'>
-          <p className='text-sm font-medium uppercase tracking-[0.08em] text-sky'>Направления</p>
+          <p className='text-sm font-medium uppercase tracking-[0.08em] text-sky'>{t('directions.label')}</p>
           <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.045em] sm:text-5xl'>
-            Реабилитация под задачу, которая важна семье сейчас
+            {t('directions.title')}
           </h2>
           <p className='mt-6 max-w-[30em] text-lg leading-relaxed text-white/75'>
-            Собираем программу вокруг реальных целей: безопасно ходить, говорить, есть, возвращаться к привычным делам.
+            {t('directions.note')}
           </p>
           <Link href={ROUTES.directions} className='tap-target mt-8 inline-flex items-center gap-2 text-base font-semibold text-white no-underline hover:text-sky'>
-            Все направления
+            {t('directions.all')}
             <ArrowRight className='h-5 w-5' aria-hidden='true' />
           </Link>
         </Reveal>
@@ -154,7 +182,7 @@ function Directions() {
           {DIRECTIONS.slice(0, 5).map((direction, index) => (
             <Reveal key={direction.id} delay={index * 0.1} className='border-t border-white/20 py-5'>
               <Link href={`${ROUTES.directions}#${direction.id}`} className='tap-target group flex items-baseline justify-between gap-6 text-xl text-white no-underline sm:text-2xl'>
-                <span>{direction.title}</span>
+                <span>{text(`${direction.id}.title`)}</span>
                 <ArrowRight className='h-5 w-5 shrink-0 text-sky transition-transform group-hover:translate-x-1' aria-hidden='true' />
               </Link>
             </Reveal>
@@ -166,18 +194,21 @@ function Directions() {
 }
 
 function Course() {
+  const t = useT('home')
+  const text = useContent('course')
+
   return (
     <section className='mx-auto grid max-w-content gap-16 px-4 py-24 sm:px-8 lg:grid-cols-12 lg:px-20'>
       <Reveal className='lg:col-span-5'>
-        <p className='text-sm font-medium uppercase tracking-[0.08em] text-brand'>Как строится курс</p>
+        <p className='text-sm font-medium uppercase tracking-[0.08em] text-brand'>{t('course.label')}</p>
         <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.045em] text-ink sm:text-5xl'>
-          Понятный путь от оценки состояния к самостоятельности
+          {t('course.title')}
         </h2>
         <p className='mt-6 max-w-[28em] text-lg leading-relaxed text-muted'>
-          Каждый этап зафиксирован в плане. Семья понимает, что происходит сегодня и к какой цели мы идём дальше.
+          {t('course.note')}
         </p>
         <Link href={ROUTES.course} className='tap-target mt-8 inline-flex items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand'>
-          Узнать о курсе и стоимости
+          {t('course.link')}
           <ArrowRight className='h-5 w-5' aria-hidden='true' />
         </Link>
       </Reveal>
@@ -186,8 +217,8 @@ function Course() {
           <Reveal key={step.n} delay={index * 0.1} className='flex items-baseline gap-6 border-t border-line py-5'>
             <span className='font-display text-sm text-brand'>{step.n}</span>
             <div>
-              <h3 className='m-0 text-xl font-medium text-ink'>{step.title}</h3>
-              <p className='mt-2 text-base leading-relaxed text-muted'>{step.full}</p>
+              <h3 className='m-0 text-xl font-medium text-ink'>{text(`step.${step.n}.title`)}</h3>
+              <p className='mt-2 text-base leading-relaxed text-muted'>{text(`step.${step.n}.full`)}</p>
             </div>
           </Reveal>
         ))}
@@ -197,18 +228,20 @@ function Course() {
 }
 
 function Team() {
+  const t = useT('home')
+
   return (
     <section className='bg-tint px-4 py-20 sm:px-8 lg:px-20'>
       <div className='mx-auto max-w-content'>
         <Reveal className='flex flex-col justify-between gap-6 sm:flex-row sm:items-end'>
           <div>
-            <p className='text-sm font-medium uppercase tracking-[0.08em] text-deep'>Команда</p>
+            <p className='text-sm font-medium uppercase tracking-[0.08em] text-deep'>{t('team.label')}</p>
             <h2 className='mt-4 max-w-[16em] font-display text-3xl font-semibold leading-[1.15] tracking-[-0.045em] text-ink sm:text-5xl'>
-              С пациентом работает не один специалист
+              {t('team.title')}
             </h2>
           </div>
           <Link href={ROUTES.team} className='tap-target inline-flex items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand'>
-            Познакомиться с командой
+            {t('team.link')}
             <ArrowRight className='h-5 w-5' aria-hidden='true' />
           </Link>
         </Reveal>
@@ -219,19 +252,22 @@ function Team() {
 }
 
 function Contact() {
+  const t = useT('home')
+  const contacts = useT('contacts')
+
   return (
     <section className='relative isolate overflow-hidden bg-deep px-4 py-24 text-white sm:px-8 lg:px-20'>
       <img src='/photos/facade.jpg' alt='' aria-hidden='true' className='absolute inset-0 -z-20 h-full w-full object-cover opacity-30' />
       <div aria-hidden='true' className='absolute inset-0 -z-10 bg-deep/75' />
       <div className='mx-auto grid max-w-content gap-12 lg:grid-cols-12 lg:items-end'>
         <Reveal className='min-w-0 lg:col-span-8'>
-          <p className='text-sm font-medium uppercase tracking-[0.08em] text-white/60'>Начните с разговора</p>
+          <p className='text-sm font-medium uppercase tracking-[0.08em] text-white/60'>{t('contact.label')}</p>
           <h2 className='mt-4 max-w-[14em] font-display text-2xl font-semibold leading-[1.18] sm:leading-[1.12] tracking-[-0.05em] sm:text-6xl'>
-            Расскажите, что происходит — мы поможем сориентироваться
+            {t('contact.title')}
           </h2>
-          <p className='mt-7 max-w-[32em] text-lg leading-relaxed text-white/75'>{CLINIC.address.full}</p>
+          <p className='mt-7 max-w-[32em] text-lg leading-relaxed text-white/75'>{contacts('addressFull')}</p>
           <div className='mt-8 flex flex-wrap items-center gap-5'>
-            <Button to={ROUTES.booking} variant='white' size='lg'>Записаться на консультацию</Button>
+            <Button to={ROUTES.booking} variant='white' size='lg'>{t('contact.book')}</Button>
             <a href={CLINIC.phones[0].href} className='tap-target inline-flex items-center gap-2 text-base font-semibold text-white no-underline hover:text-sky'>
               <Phone className='h-5 w-5' aria-hidden='true' />
               {CLINIC.phones[0].label}
@@ -239,7 +275,7 @@ function Contact() {
           </div>
         </Reveal>
         <Reveal delay={0.15} className='border-l border-white/25 pl-6 text-sm leading-relaxed text-white/75 lg:col-span-3'>
-          {CLINIC.hours}
+          {contacts('hours')}
         </Reveal>
       </div>
     </section>
