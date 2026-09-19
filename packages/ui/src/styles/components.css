@@ -4,6 +4,19 @@
   @apply mx-auto w-full max-w-content px-4 sm:px-8 lg:px-20;
 }
 
+/* Зона нажатия 44 px для текстовых ссылок: вид не меняется, растёт только
+   область попадания пальцем (U-01 ТЗ). Вылет по 0.5rem вверх и вниз подобран
+   так, чтобы зоны соседних ссылок в подвале не перекрывались. */
+@utility tap-target {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: -0.5rem;
+  }
+}
+
 /* Переливающаяся рамка bento-карточек при наведении */
 @utility gradient-border {
   position: relative;

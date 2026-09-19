@@ -32,8 +32,10 @@ export function BarthelChart({
   data: ScalePoint[]
   height?: string
 }) {
-  const axisColor = onDark ? 'rgb(154 184 196)' : 'rgb(90 95 92)'
-  const gridColor = onDark ? 'rgb(255 255 255 / 0.12)' : 'rgb(227 223 215)'
+  // Цвета — через переменные палитры: иначе график не следует контрастной теме.
+  // Кегли подписей в rem, а не в px: они должны расти вместе с --font-scale (S-13).
+  const axisColor = onDark ? 'rgb(255 255 255 / 0.72)' : 'rgb(var(--c-muted))'
+  const gridColor = onDark ? 'rgb(255 255 255 / 0.12)' : 'rgb(var(--c-line))'
 
   return (
     <figure className="m-0 flex flex-col gap-3">
@@ -41,26 +43,29 @@ export function BarthelChart({
 
       <div className="w-full" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 8, right: 0, bottom: 0, left: -18 }}>
+          <BarChart data={data} margin={{ top: 8, right: 0, bottom: 0, left: -8 }}>
             <CartesianGrid vertical={false} stroke={gridColor} />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: axisColor, fontSize: 14 }}
+              interval="preserveStartEnd"
+              tick={{ fill: axisColor, fontSize: '0.8rem' }}
             />
             <YAxis
               domain={[0, 100]}
               tickLine={false}
               axisLine={false}
-              tick={{ fill: axisColor, fontSize: 14 }}
+              tick={{ fill: axisColor, fontSize: '0.8rem' }}
             />
             <Tooltip
-              cursor={{ fill: 'rgb(127 215 242 / 0.14)' }}
+              cursor={{ fill: 'rgb(var(--c-sky) / 0.14)' }}
               contentStyle={{
                 borderRadius: 12,
-                border: '1px solid rgb(227 223 215)',
-                fontSize: 15,
+                border: '1px solid rgb(var(--c-line))',
+                background: 'rgb(var(--c-surface))',
+                color: 'rgb(var(--c-ink))',
+                fontSize: '0.85rem',
               }}
               formatter={(value) => [`${value} баллов`, 'Индекс Бартел']}
             />
@@ -70,10 +75,10 @@ export function BarthelChart({
                   key={point.day}
                   fill={
                     i === data.length - 1
-                      ? 'rgb(200 53 46)'
+                      ? 'rgb(var(--c-accent))'
                       : onDark
-                        ? `rgb(127 215 242 / ${0.3 + i * 0.17})`
-                        : `rgb(6 113 143 / ${0.35 + i * 0.16})`
+                        ? `rgb(var(--c-sky) / ${0.45 + i * 0.13})`
+                        : `rgb(var(--c-brand) / ${0.45 + i * 0.13})`
                   }
                 />
               ))}

@@ -48,13 +48,15 @@ export function AttachmentChip({
         {attachment.size}
       </span>
       {onRemove && (
+        // after-* расширяет зону нажатия до 44 px, не увеличивая высоту чипа:
+        // вложения чаще всего прикрепляют с телефона
         <button
           type="button"
           onClick={onRemove}
           aria-label={`Убрать файл ${attachment.name}`}
-          className="shrink-0 rounded-lg p-1 hover:bg-line"
+          className="relative shrink-0 rounded-lg p-1 after:absolute after:inset-[-0.6rem] after:content-[''] hover:bg-line"
         >
-          <X className="h-4 w-4" aria-hidden="true" />
+          <X className="h-5 w-5" aria-hidden="true" />
         </button>
       )}
     </span>

@@ -85,8 +85,8 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
-      <ul className="flex max-h-[26rem] flex-col gap-3 overflow-y-auto">
+    <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
+      <ul className="flex max-h-[min(26rem,60dvh)] flex-col gap-3 overflow-y-auto overscroll-contain">
         {messages.map((message) => {
           const mine = message.author === 'me'
           return (

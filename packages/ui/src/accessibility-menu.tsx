@@ -76,7 +76,8 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
         <Popover.Content
           sideOffset={10}
           align="end"
-          className="z-50 w-76 rounded-2xl border border-line bg-surface p-5 text-ink shadow-2xl"
+          collisionPadding={16}
+          className="z-50 w-[min(19rem,calc(100vw_-_2rem))] rounded-2xl border border-line bg-surface p-4 text-ink shadow-2xl sm:p-5"
         >
           <h2 className="font-display text-lg font-medium tracking-tight">Удобство чтения</h2>
 
