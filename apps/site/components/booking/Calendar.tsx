@@ -11,28 +11,30 @@ import { cn } from '@amare/ui'
  * Классы заданы полностью, поэтому стили библиотеки не подключаются —
  * иначе её переменные конфликтовали бы с нашей палитрой.
  *
- * Размеры ячеек крупные (2.75rem): по U-01 ТЗ элементы управления
+ * Высота ячеек крупная (2.75rem): по U-01 ТЗ элементы управления
  * рассчитаны на человека с нарушенной моторикой, а дату приёма часто
- * выбирает сам пациент, а не родственник.
+ * выбирает сам пациент, а не родственник. Ширина — резиновая (flex-1):
+ * семь ячеек фиксированной ширины не помещались в экран 375 px и
+ * обрезались родителем, крайние дни недели нельзя было нажать.
  */
 export function Calendar({ className, classNames, ...props }: DayPickerProps) {
   const base = {
     months: 'relative flex flex-col gap-4',
     month: 'w-full',
     month_caption: 'relative mx-11 mb-2 flex h-11 items-center justify-center',
-    caption_label: 'font-display text-lg font-medium tracking-[-0.03em] capitalize',
+    caption_label: 'truncate font-display text-lg font-medium tracking-[-0.03em] capitalize',
     nav: 'absolute top-0 flex w-full justify-between',
     button_previous:
       'inline-flex size-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-tint hover:text-ink disabled:opacity-35',
     button_next:
       'inline-flex size-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-tint hover:text-ink disabled:opacity-35',
     month_grid: 'w-full border-collapse',
-    weekdays: 'flex',
-    weekday: 'flex size-11 items-center justify-center text-sm font-medium text-muted',
+    weekdays: 'flex w-full',
+    weekday: 'flex h-11 flex-1 items-center justify-center text-sm font-medium text-muted',
     week: 'flex w-full',
-    day: 'group size-11 p-0 text-base',
+    day: 'group h-11 flex-1 p-0 text-base',
     day_button: cn(
-      'relative flex size-11 items-center justify-center rounded-xl font-medium text-ink',
+      'relative flex h-11 w-full items-center justify-center rounded-xl font-medium text-ink',
       'transition-colors hover:bg-tint',
       'group-data-[selected]:bg-deep group-data-[selected]:text-white',
       'group-data-[disabled]:pointer-events-none group-data-[disabled]:text-ink/25',
@@ -57,7 +59,7 @@ export function Calendar({ className, classNames, ...props }: DayPickerProps) {
     <DayPicker
       locale={ru}
       showOutsideDays
-      className={cn('w-fit', className)}
+      className={cn('mx-auto w-full max-w-[22rem]', className)}
       classNames={merged}
       components={{
         Chevron: ({ orientation, ...rest }) =>

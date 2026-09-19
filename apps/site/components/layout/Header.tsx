@@ -27,6 +27,10 @@ const NAV = [
  * Размытие включается только после прокрутки — над первым экраном
  * шапка прозрачная и не режет фотографию. Порог в 24 px, чтобы состояние
  * не мигало при инерционном скролле на трекпаде.
+ *
+ * Горизонтальное меню появляется только с 2xl: при базовом кегле 18 px шесть
+ * пунктов, логотип и правый блок требуют ~1300 px, и на 1024–1500 px кнопка
+ * «Кабинет» уезжала за край экрана. До 2xl работает бургер.
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -47,10 +51,10 @@ export function Header() {
         scrolled ? 'border-b border-line bg-bg/85 backdrop-blur-xl' : 'bg-bg',
       )}
     >
-      <div className="container-content flex items-center gap-8 py-3">
+      <div className="container-content flex items-center gap-3 py-3 lg:gap-8">
         <SiteLogo />
 
-        <nav aria-label="Основная навигация" className="hidden flex-1 gap-5 lg:flex xl:gap-7">
+        <nav aria-label="Основная навигация" className="hidden flex-1 gap-4 2xl:flex">
           {NAV.map((item) => (
             <Link
               key={item.to}
@@ -84,7 +88,7 @@ export function Header() {
               <button
                 type="button"
                 aria-label="Открыть меню"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-bg lg:hidden"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-bg 2xl:hidden"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
               </button>
@@ -92,7 +96,7 @@ export function Header() {
 
             <Dialog.Portal>
               <Dialog.Overlay className="fixed inset-0 z-40 bg-ink/40 backdrop-blur-xs" />
-              <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[min(22rem,88vw)] flex-col gap-6 border-l border-line bg-bg p-6 shadow-2xl">
+              <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-[min(22rem,88vw)] flex-col gap-6 overflow-y-auto overscroll-contain border-l border-line bg-bg p-6 pb-[calc(1.5rem_+_env(safe-area-inset-bottom))] shadow-2xl">
                 <div className="flex items-center justify-between">
                   <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
                     Меню

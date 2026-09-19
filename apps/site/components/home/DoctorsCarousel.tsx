@@ -60,7 +60,7 @@ export function DoctorsCarousel() {
     <div className='relative mt-9'>
       <div
         ref={trackRef}
-        className='-mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden'
+        className='-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0 [&::-webkit-scrollbar]:hidden'
         aria-label='Карточки специалистов'
         onPointerEnter={stopAutoScroll}
         onPointerLeave={startAutoScroll}

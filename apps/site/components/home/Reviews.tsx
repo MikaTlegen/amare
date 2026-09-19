@@ -22,7 +22,7 @@ export function Reviews() {
             href={REVIEWS_SUMMARY.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-base font-semibold no-underline hover:text-accent"
+            className="tap-target inline-flex items-center gap-2 text-base font-semibold no-underline hover:text-accent"
           >
             Все отзывы в {REVIEWS_SUMMARY.source}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />

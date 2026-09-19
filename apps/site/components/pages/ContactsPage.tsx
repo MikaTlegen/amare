@@ -30,8 +30,8 @@ export function ContactsPage() {
                 href={phone.href}
                 className={
                   phone.primary
-                    ? 'text-2xl font-semibold no-underline'
-                    : 'text-lg text-muted no-underline'
+                    ? 'tap-target text-2xl font-semibold no-underline'
+                    : 'tap-target text-lg text-muted no-underline'
                 }
               >
                 {phone.label}

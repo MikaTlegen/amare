@@ -24,7 +24,7 @@ export function MapFrame({ title }: { title: string }) {
   const src = `https://makemap.2gis.ru/widget?data=${MAP.widgetData}`
 
   return (
-    <div className="relative h-full min-h-112 w-full overflow-hidden rounded-3xl border border-line bg-tint">
+    <div className="relative h-full min-h-80 w-full overflow-hidden sm:min-h-112 rounded-3xl border border-line bg-tint">
       <iframe
         title={title}
         src={src}

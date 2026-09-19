@@ -12,7 +12,7 @@ import { FOUNDER } from '@/data/founder'
  */
 export function FounderWord() {
   return (
-    <section className="bg-bg px-5 py-20 sm:px-8 lg:px-20">
+    <section className="bg-bg px-4 py-20 sm:px-8 lg:px-20">
       <Reveal className="mx-auto grid max-w-content items-center gap-10 lg:grid-cols-12">
         <div className="lg:col-span-4">
           {FOUNDER.photo ? (

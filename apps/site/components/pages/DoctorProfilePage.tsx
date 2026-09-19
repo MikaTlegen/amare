@@ -53,9 +53,9 @@ export function DoctorProfilePage({ doctorId }: { doctorId: string }) {
 
   return (
     <>
-      <section className='bg-tint px-5 py-10 sm:px-8 lg:px-20'>
+      <section className='bg-tint px-4 py-10 sm:px-8 lg:px-20'>
         <div className='mx-auto max-w-content'>
-          <Link href={ROUTES.team} className='inline-flex items-center gap-2 text-sm font-semibold text-ink no-underline hover:text-brand'>
+          <Link href={ROUTES.team} className='tap-target inline-flex items-center gap-2 text-sm font-semibold text-ink no-underline hover:text-brand'>
             <ArrowLeft className='h-4 w-4' aria-hidden='true' />
             Все специалисты
           </Link>
@@ -63,28 +63,28 @@ export function DoctorProfilePage({ doctorId }: { doctorId: string }) {
             <div className='overflow-hidden bg-bg lg:col-span-4'>
               {doctor.photo ? <img src={doctor.photo} alt={`${doctor.role} ${doctor.name}`} className='aspect-4/5 h-full w-full object-cover object-top' /> : null}
             </div>
-            <div className='lg:col-span-7 lg:col-start-6'>
+            <div className='min-w-0 lg:col-span-7 lg:col-start-6'>
               <p className='text-sm font-semibold uppercase tracking-[0.08em] text-brand'>{doctor.role}</p>
-              <h1 className='mt-3 max-w-[14ch] font-display text-4xl font-semibold leading-tight tracking-[-0.05em] text-ink sm:text-6xl'>{doctor.name}</h1>
+              <h1 className='mt-3 max-w-[14ch] font-display text-3xl font-semibold leading-tight tracking-[-0.05em] text-ink sm:text-6xl'>{doctor.name}</h1>
               <p className='mt-5 text-lg leading-relaxed text-muted'>{doctor.about}</p>
               <div className='mt-7 flex flex-wrap gap-3'>
                 <span className='bg-bg px-4 py-2 text-sm font-semibold text-ink'>{doctor.experience}</span>
-                {doctor.certificates.map((certificate) => <a key={certificate.href} href={certificate.href} target='_blank' rel='noopener noreferrer' className='bg-bg px-4 py-2 text-sm font-semibold text-ink no-underline hover:text-brand'>{certificate.label}</a>)}
+                {doctor.certificates.map((certificate) => <a key={certificate.href} href={certificate.href} target='_blank' rel='noopener noreferrer' className='inline-flex min-h-11 items-center bg-bg px-4 py-2 text-sm font-semibold text-ink no-underline hover:text-brand'>{certificate.label}</a>)}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className='mx-auto grid max-w-content gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
-        <div className='lg:col-span-5'>
+      <section className='mx-auto grid max-w-content gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
+        <div className='min-w-0 lg:col-span-5'>
           <p className='text-sm font-semibold uppercase tracking-[0.08em] text-brand'>Запись на консультацию</p>
           <h2 className='mt-4 font-display text-3xl font-semibold tracking-[-0.045em] text-ink sm:text-4xl'>Выберите удобное время</h2>
           <p className='mt-5 text-base leading-relaxed text-muted'>Показываем предварительно доступные окна. Администратор подтвердит запись по телефону.</p>
           {closestSlot ? <p className='mt-6 inline-flex items-center gap-2 bg-tint px-4 py-3 text-sm font-semibold text-deep'><Clock3 className='h-4 w-4' aria-hidden='true' />Ближайшая дата: {formatClosestSlot(closestSlot)}</p> : null}
         </div>
 
-        <div className='border border-line bg-bg p-5 sm:p-6 lg:col-span-7'>
+        <div className='min-w-0 border border-line bg-bg p-5 sm:p-6 lg:col-span-7'>
           <div className='flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
             {dates.map((date, index) => (
               <button key={date.toISOString()} type='button' onClick={() => { setSelectedDate(index); setSelectedSlot(null); void loadSlots() }} className={`min-w-18 px-3 py-3 text-sm font-semibold transition-colors ${selectedDate === index ? 'bg-deep text-white' : 'bg-tint text-ink hover:bg-line'}`}>

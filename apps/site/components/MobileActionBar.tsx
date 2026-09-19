@@ -6,12 +6,12 @@ import { CLINIC, ROUTES } from '@/lib/clinic'
  * Липкая панель действий на мобильных.
  *
  * Два действия, которые реально совершают с телефона: позвонить и записаться.
- * Панель занимает место внизу, поэтому у страниц есть нижний отступ pb-24 —
- * иначе она накроет футер.
+ * Панель занимает место внизу, поэтому под футером стоит спейсер такой же
+ * высоты (app/layout.tsx) — иначе она накроет юрблок подвала.
  */
 export function MobileActionBar() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 py-3 backdrop-blur-sm md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 pt-3 pb-[calc(0.75rem_+_env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden">
       <div className="flex gap-2.5">
         <a
           href={CLINIC.phones[0].href}

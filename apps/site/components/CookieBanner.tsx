@@ -47,7 +47,7 @@ export function CookieBanner() {
     <div
       role="region"
       aria-label="Согласие на использование файлов cookie"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface px-4 pb-24 pt-4 shadow-2xl sm:px-8 md:pb-4"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface px-4 pt-4 pb-[calc(6rem_+_env(safe-area-inset-bottom))] shadow-2xl sm:px-8 md:pb-4"
     >
       <div className="mx-auto flex max-w-content flex-col gap-4 lg:flex-row lg:items-center">
         <Cookie className="h-6 w-6 shrink-0 text-brand" aria-hidden="true" />
@@ -55,7 +55,7 @@ export function CookieBanner() {
         <p className="m-0 flex-1 text-base leading-relaxed">
           Сайт использует файлы cookie. Карта 2ГИС загружается со стороннего сервера и тоже ставит
           свои cookie.{' '}
-          <Link href={ROUTES.privacy} className="font-semibold">
+          <Link href={ROUTES.privacy} className="tap-target font-semibold">
             Политика обработки данных
           </Link>
         </p>

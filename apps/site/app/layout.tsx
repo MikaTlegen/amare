@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { ContactFab } from "@/components/ContactFab";
 import { CookieBanner } from "@/components/CookieBanner";
@@ -15,6 +15,17 @@ export const metadata: Metadata = {
   },
   description:
     "Реабилитация после инсульта, ЧМТ и операций в Астане. Курс 10–20 дней под контролем мультидисциплинарной команды, домашняя программа и личный куратор.",
+};
+
+/*
+ * viewport-fit=cover обязателен: без него env(safe-area-inset-*) на iOS всегда 0,
+ * и липкие панели уезжают под системную полосу жестов.
+ * Масштабирование пальцами не ограничиваем — аудитория 55+ (S-13).
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 /*
@@ -62,12 +73,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         <Header />
 
-        {/* pb-24 на мобильных — под липкую панель действий */}
-        <main id="main" className="pb-24 md:pb-0">
+        <main id="main" className="scroll-mt-24">
           {children}
         </main>
 
         <Footer />
+
+        {/* Место под липкую панель действий: раньше отступ стоял на <main>,
+            и панель накрывала низ футера с лицензией и политикой данных */}
+        <div aria-hidden="true" className="h-[calc(6rem_+_env(safe-area-inset-bottom))] md:hidden" />
         <ContactFab />
         <MobileActionBar />
         <CookieBanner />

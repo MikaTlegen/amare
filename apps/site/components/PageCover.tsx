@@ -23,14 +23,14 @@ export function PageCover({ title, note, image, alt, crumb, objectPosition = "ce
       className="relative isolate overflow-hidden bg-deep bg-cover bg-center"
       style={{ backgroundImage: 'url(' + image + ')', backgroundPosition: objectPosition }}
     >
-      <div className="mx-auto max-w-content px-5 py-20 sm:px-8 lg:px-20 lg:py-28">
+      <div className="mx-auto max-w-content px-4 py-20 sm:px-8 lg:px-20 lg:py-28">
         <div className="flex max-w-2xl flex-col justify-center gap-4">
           <nav aria-label="Хлебные крошки" className="flex items-center gap-2 text-base text-white/70">
-            <Link href={ROUTES.home} className="text-white/70 no-underline hover:text-white">Главная</Link>
+            <Link href={ROUTES.home} className="tap-target text-white/70 no-underline hover:text-white">Главная</Link>
             <span aria-hidden="true">/</span>
             <span className="text-white">{crumb}</span>
           </nav>
-          <h1 className="max-w-[16em] font-display text-4xl font-semibold leading-[1.1] tracking-[-0.045em] text-white sm:text-5xl sm:leading-none">{title}</h1>
+          <h1 className="max-w-[16em] font-display text-2xl font-semibold leading-[1.18] tracking-[-0.045em] text-white sm:text-5xl sm:leading-none">{title}</h1>
           {note && <p className="max-w-[34em] text-lg leading-relaxed text-white/80">{note}</p>}
         </div>
       </div>

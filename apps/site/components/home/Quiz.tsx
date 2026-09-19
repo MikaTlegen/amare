@@ -119,7 +119,7 @@ export function Quiz() {
           <span className="text-sm font-semibold uppercase tracking-widest text-accent">
             Оценка потребности
           </span>
-          <h2 className="font-display text-3xl font-medium leading-[1.18] tracking-[-0.04em]">
+          <h2 className="font-display text-2xl font-medium leading-[1.24] sm:text-3xl sm:leading-[1.18] tracking-[-0.04em]">
             Насколько срочно нужна реабилитация?
           </h2>
           <p className="text-base leading-relaxed text-muted">

@@ -90,8 +90,8 @@ export function Footer() {
                 href={phone.href}
                 className={
                   phone.primary
-                    ? 'text-xl font-semibold text-white no-underline'
-                    : 'text-base text-white/80 no-underline'
+                    ? 'tap-target text-xl font-semibold text-white no-underline'
+                    : 'tap-target text-base text-white/80 no-underline'
                 }
               >
                 {phone.label}
@@ -106,7 +106,7 @@ export function Footer() {
                 <Link
                   key={link.label}
                   href={link.to}
-                  className="text-base text-white/85 no-underline transition-colors hover:text-accent"
+                  className="tap-target text-base text-white/85 no-underline transition-colors hover:text-accent"
                 >
                   {link.label}
                 </Link>
@@ -120,7 +120,7 @@ export function Footer() {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-base text-white/85 no-underline transition-colors hover:text-accent"
+                className="tap-target text-base text-white/85 no-underline transition-colors hover:text-accent"
               >
                 {link.label}
               </a>

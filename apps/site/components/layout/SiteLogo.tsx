@@ -17,7 +17,7 @@ export function SiteLogo(props: LogoProps) {
   return (
     <Link
       href={ROUTES.home}
-      className='inline-flex shrink-0 no-underline [perspective:600px]'
+      className='tap-target inline-flex shrink-0 no-underline [perspective:600px]'
       aria-label='Amare.kz — на главную'
       onClick={(event) => {
         event.preventDefault()
