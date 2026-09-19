@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useReducedMotion } from 'motion/react'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
-import { bookingLink } from '@/lib/clinic'
+import { ROUTES } from '@/lib/clinic'
 
 /** Первый сдвиг — через секунду после загрузки, дальше раз в три секунды. */
 const AUTO_SCROLL_DELAY = 1_000
@@ -107,9 +107,9 @@ export function DoctorsCarousel() {
               <span className='text-base text-muted'>{doctor.role}</span>
               <span className='text-base font-medium text-accent'>{doctor.experience}</span>
 
-              {/* Растянутая ссылка: нажатие в любом месте карточки ведёт на запись к этому врачу. */}
+              {/* Растянутая ссылка: нажатие в любом месте карточки ведёт на страницу врача. */}
               <Link
-                href={bookingLink(doctor.id)}
+                href={`${ROUTES.team}/${doctor.id}`}
                 tabIndex={index >= DOCTORS.length ? -1 : undefined}
                 className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline after:absolute after:inset-0 after:content-['']"
               >

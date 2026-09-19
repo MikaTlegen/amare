@@ -119,15 +119,15 @@ export function CoursePage() {
 
       <section className="container-content pb-14">
         {/*
-          Кадр по верхней трети: вывеска «amare.kz» и входная группа.
-          При center 62% в широкую полосу попадал только козырёк над дверью.
+          Кадр узкий и банерный: вывеска занимает его почти целиком.
+          strength={0} снимает и параллакс, и зум — иначе полоса срезала бы
+          как раз вывеску, ради которой этот снимок и взят.
         */}
         <ParallaxBand
-          image="/photos/facade-sign.webp"
-          alt="Фасад клиники Amare с вывеской и входной группой"
+          image="/photos/facade-sign.png"
+          alt="Вывеска клиники нейрореабилитации Amare.kz на фасаде здания"
           scrim="side"
-          strength={14}
-          objectPosition="center 22%"
+          strength={0}
           className="rounded-3xl"
         >
           <div className="flex max-w-136 flex-col items-start gap-4 p-8 sm:p-10">

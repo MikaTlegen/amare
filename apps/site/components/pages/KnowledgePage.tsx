@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- иллюстрации статей; next/image — отдельная задача */
 import { AlertTriangle, Phone } from 'lucide-react'
-import { Button } from '@amare/ui'
+import { Button, cn } from '@amare/ui'
 import { PageCover } from '@/components/PageCover'
 import { KNOWLEDGE } from '@/data/knowledge'
 import { CLINIC, ROUTES } from '@/lib/clinic'
@@ -26,7 +26,15 @@ export function KnowledgePage() {
       />
 
       <section className="container-content flex flex-col gap-12 py-14">
-        {KNOWLEDGE.map((section) => (
+        {KNOWLEDGE.map((section) => {
+          /*
+           * Раздел с одной статьёй раскладывается горизонтально во всю
+           * ширину: в сетке из двух колонок одинокая карточка оставляла
+           * справа пустое место.
+           */
+          const single = section.articles.length === 1
+
+          return (
           <div key={section.id} id={section.id} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
               <h2 className="m-0 font-display text-3xl font-medium tracking-[-0.045em]">
@@ -35,27 +43,38 @@ export function KnowledgePage() {
               <p className="m-0 text-lg leading-relaxed text-muted">{section.note}</p>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className={cn('grid gap-4', !single && 'lg:grid-cols-2')}>
               {section.articles.map((article) => (
                 <article
                   key={article.id}
                   id={article.id}
-                  className="flex flex-col gap-3 overflow-hidden rounded-3xl border border-line bg-surface"
+                  className={cn(
+                    'flex flex-col gap-3 overflow-hidden rounded-3xl border border-line bg-surface',
+                    single && 'lg:flex-row lg:gap-0',
+                  )}
                 >
                   <img
                     src={article.photo}
                     alt={article.photoAlt}
                     loading="lazy"
                     decoding="async"
-                    className="h-48 w-full object-cover"
+                    className={cn(
+                      'h-48 w-full object-cover',
+                      single && 'lg:h-auto lg:w-2/5 lg:shrink-0 lg:self-stretch',
+                    )}
                   />
 
-                  <div className="flex flex-1 flex-col gap-3 px-6 pb-6">
+                  <div className={cn('flex flex-1 flex-col gap-3 px-6 pb-6', single && 'lg:p-7')}>
                     <h3 className="m-0 text-xl font-semibold leading-snug">{article.title}</h3>
                     <p className="m-0 text-base leading-relaxed text-muted">{article.summary}</p>
 
                     {article.points && (
-                      <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
+                      <ul
+                        className={cn(
+                          'm-0 flex list-none flex-col gap-2.5 p-0',
+                          single && 'lg:grid lg:grid-cols-2',
+                        )}
+                      >
                         {article.points.map((point) => (
                           <li
                             key={point}
@@ -85,7 +104,8 @@ export function KnowledgePage() {
               ))}
             </div>
           </div>
-        ))}
+          )
+        })}
       </section>
 
       <section className="container-content pb-16">

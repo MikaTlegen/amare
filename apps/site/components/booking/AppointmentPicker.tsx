@@ -55,10 +55,14 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
     return date
   }, [today])
 
-  /** Дни, в которые есть хотя бы один свободный слот выбранного формата. */
+  /**
+   * Дни, в которые есть хотя бы одно СВОБОДНОЕ окно выбранного формата.
+   * День, где всё занято, остаётся выключенным: открывать его незачем.
+   */
   const openDays = useMemo(() => {
     const seen = new Map<string, Date>()
     for (const slot of slots) {
+      if (slot.taken) continue
       const key = slot.at.slice(0, 10)
       if (!seen.has(key)) seen.set(key, slotDate(slot.at))
     }
@@ -109,12 +113,18 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
                     <button
                       type="button"
                       onClick={() => onSelect(slot.id)}
+                      disabled={slot.taken}
                       aria-pressed={chosen}
+                      aria-label={
+                        slot.taken ? `${slot.at.slice(11, 16)} — время занято` : undefined
+                      }
                       className={cn(
                         'flex min-h-14 w-full flex-col items-center justify-center rounded-xl border-[1.5px] px-2 py-2 transition-colors',
-                        chosen
-                          ? 'border-deep bg-deep text-white'
-                          : 'border-line hover:border-deep hover:bg-tint',
+                        slot.taken
+                          ? 'cursor-not-allowed border-line bg-bg text-muted line-through'
+                          : chosen
+                            ? 'border-deep bg-deep text-white'
+                            : 'border-line hover:border-deep hover:bg-tint',
                       )}
                     >
                       <span className="text-base font-semibold">{slot.at.slice(11, 16)}</span>
@@ -122,7 +132,7 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
                         <span
                           className={cn(
                             'max-w-full truncate text-sm',
-                            chosen ? 'text-white/75' : 'text-muted',
+                            chosen && !slot.taken ? 'text-white/75' : 'text-muted',
                           )}
                         >
                           {doctor.name.split(' ')[0]}
@@ -134,8 +144,14 @@ export function AppointmentPicker({ slots, selectedId, onSelect }: Props) {
               })}
             </ul>
 
-            {daySlots.length === 0 && (
+            {daySlots.length === 0 ? (
               <p className="m-0 text-base text-muted">На этот день свободного времени нет.</p>
+            ) : (
+              daySlots.some((slot) => slot.taken) && (
+                <p className="m-0 text-sm text-muted">
+                  <span className="line-through">Перечёркнутое</span> время уже занято.
+                </p>
+              )
             )}
           </>
         ) : (

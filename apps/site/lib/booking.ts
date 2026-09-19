@@ -9,6 +9,8 @@ export interface Slot {
   at: string
   doctorId: string
   format: 'clinic' | 'online' | 'home'
+  /** Окно уже занято: показываем его перечёркнутым, выбрать нельзя. */
+  taken: boolean
 }
 
 export interface BookingPayload {
@@ -82,13 +84,18 @@ function createDemoSlots(): Slot[] {
 
     FORMATS.forEach((format, formatIndex) => {
       times.forEach((time, timeIndex) => {
-        // Часть слотов «занята»: пустое расписание выглядит нерабочим
-        if ((dayOffset + timeIndex + formatIndex * 2) % 3 === 0) return
+        // Выезд на дом клиника проводит через окно и только до обеда —
+        // это не занятость, такого приёма в сетке нет вовсе.
         if (format === 'home' && timeIndex % 2 === 1) return
         if (format === 'home' && time >= '13:00') return
 
+        // Часть окон «занята»: пустое расписание выглядит нерабочим.
+        // Раньше такие слоты просто не создавались, и человек видел
+        // необъяснимый разрыв 11:30 → 12:30. Теперь они видны перечёркнутыми.
+        const taken = (dayOffset + timeIndex + formatIndex * 2) % 3 === 0
+
         const doctorId = SPECIALISTS[(dayOffset + timeIndex) % SPECIALISTS.length]!
-        slots.push({ id: `${format}-${day}-${time}`, at: `${day}T${time}`, doctorId, format })
+        slots.push({ id: `${format}-${day}-${time}`, at: `${day}T${time}`, doctorId, format, taken })
       })
     })
   }

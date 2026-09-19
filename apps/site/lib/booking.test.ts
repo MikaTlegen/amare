@@ -69,3 +69,35 @@ describe('getSlots', () => {
     expect(second.map((slot) => slot.id)).toEqual(first.map((slot) => slot.id))
   })
 })
+
+describe('занятое время', () => {
+  it('отдаёт и свободные окна, и занятые — разрыв в расписании должен быть объяснён', async () => {
+    const slots = await getSlots()
+
+    expect(slots.some((slot) => slot.taken)).toBe(true)
+    expect(slots.some((slot) => !slot.taken)).toBe(true)
+  })
+
+  it('свободных больше, чем занятых: расписание не выглядит мёртвым', async () => {
+    const slots = await getSlots()
+    const taken = slots.filter((slot) => slot.taken).length
+
+    expect(taken).toBeLessThan(slots.length - taken)
+  })
+
+  it('выезд на дом не предлагается после 13:00 — это не занятость, а отсутствие услуги', async () => {
+    const slots = await getSlots()
+    const lateHomeVisits = slots.filter(
+      (slot) => slot.format === 'home' && slot.at.slice(11) >= '13:00',
+    )
+
+    expect(lateHomeVisits).toEqual([])
+  })
+
+  it('держит занятость стабильной: повторный запрос не «освобождает» время', async () => {
+    const first = await getSlots()
+    const second = await getSlots()
+
+    expect(second.map((slot) => slot.taken)).toEqual(first.map((slot) => slot.taken))
+  })
+})

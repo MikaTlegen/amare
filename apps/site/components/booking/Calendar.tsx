@@ -37,8 +37,11 @@ export function Calendar({ className, classNames, ...props }: DayPickerProps) {
       'relative flex h-11 w-full items-center justify-center rounded-xl font-medium text-ink',
       'transition-colors hover:bg-tint',
       'group-data-[selected]:bg-deep group-data-[selected]:text-white',
-      'group-data-[disabled]:pointer-events-none group-data-[disabled]:text-ink/25',
-      'group-data-[outside]:text-ink/25',
+      // Занятый (или закрытый) день перечёркнут: одной приглушённости мало —
+      // её не отличить от чисел соседнего месяца
+      'group-data-[disabled]:pointer-events-none group-data-[disabled]:text-ink/35 group-data-[disabled]:line-through',
+      // Числа соседнего месяца не «заняты», они чужие — перечёркивание снимаем
+      'group-data-[outside]:text-ink/25 group-data-[outside]:[text-decoration-line:none]',
       'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
     ),
     // Точка под сегодняшним числом: «сегодня» должно читаться без цвета

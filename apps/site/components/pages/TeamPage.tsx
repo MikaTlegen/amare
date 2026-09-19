@@ -3,12 +3,12 @@
 /* eslint-disable @next/next/no-img-element -- перенос 1:1 из набросков; next/image — отдельная задача */
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { ArrowRight, CalendarDays, X, Award } from 'lucide-react'
+import { CalendarDays, X, Award } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
 import { Button } from '@amare/ui'
 import { DOCTORS, TEAM_ROLES, CONDITION_LIST, type ConditionId } from '@/data/doctors'
-import { CLINIC, PRICES, ROUTES, bookingLink } from '@/lib/clinic'
+import { CLINIC, PRICES, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 /**
@@ -130,23 +130,15 @@ export function TeamPage() {
 
                   {/*
                     Растянутая ссылка: нажатие в любом месте карточки ведёт
-                    на запись к этому врачу. Ссылка одна — вложенных <a> нет.
+                    на страницу врача, где стоит календарь записи.
+                    Ссылка одна — вложенных <a> нет.
                   */}
                   <Link
-                    href={bookingLink(doctor.id)}
+                    href={`${ROUTES.team}/${doctor.id}`}
                     className="mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline after:absolute after:inset-0 after:content-['']"
                   >
                     <CalendarDays className="h-4 w-4" aria-hidden="true" />
                     Записаться
-                  </Link>
-
-                  {/* Профиль врача остаётся доступен: эта ссылка лежит поверх растянутой. */}
-                  <Link
-                    href={`${ROUTES.team}/${doctor.id}`}
-                    className="relative z-10 mt-2 inline-flex w-fit items-center gap-1.5 text-base font-medium text-deep"
-                  >
-                    Подробнее о враче
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
               </article>

@@ -52,7 +52,18 @@ export function BookingPage() {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    void getSlots().then(setSlots)
+    void getSlots().then((loaded) => {
+      setSlots(loaded)
+      // ?slot=<id> приходит со страницы врача: подставляем выбранное там время,
+      // но только если оно свободно и нужного формата
+      const requested = params.get('slot')
+      const preset = loaded.find((slot) => slot.id === requested && !slot.taken)
+      if (preset) {
+        setSlotId(preset.id)
+        setFormat(preset.format)
+      }
+    })
+    // Адрес читаем один раз при загрузке: дальше временем управляет человек
   }, [])
 
   /*
@@ -62,10 +73,12 @@ export function BookingPage() {
    * Неизвестный id фильтр не включает — лучше общий список, чем пустая страница.
    */
   const doctor = DOCTORS.find((item) => item.id === params.get('doctor'))
+  // Занятые окна тоже попадают в список — они рисуются перечёркнутыми
   const visible = slots.filter(
     (slot) => slot.format === format && (!doctor || slot.doctorId === doctor.id),
   )
-  const chosen = slots.find((slot) => slot.id === slotId)
+  // Выбрать можно только свободное время, даже если id пришёл из адреса
+  const chosen = slots.find((slot) => slot.id === slotId && !slot.taken)
   const chosenDoctor = chosen && DOCTORS.find((doctor) => doctor.id === chosen.doctorId)
 
   const submit = async (event: FormEvent) => {

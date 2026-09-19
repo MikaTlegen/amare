@@ -36,11 +36,12 @@ const SCRIMS: Record<NonNullable<ParallaxBandProps['scrim']>, string> = {
  * Как это работает: useScroll даёт прогресс секции от «вошла снизу»
  * до «вышла сверху», useTransform превращает его в сдвиг фона по Y.
  *
- * Про масштаб. Картинка увеличена до 150%, и это связано со сдвигом
- * жёстко: чтобы фон не обнажил край при смещении на ±S процентов,
- * запас должен быть не меньше 2×S. При strength=20 минимум — 140%.
- * Будете усиливать параллакс — поднимайте и scale, иначе сверху и снизу
- * полосы пустоты.
+ * Про масштаб. Он выводится из strength, а не задан константой: чтобы фон
+ * не обнажил край при смещении на ±S процентов, запас должен быть не меньше
+ * 2×S. Берём 2.5×S — при strength=20 это привычные 150% с небольшим запасом.
+ * При strength=0 увеличения нет вовсе: кадр показывается как есть, без
+ * дополнительной обрезки. Это нужно узким банерным фотографиям, где важное
+ * занимает почти весь кадр и любой зум его срезает.
  *
  * Доступность. Сдвиг заметный, но не экстремальный (20% по умолчанию,
  * не 50%): у пациентов после инсульта вестибулярные нарушения — обычное
@@ -70,13 +71,14 @@ export function ParallaxBand({
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [`-${strength}%`, `${strength}%`])
+  const zoom = 1 + strength * 0.025
 
   return (
     <section ref={ref} id={id} className={cn('relative isolate overflow-hidden', className)}>
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 scale-[1.5] will-change-transform"
-        style={reduced ? undefined : { y }}
+        className="absolute inset-0 -z-10 will-change-transform"
+        style={reduced ? { scale: zoom } : { scale: zoom, y }}
       >
         {/* Обычный img — перенос 1:1 из набросков; next/image — отдельная задача */}
         <img
