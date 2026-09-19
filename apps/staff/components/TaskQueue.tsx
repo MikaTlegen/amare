@@ -68,11 +68,11 @@ export function TaskQueue({
                 </span>
               </div>
 
-              <div className="flex shrink-0 gap-2.5">
+              <div className="flex w-full flex-wrap gap-2.5 sm:w-auto sm:shrink-0">
                 <button
                   type="button"
                   onClick={() => onOpenPatient(task.patientId)}
-                  className="min-h-[3rem] rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold transition-colors hover:border-ink"
+                  className="min-h-[3rem] flex-1 rounded-xl border-[1.5px] border-line px-4 py-3 text-base font-semibold transition-colors hover:border-ink sm:flex-none sm:px-5"
                 >
                   Открыть карточку
                 </button>
@@ -80,7 +80,7 @@ export function TaskQueue({
                   type="button"
                   onClick={() => void done(task.id)}
                   disabled={busy === task.id}
-                  className="min-h-[3rem] rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white disabled:opacity-60"
+                  className="min-h-[3rem] flex-1 rounded-xl bg-deep px-4 py-3 text-base font-semibold text-white disabled:opacity-60 sm:flex-none sm:px-5"
                 >
                   {busy === task.id ? 'Закрываем…' : 'Выполнено'}
                 </button>

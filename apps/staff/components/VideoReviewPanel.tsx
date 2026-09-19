@@ -132,7 +132,7 @@ export function VideoReviewPanel() {
                       key={text}
                       type="button"
                       onClick={() => setComment(text)}
-                      className="rounded-full border border-line px-4 py-2 text-sm text-muted hover:border-ink hover:text-ink"
+                      className="min-h-11 max-w-full rounded-2xl border border-line px-4 py-2.5 text-left text-sm text-muted [overflow-wrap:anywhere] hover:border-ink hover:text-ink sm:rounded-full"
                     >
                       {text}
                     </button>

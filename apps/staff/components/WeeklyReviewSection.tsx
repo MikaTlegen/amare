@@ -61,7 +61,7 @@ export function WeeklyReviewSection({ patient }: { patient: PatientCard }) {
         </h3>
 
         <textarea
-          rows={12}
+          rows={8}
           value={text}
           onChange={(event) => setText(event.target.value)}
           aria-label="Текст еженедельного разбора"
