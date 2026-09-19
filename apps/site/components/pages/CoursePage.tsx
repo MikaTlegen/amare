@@ -15,8 +15,9 @@ export function CoursePage() {
         crumb="Курс и цены"
         title="Как проходит курс"
         note="От первой консультации до домашней программы после выписки."
-        image="/photos/massage.jpg"
-        alt="Процедура курса реабилитации"
+        image="/photos/fine-motor.jpg"
+        alt="Специалист клиники ведёт занятие на аппарате для мелкой моторики"
+        objectPosition="center 35%"
       />
 
       <section className="container-content flex flex-col gap-6 py-14">

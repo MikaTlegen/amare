@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { StaffRole } from '@amare/api-client'
 import { useAuth } from '@/auth/AuthContext'
@@ -30,6 +30,12 @@ const DEMO_ROLES: { role: StaffRole; title: string; note: string; Icon: LucideIc
 
 /** Общий вход клиники живёт в care. Адрес публичный, не секрет. */
 const COMMON_LOGIN_URL = `${(process.env.NEXT_PUBLIC_CARE_URL ?? 'http://localhost:3002').replace(/\/+$/, '')}/vhod`
+
+/**
+ * Адрес публичного сайта. Рабочее место — отдельное приложение на своём
+ * домене, поэтому уйти на главную ссылкой `/` нельзя: нужен полный адрес.
+ */
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001').replace(/\/+$/, '')
 
 function isStaffRole(value: string | null): value is StaffRole {
   return value === 'curator' || value === 'admin' || value === 'moderator'
@@ -87,7 +93,15 @@ export function LoginPage() {
     <section className="container-content py-14">
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="m-0 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
+          {/* Рабочее место — отдельное приложение, ссылка «/» вела бы внутрь него */}
+          <a
+            href={SITE_URL}
+            className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            На главную страницу
+          </a>
+          <h1 className="m-0 mt-2 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
             Вход в рабочее место
           </h1>
           <p className="m-0 max-w-[40em] text-lg leading-relaxed text-muted">

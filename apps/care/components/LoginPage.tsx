@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { UserRound, HeartHandshake, Stethoscope, ShieldCheck, LibraryBig } from 'lucide-react'
+import { ArrowLeft, UserRound, HeartHandshake, Stethoscope, ShieldCheck, LibraryBig } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useAuth } from '@/auth/AuthContext'
 import type { CareRole } from '@/lib/mock'
-import { ROUTES, safeRedirectPath, staffLoginUrl, type StaffRoleId } from '@/lib/routes'
+import { ROUTES, SITE_URL, safeRedirectPath, staffLoginUrl, type StaffRoleId } from '@/lib/routes'
 
 const STAFF_DEMO_ROLES: { role: StaffRoleId; title: string; note: string; Icon: LucideIcon }[] = [
   {
@@ -78,7 +78,15 @@ export function LoginPage() {
     <section className="container-content py-14">
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <h1 className="m-0 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
+          {/* Кабинет — отдельное приложение, ссылка «/» вела бы внутрь него */}
+          <a
+            href={SITE_URL}
+            className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            На главную страницу
+          </a>
+          <h1 className="m-0 mt-2 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
             Вход в кабинет
           </h1>
           <p className="m-0 max-w-[40em] text-lg leading-relaxed text-muted">

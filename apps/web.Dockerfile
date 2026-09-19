@@ -1,8 +1,9 @@
 # syntax=docker/dockerfile:1
 # Один Dockerfile для Next-приложений (site, care, staff). Сборка из корня репозитория:
 #   docker build -f apps/web.Dockerfile --build-arg APP=site --build-arg PORT=3001 -t amare-site .
-# NEXT_PUBLIC_CARE_URL и NEXT_PUBLIC_STAFF_URL вшиваются при сборке: редиректы сайта в кабинеты,
-# общий вход в care со ссылками в рабочее место и обратная ссылка из staff. Адреса публичные, не секрет.
+# NEXT_PUBLIC_CARE_URL, NEXT_PUBLIC_STAFF_URL и NEXT_PUBLIC_SITE_URL вшиваются при сборке:
+# редиректы сайта в кабинеты, общий вход в care со ссылками в рабочее место, обратная ссылка
+# из staff и возврат из кабинетов на главную. Адреса публичные, не секрет.
 
 FROM node:24-alpine AS base
 ENV PNPM_HOME=/pnpm \
@@ -30,6 +31,8 @@ ARG NEXT_PUBLIC_CARE_URL=http://localhost:3002
 ENV NEXT_PUBLIC_CARE_URL=${NEXT_PUBLIC_CARE_URL}
 ARG NEXT_PUBLIC_STAFF_URL=http://localhost:3003
 ENV NEXT_PUBLIC_STAFF_URL=${NEXT_PUBLIC_STAFF_URL}
+ARG NEXT_PUBLIC_SITE_URL=http://localhost:3001
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 COPY --from=pruner /repo/out/full/ .
 # turbo prune не переносит корневой tsconfig, а tsconfig приложений на него ссылаются
 COPY --from=pruner /repo/tsconfig.base.json ./

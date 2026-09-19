@@ -15,6 +15,15 @@ export type StaffRoleId = (typeof STAFF_ROLES)[number]
 const STAFF_URL = (process.env.NEXT_PUBLIC_STAFF_URL ?? 'http://localhost:3003').replace(/\/+$/, '')
 
 /**
+ * Адрес публичного сайта. Кабинет — отдельное приложение на своём домене,
+ * поэтому уйти на главную обычной ссылкой `/` нельзя: нужен полный адрес.
+ */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001').replace(
+  /\/+$/,
+  '',
+)
+
+/**
  * Ссылка на вход сотрудника с выбранной ролью.
  *
  * Вход у клиники один — этот экран. Рабочее место при этом остаётся отдельным
