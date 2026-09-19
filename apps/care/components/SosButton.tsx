@@ -52,9 +52,9 @@ export function SosButton() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-5 right-5 z-40 inline-flex min-h-16 items-center gap-3 rounded-full bg-[rgb(179,38,30)] px-7 text-xl font-bold text-white shadow-[0_14px_34px_rgba(179,38,30,0.45)]"
+        className="fixed right-4 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-40 inline-flex min-h-16 items-center gap-2 rounded-full bg-[rgb(179,38,30)] px-5 text-lg font-bold text-white shadow-[0_14px_34px_rgba(179,38,30,0.45)] sm:right-5 sm:gap-3 sm:px-7 sm:text-xl"
       >
-        <TriangleAlert className="h-7 w-7" aria-hidden="true" />
+        <TriangleAlert className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
         SOS
       </button>
 
@@ -62,7 +62,7 @@ export function SosButton() {
         ref={dialogRef}
         onClose={() => setOpen(false)}
         aria-label="Признаки инсульта и вызов скорой"
-        className="m-auto w-[min(40rem,92vw)] rounded-3xl border border-line bg-bg p-0 text-ink backdrop:bg-ink/60"
+        className="m-auto max-h-[90dvh] w-[min(40rem,92vw)] overflow-y-auto overscroll-contain rounded-3xl border border-line bg-bg p-0 text-ink backdrop:bg-ink/60"
       >
         <div className="flex flex-col gap-5 p-6 sm:p-8">
           <div className="flex items-start justify-between gap-4">
@@ -120,6 +120,9 @@ export function SosButton() {
           </p>
         </div>
       </dialog>
+
+      {/* Место под плавающую кнопку: иначе она накрывает конец страницы */}
+      <div aria-hidden="true" className="h-[calc(6rem_+_env(safe-area-inset-bottom))] md:hidden" />
     </>
   )
 }

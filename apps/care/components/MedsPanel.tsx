@@ -99,7 +99,7 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
             <div
               role="group"
               aria-label={`Отметка приёма: ${item.title}`}
-              className="flex shrink-0 overflow-hidden rounded-xl border-[1.5px] border-line"
+              className="flex w-full overflow-hidden rounded-xl border-[1.5px] border-line lg:w-auto lg:shrink-0"
             >
               {STATES.map((state) => {
                 const active = item.state === state.id
@@ -111,7 +111,7 @@ export function MedsPanel({ byGuardian = false }: { byGuardian?: boolean }) {
                     disabled={busy === item.id}
                     aria-pressed={active}
                     className={cn(
-                      'min-h-[3.2rem] flex-1 px-4 py-3 text-base font-semibold transition-colors disabled:opacity-60',
+                      'min-h-[3.2rem] min-w-0 flex-1 px-1 py-3 text-[0.95rem] font-semibold transition-colors disabled:opacity-60 sm:px-4 sm:text-base',
                       active ? 'bg-deep text-white' : 'bg-surface text-muted hover:text-ink',
                     )}
                   >
