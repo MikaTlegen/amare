@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import type { StaffRole } from '@amare/api-client'
@@ -23,30 +23,57 @@ const DEMO_ROLES: { role: StaffRole; title: string; note: string; Icon: LucideIc
   {
     role: 'admin',
     title: 'Войти как администратор',
-    note: 'Шаблоны курсов, библиотека упражнений, назначение программ',
+    note: 'Пациенты и кураторы, расписание, оплаты',
     Icon: LibraryBig,
   },
 ]
 
+/** Общий вход клиники живёт в care. Адрес публичный, не секрет. */
+const COMMON_LOGIN_URL = `${(process.env.NEXT_PUBLIC_CARE_URL ?? 'http://localhost:3002').replace(/\/+$/, '')}/vhod`
+
+function isStaffRole(value: string | null): value is StaffRole {
+  return value === 'curator' || value === 'admin' || value === 'moderator'
+}
+
 /**
  * Вход в рабочее место.
  *
- * Две роли, потому что это две разные работы: куратор ведёт людей,
- * администратор — содержимое. Курсы загружает администратор, и у
- * куратора такой кнопки быть не должно: иначе шаблон правит тот, кто
- * между делом закрывает двадцать задач.
+ * Три роли, потому что это разные работы: куратор ведёт людей, модератор —
+ * содержимое, администратор — расписание и оплаты. Курсы загружает не куратор:
+ * иначе шаблон правит тот, кто между делом закрывает двадцать задач.
  *
- * Справа — форма «телефон + код», выключенная: показывает, каким вход
+ * Общий вход клиники живёт в care и присылает сюда `?role=`: в демо это
+ * заменяет общую сессию, которой без бэкенда нет. Значение проверяется по
+ * белому списку — оно приходит из адресной строки, то есть извне.
+ *
+ * Справа — форма «логин + пароль», выключенная: показывает, каким вход
  * будет на самом деле.
  */
 export function LoginPage() {
   const { user, signIn } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [busy, setBusy] = useState<StaffRole | null>(null)
+
+  const requestedRole = searchParams.get('role')
 
   useEffect(() => {
     if (user) router.replace('/')
   }, [user, router])
+
+  // Роль из общего входа: открываем рабочее место сразу, не заставляя выбирать дважды
+  useEffect(() => {
+    if (user || !isStaffRole(requestedRole)) return
+    let cancelled = false
+    const enterFromCommonLogin = async () => {
+      await signIn(requestedRole)
+      if (!cancelled) router.replace('/')
+    }
+    void enterFromCommonLogin()
+    return () => {
+      cancelled = true
+    }
+  }, [user, requestedRole, signIn, router])
 
   if (user) return null
 
@@ -64,7 +91,11 @@ export function LoginPage() {
             Вход в рабочее место
           </h1>
           <p className="m-0 max-w-[40em] text-lg leading-relaxed text-muted">
-            Доступ выдаёт администратор клиники штатным специалистам.
+            Доступ выдаёт администратор клиники штатным специалистам. Общий вход клиники —{' '}
+            <a href={COMMON_LOGIN_URL} className="font-semibold text-ink">
+              на странице входа в кабинет
+            </a>
+            , эта страница открывается из него.
           </p>
         </div>
 
@@ -104,27 +135,29 @@ export function LoginPage() {
             </span>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="login-phone" className="text-base font-medium text-muted">
-                Номер телефона
+              <label htmlFor="login-name" className="text-base font-medium text-muted">
+                Логин
               </label>
               <input
-                id="login-phone"
-                type="tel"
+                id="login-name"
+                type="text"
                 disabled
-                placeholder="+7 ___ ___ __ __"
+                autoComplete="username"
+                placeholder="i.zhumabekova"
                 className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-surface px-4 py-3 text-base disabled:opacity-60"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="login-code" className="text-base font-medium text-muted">
-                Код из SMS
+              <label htmlFor="login-password" className="text-base font-medium text-muted">
+                Пароль
               </label>
               <input
-                id="login-code"
-                inputMode="numeric"
+                id="login-password"
+                type="password"
                 disabled
-                placeholder="____"
+                autoComplete="current-password"
+                placeholder="••••••••"
                 className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-surface px-4 py-3 text-base disabled:opacity-60"
               />
             </div>
@@ -134,11 +167,14 @@ export function LoginPage() {
               disabled
               className="min-h-[3.2rem] rounded-xl bg-deep px-6 py-3 text-base font-semibold text-white opacity-50"
             >
-              Получить код
+              Войти
             </button>
 
             <p className="m-0 text-base leading-relaxed text-muted">
-              Вход по коду из SMS, без пароля. Сессия — в httpOnly-cookie, которую ставит сервер.
+              В дальнейшем здесь будет обычная авторизация: логин и пароль, которые выдаёт
+              администратор клиники. Роль и права приходят с сервера вместе с учётной записью,
+              выбрать их на этом экране будет нельзя. Сессия — в httpOnly-cookie, которую ставит
+              сервер; пароли хранятся хешами (argon2id), вход защищён ограничением попыток.
             </p>
           </div>
         </div>

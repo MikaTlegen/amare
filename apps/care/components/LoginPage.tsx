@@ -2,11 +2,32 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { UserRound, HeartHandshake } from 'lucide-react'
+import { UserRound, HeartHandshake, Stethoscope, ShieldCheck, LibraryBig } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useAuth } from '@/auth/AuthContext'
 import type { CareRole } from '@/lib/mock'
-import { ROUTES, safeRedirectPath } from '@/lib/routes'
+import { ROUTES, safeRedirectPath, staffLoginUrl, type StaffRoleId } from '@/lib/routes'
+
+const STAFF_DEMO_ROLES: { role: StaffRoleId; title: string; note: string; Icon: LucideIcon }[] = [
+  {
+    role: 'curator',
+    title: 'Войти как куратор',
+    note: 'Очередь задач, пациенты, тревожные сигналы, проверка видео',
+    Icon: Stethoscope,
+  },
+  {
+    role: 'moderator',
+    title: 'Войти как модератор',
+    note: 'Упражнения, материалы, версии и проверка шаблонов',
+    Icon: ShieldCheck,
+  },
+  {
+    role: 'admin',
+    title: 'Войти как администратор',
+    note: 'Пациенты и кураторы, расписание, оплаты',
+    Icon: LibraryBig,
+  },
+]
 
 const DEMO_ROLES: { role: CareRole; title: string; note: string; Icon: LucideIcon }[] = [
   {
@@ -62,6 +83,7 @@ export function LoginPage() {
           </h1>
           <p className="m-0 max-w-[40em] text-lg leading-relaxed text-muted">
             Кабинет открывается после первой консультации: доступ выдаёт администратор клиники.
+            Сотрудники клиники входят на этой же странице.
           </p>
         </div>
 
@@ -93,6 +115,30 @@ export function LoginPage() {
               Данные в демо вымышлены. Ничего не отправляется и нигде не сохраняется, кроме
               выбранной роли в этом браузере.
             </p>
+
+            {/* Сотрудники входят отсюда же: вход у клиники один, а рабочее место
+                открывается в отдельном приложении со своим периметром доступа */}
+            <div className="mt-3 flex flex-col gap-3 border-t border-line pt-5">
+              <span className="text-sm font-semibold uppercase tracking-[0.1em] text-muted">
+                Сотрудникам клиники
+              </span>
+
+              {STAFF_DEMO_ROLES.map(({ role, title, note, Icon }) => (
+                <a
+                  key={role}
+                  href={staffLoginUrl(role)}
+                  className="flex items-center gap-4 rounded-3xl border border-line bg-surface p-5 text-left no-underline transition-colors hover:border-deep"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-tint">
+                    <Icon className="h-6 w-6 text-deep" aria-hidden="true" />
+                  </span>
+                  <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                    <span className="text-lg font-semibold text-ink">{title}</span>
+                    <span className="text-base text-muted">{note}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* Будущий боевой вход — намеренно выключен */}
@@ -136,7 +182,14 @@ export function LoginPage() {
             </button>
 
             <p className="m-0 text-base leading-relaxed text-muted">
-              Вход по коду из SMS, без пароля. Сессия — в httpOnly-cookie, которую ставит сервер.
+              Пациент и опекун входят по коду из SMS, без пароля. Сессия — в httpOnly-cookie,
+              которую ставит сервер.
+            </p>
+
+            <p className="m-0 border-t border-line pt-4 text-base leading-relaxed text-muted">
+              У сотрудников будет обычная авторизация: логин и пароль, которые выдаёт
+              администратор клиники. Роль и права придут с сервера вместе с учётной записью —
+              выбирать их на этом экране, как сейчас в демо, будет нельзя.
             </p>
           </div>
         </div>
