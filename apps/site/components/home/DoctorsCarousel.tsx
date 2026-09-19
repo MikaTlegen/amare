@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useReducedMotion } from 'motion/react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { DOCTORS } from '@/data/doctors'
 import { ROUTES } from '@/lib/clinic'
 
@@ -70,15 +70,13 @@ export function DoctorsCarousel() {
         onBlur={startAutoScroll}
       >
         {doctors.map((doctor, index) => (
-          <Link
+          <article
             key={`${doctor.id}-${index}`}
-        href={ROUTES.team + '/' + doctor.id}
-        tabIndex={index >= DOCTORS.length ? -1 : undefined}
             data-doctor-card
             aria-hidden={index >= DOCTORS.length}
-            className='group w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start bg-bg no-underline lg:min-w-0'
+            className='gradient-border group flex w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-line bg-surface lg:min-w-0'
           >
-            <div className='relative aspect-[4/4.5] overflow-hidden bg-line'>
+            <div className='aspect-4/5 overflow-hidden bg-tint'>
               {doctor.photo ? (
                 <img
                   src={doctor.photo}
@@ -90,22 +88,31 @@ export function DoctorsCarousel() {
               ) : (
                 <div className='flex h-full items-center justify-center px-4 text-center text-sm text-muted'>Фото специалиста</div>
               )}
-              <span className='absolute left-3 top-3 bg-bg px-2.5 py-1 text-xs font-medium text-ink'>{doctor.experience}</span>
             </div>
 
-            <div className='flex min-h-36 flex-col p-4 sm:p-5'>
-              <p className='m-0 text-xs font-medium uppercase tracking-[0.08em] text-brand'>{doctor.role}</p>
-              <h3 className='mt-2 font-display text-xl font-semibold leading-tight tracking-[-0.035em] text-ink'>{doctor.name}</h3>
+            <div className='flex flex-1 flex-col gap-1.5 p-5'>
+              <h3 className='m-0 text-lg font-semibold leading-snug'>{doctor.name}</h3>
+              <span className='text-base text-muted'>{doctor.role}</span>
+              <span className='text-base font-medium text-accent'>{doctor.experience}</span>
+
+              <Link
+                href={ROUTES.team + '/' + doctor.id}
+                tabIndex={index >= DOCTORS.length ? -1 : undefined}
+                className='mt-auto inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 pt-3 text-base font-semibold text-accent-ink no-underline'
+              >
+                <CalendarDays className='h-4 w-4' aria-hidden='true' />
+                Записаться
+              </Link>
             </div>
-          </Link>
+          </article>
         ))}
       </div>
 
       <div className='mt-2 flex justify-end gap-2'>
-        <button type='button' onClick={() => move(-1)} className='inline-flex h-10 w-10 items-center justify-center border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Предыдущий врач'>
+        <button type='button' onClick={() => move(-1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Предыдущий врач'>
           <ChevronLeft className='h-5 w-5' aria-hidden='true' />
         </button>
-        <button type='button' onClick={() => move(1)} className='inline-flex h-10 w-10 items-center justify-center border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Следующий врач'>
+        <button type='button' onClick={() => move(1)} className='inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-brand hover:text-brand' aria-label='Следующий врач'>
           <ChevronRight className='h-5 w-5' aria-hidden='true' />
         </button>
       </div>
