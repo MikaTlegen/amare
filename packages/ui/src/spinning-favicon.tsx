@@ -47,13 +47,22 @@ function drawFrame(ctx: CanvasRenderingContext2D, scaleX: number): void {
 }
 
 /**
- * Убирает конкурирующие теги фавиконки (в dev-режиме Next может заново
- * вставить статичную app/icon.svg после наших правок) и возвращает наш тег.
- * Вызывается на каждом кадре — так вкладка не мигает между двумя иконками.
+ * Возвращает наш тег фавиконки, держа его последним среди иконок документа.
+ *
+ * Чужие теги больше не удаляются. Раньше здесь на каждом кадре вызывался
+ * `link[rel="icon"]:not(#id)` → `el.remove()`, и под нож попадал тег, который
+ * Next рисует из app/icon.svg. Этим узлом владеет React: при следующем
+ * клиентском переходе он пытался удалить уже удалённый узел, падал внутри
+ * commitDeletionEffectsOnFiber («Cannot read properties of null (reading
+ * 'removeChild')») и обрывал коммит на середине. Снаружи это выглядело так:
+ * адрес сменился, содержимое осталось прежним, а меню после этого не
+ * открывалось до перезагрузки.
+ *
+ * Мигания это не вернёт: браузер берёт последнюю иконку в документе, поэтому
+ * достаточно переставлять наш тег в конец, когда чужой оказался ниже.
+ * Перестановка собственного узла React не трогает.
  */
 function claimFaviconLink(): HTMLLinkElement {
-  document.querySelectorAll(`link[rel="icon"]:not(#${FAVICON_ID})`).forEach((el) => el.remove());
-
   let link = document.getElementById(FAVICON_ID) as HTMLLinkElement | null;
   if (!link) {
     link = document.createElement("link");
@@ -61,8 +70,18 @@ function claimFaviconLink(): HTMLLinkElement {
     link.rel = "icon";
     link.type = "image/png";
     document.head.appendChild(link);
+    return link;
   }
-  return link;
+
+  const ours = link;
+  const outranked = [...document.querySelectorAll('link[rel="icon"]')].some(
+    (el) =>
+      el !== ours &&
+      Boolean(ours.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING),
+  );
+  if (outranked || !ours.isConnected) document.head.appendChild(ours);
+
+  return ours;
 }
 
 /**
