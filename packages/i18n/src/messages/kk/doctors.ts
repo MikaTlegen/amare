@@ -90,6 +90,8 @@ export const doctors: Translation<"doctors"> = {
   "profile.notFound": "Маман табылмады",
   "profile.conditions": "Қандай жағдайлармен жұмыс істейді",
   "profile.certificates": "Құжаттар",
+  "profile.noCertificates":
+    "Клиника бұл маманның құжаттарын әзірге жарияламаған. Көшірмелерін әкімшіден сұрауға болады.",
   "profile.bookNote":
     "«Жазылу» түймесін басқанда таңдалған маманы бар формаға өтесіз. {hours}.",
   "profile.bookLink": "жазылу бетінде",

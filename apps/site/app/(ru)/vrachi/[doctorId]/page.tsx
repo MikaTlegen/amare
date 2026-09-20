@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { t } from '@amare/i18n'
+import { PageMessages } from '@/components/PageMessages'
 import { DoctorProfilePage } from '@/components/pages/DoctorProfilePage'
 import { DOCTORS } from '@/data/doctors'
 import { doctorPath } from '@/lib/pages'
@@ -22,7 +23,18 @@ export function generateStaticParams() {
   return DOCTORS.map(({ id }) => ({ doctorId: id }))
 }
 
+/*
+ * PageMessages обязателен: карточка — клиентский компонент, и без провайдера
+ * useT возвращает сам ключ. Страница показывала «niyazbekova.name» вместо
+ * имени. Казахская версия собирается через renderPage, который оборачивает
+ * сам, поэтому ломалась только русская.
+ */
 export default async function Page({ params }: Props) {
   const { doctorId } = await params
-  return <DoctorProfilePage doctorId={doctorId} locale="ru" />
+
+  return (
+    <PageMessages path={doctorPath(doctorId)} locale="ru">
+      <DoctorProfilePage doctorId={doctorId} locale="ru" />
+    </PageMessages>
+  )
 }

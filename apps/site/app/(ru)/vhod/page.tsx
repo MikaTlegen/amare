@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { PageMessages } from '@/components/PageMessages'
 import { CabinetRedirect } from '@/components/pages/CabinetRedirect'
 import { ROUTES } from '@/lib/clinic'
 import { pageMetadata } from '@/lib/seo'
@@ -14,5 +15,9 @@ export const metadata: Metadata = pageMetadata(ROUTES.login, 'ru')
  * бы в 404. Эта страница закрывает дыру, не меняя поведение в разработке.
  */
 export default function Page() {
-  return <CabinetRedirect />
+  return (
+    <PageMessages path={ROUTES.login} locale="ru">
+      <CabinetRedirect />
+    </PageMessages>
+  )
 }

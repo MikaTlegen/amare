@@ -90,6 +90,8 @@ export const doctors = {
   "profile.notFound": "Специалист не найден",
   "profile.conditions": "С какими состояниями работает",
   "profile.certificates": "Документы",
+  "profile.noCertificates":
+    "Клиника пока не опубликовала документы этого специалиста. Копии можно запросить у администратора.",
   "profile.bookNote": "Нажимая «Записаться», вы переходите к форме с выбранным специалистом. {hours}.",
   "profile.bookLink": "странице записи",
   "profile.all": "Все специалисты",

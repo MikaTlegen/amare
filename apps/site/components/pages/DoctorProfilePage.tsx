@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@/components/Links'
-import { ArrowLeft, CalendarDays, Clock3 } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, CalendarDays, Clock3 } from 'lucide-react'
 import type { Locale } from '@amare/i18n'
 import { useContent, useT } from '@amare/i18n/react'
 import { AppointmentPicker } from '@/components/booking/AppointmentPicker'
@@ -87,10 +87,61 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
               <p className='mt-5 text-lg leading-relaxed text-muted'>{text(`${doctor.id}.about`)}</p>
               <div className='mt-7 flex flex-wrap gap-3'>
                 <span className='bg-bg px-4 py-2 text-sm font-semibold text-ink'>{text(`${doctor.id}.experience`)}</span>
-                {doctor.certificates.map((certificate) => <a key={certificate.href} href={certificate.href} target='_blank' rel='noopener noreferrer' className='inline-flex min-h-11 items-center bg-bg px-4 py-2 text-sm font-semibold text-ink no-underline hover:text-brand'>{text(certificate.labelKey)}</a>)}
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/*
+        Состояния и документы были только в данных и словаре: на странице
+        не выводились ни списком, ни заголовком, а сертификаты висели
+        безымянной плашкой рядом со стажем.
+      */}
+      <section className='mx-auto grid max-w-content gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
+        <div className='min-w-0 lg:col-span-5'>
+          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.045em] text-ink sm:text-3xl'>
+            {t('profile.conditions')}
+          </h2>
+          <ul className='mt-6 flex list-none flex-col p-0'>
+            {doctor.conditions.map((condition) => (
+              <li key={condition} className='border-t border-line py-4 text-lg leading-relaxed text-ink'>
+                {text(`condition.${condition}`)}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className='min-w-0 lg:col-span-6 lg:col-start-7'>
+          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.045em] text-ink sm:text-3xl'>
+            {t('profile.certificates')}
+          </h2>
+          {doctor.certificates.length > 0 ? (
+            <ul className='mt-6 flex list-none flex-col p-0'>
+              {doctor.certificates.map((certificate) => (
+                <li key={certificate.href} className='border-t border-line'>
+                  <a
+                    href={certificate.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='tap-target group flex items-center justify-between gap-6 py-4 text-lg leading-relaxed text-ink no-underline hover:text-brand'
+                  >
+                    {text(certificate.labelKey)}
+                    <ArrowUpRight
+                      className='h-5 w-5 shrink-0 text-brand transition-transform group-hover:translate-x-1'
+                      aria-hidden='true'
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            /* Документов у части специалистов клиника не публиковала. Пустой
+               блок честнее выдуманной строки: это медицинский сайт. */
+            <p className='mt-6 border-t border-line pt-4 text-base leading-relaxed text-muted'>
+              {t('profile.noCertificates')}
+            </p>
+          )}
         </div>
       </section>
 
