@@ -21,7 +21,10 @@ export function ClinicMap({ className }: { className?: string }) {
 
   return (
     <div className={cn('grid gap-6 lg:grid-cols-12', className)}>
-      <aside className="flex flex-col gap-6 rounded-3xl border border-line bg-surface p-8 lg:col-span-4">
+      {/* min-w-0: у элемента сетки ширина по умолчанию auto, и он не сжимается
+          ниже своего содержимого. На крупном кегле адрес и телефон распирали
+          колонку на 35 px за край экрана, а overflow-x: clip это молча срезал. */}
+      <aside className="flex min-w-0 flex-col gap-6 rounded-3xl border border-line bg-surface p-8 lg:col-span-4">
         <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
           <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
         </span>
@@ -65,7 +68,7 @@ export function ClinicMap({ className }: { className?: string }) {
         </a>
       </aside>
 
-      <div className="lg:col-span-8">
+      <div className="min-w-0 lg:col-span-8">
         <MapFrame title={t('mapFrameTitle', { clinic: CLINIC.name, address: t('addressFull') })} />
       </div>
     </div>

@@ -19,15 +19,19 @@ interface ParallaxBandProps {
 }
 
 /**
- * Плотности вуали. Записаны через rgba(...) с запятыми, а не через
- * rgb(... / ...): слэш внутри произвольного значения Tailwind принимает
- * за модификатор прозрачности и класс молча не собирается.
+ * Плотности вуали. Цвет — токен scrim: раньше здесь стояло захардкоженное
+ * rgba(6,32,42,…), то есть цвет, на котором держится читаемость текста поверх
+ * всех фотографий сайта, был единственным вне палитры и не отзывался на
+ * контрастную тему.
+ *
+ * Светлый конец у side — 0.62, а не 0.25: на светлом кадре белый текст давал
+ * там 2.0:1 вместо 4.5:1.
  */
 const SCRIMS: Record<NonNullable<ParallaxBandProps['scrim']>, string> = {
-  soft: 'bg-[rgba(6,32,42,0.72)]',
-  medium: 'bg-[rgba(6,32,42,0.84)]',
-  strong: 'bg-[rgba(6,32,42,0.9)]',
-  side: 'bg-linear-to-r from-[rgba(6,32,42,0.94)] via-[rgba(6,32,42,0.7)] to-[rgba(6,32,42,0.25)]',
+  soft: 'bg-scrim/72',
+  medium: 'bg-scrim/84',
+  strong: 'bg-scrim/90',
+  side: 'bg-linear-to-r from-scrim/94 via-scrim/72 to-scrim/62',
 }
 
 /**
@@ -77,7 +81,9 @@ export function ParallaxBand({
     <section ref={ref} id={id} className={cn('relative isolate overflow-hidden', className)}>
       <motion.div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 will-change-transform"
+        // will-change держит композитный слой в памяти, поэтому ставим его
+        // только когда слой действительно едет: при reduced-motion фон статичен
+        className={cn('absolute inset-0 -z-10', !reduced && 'will-change-transform')}
         style={reduced ? { scale: zoom } : { scale: zoom, y }}
       >
         {/* Обычный img — перенос 1:1 из набросков; next/image — отдельная задача */}

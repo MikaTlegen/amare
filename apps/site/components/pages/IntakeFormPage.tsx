@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { CheckCircle2, Upload } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
@@ -26,6 +26,7 @@ export function IntakeFormPage() {
   const t = useT('forms')
   const text = useContent('forms')
   const contacts = useT('contacts')
+  const common = useT('common')
 
   const [filledBy, setFilledBy] = useState<'patient' | 'relative'>('relative')
   const [when, setWhen] = useState<string>('')
@@ -37,10 +38,19 @@ export function IntakeFormPage() {
   const [consent, setConsent] = useState(false)
   const [sending, setSending] = useState(false)
   const [done, setDone] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const doneRef = useRef<HTMLDivElement>(null)
+
+  // Форма подменяется блоком успеха: без переноса фокуса человек со
+  // скринридером не узнаёт, что заявка ушла
+  useEffect(() => {
+    if (done) doneRef.current?.focus()
+  }, [done])
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (!consent) return
+    setFailed(false)
     setSending(true)
     const result = await submitLead({
       filledBy,
@@ -53,7 +63,10 @@ export function IntakeFormPage() {
       consent,
     })
     setSending(false)
+    // Без ветки отказа кнопка просто разблокируется, и человек уходит
+    // с уверенностью, что заявка отправлена
     if (result.ok) setDone(true)
+    else setFailed(true)
   }
 
   return (
@@ -68,7 +81,12 @@ export function IntakeFormPage() {
 
       <section className="container-content py-12">
         {done ? (
-          <div className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
+          <div
+            ref={doneRef}
+            role="status"
+            tabIndex={-1}
+            className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
+          >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
               {t('done.title')}
@@ -154,7 +172,7 @@ export function IntakeFormPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     autoComplete="name"
-                    className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-surface px-4 py-3 text-base"
+                    className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-surface px-4 py-3 text-base"
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -169,7 +187,7 @@ export function IntakeFormPage() {
                     autoComplete="tel"
                     placeholder={t('contacts.phonePlaceholder')}
                     required
-                    className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-surface px-4 py-3 text-base"
+                    className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-surface px-4 py-3 text-base"
                   />
                 </div>
               </div>
@@ -187,6 +205,15 @@ export function IntakeFormPage() {
                 {t('contacts.consent')}
               </span>
             </label>
+
+            {failed && (
+              <p
+                role="alert"
+                className="m-0 rounded-2xl border-[1.5px] border-accent bg-accent/10 px-4 py-3 text-base leading-relaxed text-ink"
+              >
+                {common('form.error')}
+              </p>
+            )}
 
             <button
               type="submit"

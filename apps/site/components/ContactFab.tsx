@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion } from 'motion/react'
+import * as Popover from '@radix-ui/react-popover'
 import { Camera, MessageCircle, Phone, X } from 'lucide-react'
 import { useT } from '@amare/i18n/react'
 import { CLINIC } from '@/lib/clinic'
@@ -21,6 +22,15 @@ const CHANNELS = [
  *
  * Пульсация — единственная постоянная анимация на сайте, и она отключается
  * при prefers-reduced-motion вместе с раскрытием меню.
+ *
+ * Раскрытие — на Radix Popover, как шапка и виджет доступности. Раньше меню
+ * было самодельным: aria-expanded стоял, но Escape не закрывал, фокус не
+ * возвращался на кнопку и клик мимо не срабатывал.
+ *
+ * Анимации закрытия нет намеренно. С forceMount + AnimatePresence содержимое
+ * оставалось смонтированным на время выхода, и Radix не мог вернуть фокус на
+ * кнопку; в фоновой вкладке кадров нет вовсе, и выход не завершался никогда.
+ * Появление анимируем, исчезновение — мгновенное.
  */
 export function ContactFab() {
   const t = useT('common')
@@ -28,15 +38,38 @@ export function ContactFab() {
   const reduced = useReducedMotion()
 
   return (
-    <div className="fixed bottom-10 right-10 z-40 hidden flex-col items-end gap-3 md:flex">
-      <AnimatePresence>
-        {open && (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <div className="fixed bottom-10 right-10 z-40 hidden md:block">
+        <Popover.Trigger asChild>
+          <button
+            type="button"
+            aria-label={t(open ? 'contact.close' : 'contact.open')}
+            className="halo-accent relative flex h-16 w-16 items-center justify-center rounded-full bg-accent text-accent-ink transition-transform hover:scale-105"
+          >
+            {!open && !reduced && (
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 animate-pulse-ring rounded-full bg-accent"
+              />
+            )}
+            <span className="relative">
+              {open ? (
+                <X className="h-7 w-7" aria-hidden="true" />
+              ) : (
+                <MessageCircle className="h-7 w-7" aria-hidden="true" />
+              )}
+            </span>
+          </button>
+        </Popover.Trigger>
+      </div>
+
+      <Popover.Portal>
+        <Popover.Content asChild side="top" align="end" sideOffset={12} collisionPadding={16}>
           <motion.div
             initial={reduced ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.94 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="flex origin-bottom-right flex-col gap-1.5 rounded-2xl border border-line bg-surface p-2.5 shadow-2xl"
+            className="z-50 flex origin-bottom-right flex-col gap-1.5 rounded-2xl border border-line bg-surface p-2.5 shadow-2xl"
           >
             {CHANNELS.map(({ id, href, Icon }) => (
               <a
@@ -51,30 +84,8 @@ export function ContactFab() {
               </a>
             ))}
           </motion.div>
-        )}
-      </AnimatePresence>
-
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-label={t(open ? 'contact.close' : 'contact.open')}
-        className="relative flex h-16 w-16 items-center justify-center rounded-full bg-accent text-accent-ink shadow-[0_14px_34px_rgba(200,53,46,0.4)] transition-transform hover:scale-105"
-      >
-        {!open && !reduced && (
-          <span
-            aria-hidden="true"
-            className="absolute inset-0 animate-pulse-ring rounded-full bg-accent"
-          />
-        )}
-        <span className="relative">
-          {open ? (
-            <X className="h-7 w-7" aria-hidden="true" />
-          ) : (
-            <MessageCircle className="h-7 w-7" aria-hidden="true" />
-          )}
-        </span>
-      </button>
-    </div>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }

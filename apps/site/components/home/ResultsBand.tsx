@@ -85,7 +85,7 @@ export function ResultsBand() {
               <p className="m-0 text-base font-semibold text-white">{t('before')}</p>
             </div>
             <div className="rounded-2xl border border-accent/50 bg-accent/10 px-5 py-4">
-              <span className="text-sm text-[rgb(248,180,175)]">{t('band.afterLabel')}</span>
+              <span className="text-sm text-white">{t('band.afterLabel')}</span>
               <p className="m-0 text-base font-semibold text-white">{t('after')}</p>
             </div>
           </div>

@@ -1,8 +1,9 @@
 'use client'
 
+import { useRef, useState } from 'react'
 import { Button, Link } from '@/components/Links'
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowDownRight, ArrowRight, Phone } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, Pause, Phone, Play } from 'lucide-react'
 import { Reveal } from '@amare/ui'
 import { COURSE_STEPS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
@@ -17,7 +18,11 @@ import { FounderWord } from '@/components/home/FounderWord'
 import { ClinicMap } from '@/components/ClinicMap'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 
-const VIDEO_URL = 'https://videos.pexels.com/video-files/6111018/6111018-sd_640_360_25fps.mp4'
+/* Видео и постер лежат у нас: раньше файл тянулся с videos.pexels.com,
+   то есть каждый визит уходил запросом к третьей стороне — ровно то, от чего
+   мы ушли со шрифтами, раздавая их со своего домена. */
+const HERO_VIDEO = '/video/hero.mp4'
+const HERO_POSTER = '/photos/walk-bars.jpg'
 
 /** Главная в редакционном стиле: крупный ритм, живая типографика и минимум оболочек. */
 export function HomePage() {
@@ -46,13 +51,62 @@ function Hero() {
   const t = useT('home')
   const price = useT('prices')
   const reduced = useReducedMotion()
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(true)
+
+  // Состояние ведём от самого элемента: браузер может не дать автозапуск,
+  // и тогда подпись кнопки должна говорить «Запустить», а не «Остановить»
+  function toggleVideo() {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) void video.play()
+    else video.pause()
+  }
 
   return (
     <section className='relative isolate flex min-h-[45rem] items-end overflow-hidden bg-deep px-4 pb-14 pt-36 text-white sm:px-8 lg:min-h-screen lg:px-20 lg:pb-20'>
-      <video className='absolute inset-0 -z-20 h-full w-full object-cover' autoPlay loop muted playsInline poster='/photos/walk-bars.jpg'>
-        <source src={VIDEO_URL} type='video/mp4' />
-      </video>
-      <div aria-hidden='true' className='absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(6,32,42,0.94)_0%,rgba(6,32,42,0.72)_48%,rgba(6,32,42,0.3)_100%)]' />
+      {/* При prefers-reduced-motion видео не грузится вовсе — постер и есть кадр.
+          Остальное движение на сайте так себя и ведёт, а это было единственным,
+          что нельзя было ни выключить, ни остановить (WCAG 2.2.2). */}
+      {reduced ? (
+        <img
+          src={HERO_POSTER}
+          alt=''
+          aria-hidden='true'
+          className='absolute inset-0 -z-20 h-full w-full object-cover'
+        />
+      ) : (
+        <>
+          <video
+            ref={videoRef}
+            className='absolute inset-0 -z-20 h-full w-full object-cover'
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={HERO_POSTER}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+          >
+            <source src={HERO_VIDEO} type='video/mp4' />
+          </video>
+          <button
+            type='button'
+            onClick={toggleVideo}
+            aria-label={t(playing ? 'hero.videoPause' : 'hero.videoPlay')}
+            className='absolute right-4 top-24 z-10 inline-flex h-11 w-11 items-center justify-center rounded-xl border-[1.5px] border-white/45 text-white transition-colors hover:bg-white/10 sm:right-8 lg:right-20'
+          >
+            {playing ? (
+              <Pause className='h-5 w-5' aria-hidden='true' />
+            ) : (
+              <Play className='h-5 w-5' aria-hidden='true' />
+            )}
+          </button>
+        </>
+      )}
+      {/* Светлый конец вуали 0.62, а не 0.3: приписка справа стояла на светлом
+          участке кадра и давала 1.9:1 вместо 4.5:1 */}
+      <div aria-hidden='true' className='absolute inset-0 -z-10 bg-linear-to-r from-scrim/94 via-scrim/72 to-scrim/62' />
 
       <div className='mx-auto grid w-full max-w-content gap-10 lg:grid-cols-12 lg:items-end'>
         <motion.div
@@ -82,7 +136,7 @@ function Hero() {
           initial={reduced ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: reduced ? 0 : 0.7, duration: 0.5 }}
-          className='hidden border-l border-white/30 pl-6 text-sm leading-relaxed text-white/75 lg:col-span-3 lg:block'
+          className='hidden border-l border-white/45 pl-6 text-sm leading-relaxed text-white lg:col-span-3 lg:block'
         >
           {t('hero.aside')}
         </motion.p>
@@ -257,7 +311,14 @@ function Contact() {
 
   return (
     <section className='relative isolate overflow-hidden bg-deep px-4 py-24 text-white sm:px-8 lg:px-20'>
-      <img src='/photos/facade.jpg' alt='' aria-hidden='true' className='absolute inset-0 -z-20 h-full w-full object-cover opacity-30' />
+      <img
+        src='/photos/facade.jpg'
+        alt=''
+        aria-hidden='true'
+        loading='lazy'
+        decoding='async'
+        className='absolute inset-0 -z-20 h-full w-full object-cover opacity-30'
+      />
       <div aria-hidden='true' className='absolute inset-0 -z-10 bg-deep/75' />
       <div className='mx-auto grid max-w-content gap-12 lg:grid-cols-12 lg:items-end'>
         <Reveal className='min-w-0 lg:col-span-8'>

@@ -162,7 +162,7 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={t('chat.placeholder')}
-              className="min-h-[3.2rem] flex-1 rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
+              className="min-h-[3.2rem] flex-1 rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
             />
 
             <input
@@ -176,7 +176,7 @@ export function ChatPanel({ api, readOnly = false }: { api: ChatApi; readOnly?: 
             />
             <label
               htmlFor="chat-files"
-              className="inline-flex min-h-[3.2rem] cursor-pointer items-center justify-center gap-2 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-medium"
+              className="inline-flex min-h-[3.2rem] cursor-pointer items-center justify-center gap-2 rounded-xl border-[1.5px] border-line-strong px-5 py-3 text-base font-medium"
             >
               <Paperclip className="h-5 w-5 text-brand" aria-hidden="true" />
               {t('chat.attach')}

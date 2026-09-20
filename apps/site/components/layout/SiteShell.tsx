@@ -89,9 +89,10 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
 
           <Footer locale={locale} />
 
-          {/* Место под липкую панель действий: раньше отступ стоял на <main>,
-              и панель накрывала низ футера с лицензией и политикой данных */}
-          <div aria-hidden="true" className="h-[calc(6rem_+_env(safe-area-inset-bottom))] md:hidden" />
+          {/* Место под липкую панель действий держит она сама: рисует в потоке
+              невидимую копию своей строки. Раньше здесь стояла распорка с
+              фиксированной высотой, и на крупном кегле, когда кнопки
+              переносятся на второй ряд, панель накрывала юрблок подвала. */}
           <ContactFab />
           <MobileActionBar locale={locale} />
           <CookieBanner />

@@ -66,7 +66,7 @@ export function AccessibilityMenu({ onDark = false }: { onDark?: boolean }) {
             'inline-flex h-11 items-center gap-2 rounded-xl border-[1.5px] px-3 text-base font-medium transition-colors',
             onDark
               ? 'border-white/40 text-white hover:bg-white/10'
-              : 'border-line text-ink hover:border-ink',
+              : 'border-line-strong text-ink hover:border-ink',
           )}
         >
           <Eye className="h-5 w-5" aria-hidden="true" />

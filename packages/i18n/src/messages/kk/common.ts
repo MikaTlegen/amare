@@ -5,6 +5,9 @@ export const common: Translation<"common"> = {
   appName: "Amare.kz",
   healthOk: "Қызмет жұмыс істеп тұр",
 
+  "form.error":
+    "Өтінімді жіберу мүмкін болмады. Байланысты тексеріп, қайта көріңіз немесе бізге қоңырау шалыңыз.",
+
   call: "Хабарласу",
   book: "Жазылу",
 

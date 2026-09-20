@@ -34,6 +34,14 @@ const NAV = [
  * Горизонтальное меню появляется только с 2xl: при базовом кегле 18 px шесть
  * пунктов, логотип и правый блок требуют ~1300 px, и на 1024–1500 px кнопка
  * «Кабинет» уезжала за край экрана. До 2xl работает бургер.
+ *
+ * Словесный знак прячется по container-запросу, а не по ширине экрана.
+ * Медиазапросы считают rem от 16 px и про --font-scale не знают, поэтому на
+ * крупном кегле шапка молча вылезала за край: при масштабе 1.3 бургер
+ * обрезался ровно у того человека, который этот масштаб и включил.
+ * Container-запрос в rem меряется корневым кеглем — тем самым, который двигает
+ * ползунок доступности. 17rem подобраны так, чтобы надпись уходила начиная со
+ * среднего деления, а марка с кнопками помещалась на любом.
  */
 export function Header() {
   const t = useT('nav')
@@ -56,8 +64,8 @@ export function Header() {
         scrolled ? 'border-b border-line bg-bg/85 backdrop-blur-xl' : 'bg-bg',
       )}
     >
-      <div className="container-content flex items-center gap-3 py-3 lg:gap-8">
-        <SiteLogo />
+      <div className="@container container-content flex items-center gap-3 py-3 lg:gap-8">
+        <SiteLogo textClassName="@max-[17rem]:hidden" />
 
         <nav aria-label={t('mainLabel')} className="hidden flex-1 gap-4 2xl:flex">
           {NAV.map((item) => (

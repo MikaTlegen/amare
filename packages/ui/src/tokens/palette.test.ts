@@ -6,6 +6,9 @@ import { COLOR_TOKENS, type ColorToken, contrastRatio, PALETTE, type Rgb, type T
 const WHITE: Rgb = [255, 255, 255];
 const AA_TEXT = 4.5;
 const AAA_TEXT = 7;
+// WCAG 1.4.11: граница, по которой опознают элемент управления, — не ниже 3:1
+const AA_UI = 3;
+const AAA_UI = 4.5;
 
 const cssPath = fileURLToPath(new URL("../styles/tokens.css", import.meta.url));
 const css = readFileSync(cssPath, "utf8");
@@ -39,6 +42,16 @@ const TEXT_PAIRS: ReadonlyArray<[ColorToken | "white", ColorToken]> = [
   ["sky", "deep"],
 ];
 
+/*
+ * Пары «граница / фон» для нетекстового контраста. Поле ввода залито bg на
+ * белой карточке (1.04:1), то есть его границу не обозначает ничего, кроме
+ * рамки: line там давал 1.26:1 при норме 3:1.
+ */
+const UI_PAIRS: ReadonlyArray<[ColorToken, ColorToken]> = [
+  ["line-strong", "surface"],
+  ["line-strong", "bg"],
+];
+
 function color(theme: ThemeName, token: ColorToken | "white"): Rgb {
   return token === "white" ? WHITE : PALETTE[theme][token];
 }
@@ -64,5 +77,11 @@ describe.each(Object.keys(CSS_SELECTORS) as ThemeName[])("тема %s", (theme) 
 
   it.each(TEXT_PAIRS)(`%s на %s — не ниже ${minimum}:1`, (text, background) => {
     expect(contrastRatio(color(theme, text), color(theme, background))).toBeGreaterThanOrEqual(minimum);
+  });
+
+  const minimumUi = theme === "default" ? AA_UI : AAA_UI;
+
+  it.each(UI_PAIRS)(`%s на %s — не ниже ${minimumUi}:1 (нетекстовый контраст)`, (border, background) => {
+    expect(contrastRatio(color(theme, border), color(theme, background))).toBeGreaterThanOrEqual(minimumUi);
   });
 });

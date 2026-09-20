@@ -42,7 +42,7 @@ const VARIANTS: Record<Variant, string> = {
   primary: 'bg-accent text-accent-ink hover:brightness-95',
   deep: 'bg-deep text-white hover:bg-deep2',
   outline: 'border-[1.5px] border-deep text-deep hover:bg-deep hover:text-white',
-  ghost: 'border-[1.5px] border-line text-ink hover:border-ink',
+  ghost: 'border-[1.5px] border-line-strong text-ink hover:border-ink',
   onDark: 'border-[1.5px] border-white/45 text-white hover:bg-white/10',
   white: 'bg-white text-ink hover:bg-white/90',
 }

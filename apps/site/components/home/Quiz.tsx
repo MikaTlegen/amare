@@ -44,6 +44,8 @@ export function Quiz() {
   const [phone, setPhone] = useState('')
   const [consent, setConsent] = useState(false)
   const [sending, setSending] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const common = useT('common')
 
   const progress = { when: 20, mobility: 50, contacts: 80, urgent: 100, done: 100 }[step]
 
@@ -88,7 +90,10 @@ export function Quiz() {
     } as LeadPayload)
 
     setSending(false)
+    // Отказ нельзя проглатывать: без этой ветки опросник просто замирает
+    // на последнем шаге, а человек считает, что заявка ушла
     if (result.ok) setStep('done')
+    else setFailed(true)
   }
 
   const slide = reduced
@@ -241,6 +246,15 @@ export function Quiz() {
                     </span>
                   </label>
 
+                  {failed && (
+                    <p
+                      role="alert"
+                      className="m-0 rounded-2xl border-[1.5px] border-accent bg-accent/10 px-4 py-3 text-base leading-relaxed text-ink"
+                    >
+                      {common('form.error')}
+                    </p>
+                  )}
+
                   <Button onClick={() => undefined} type="submit" size="lg" className="self-start">
                     {sending ? t('contacts.sending') : t('contacts.submit')}
                   </Button>
@@ -248,7 +262,7 @@ export function Quiz() {
               )}
 
               {step === 'done' && (
-                <div className="flex flex-col gap-3 rounded-2xl bg-tint p-6">
+                <div role="status" className="flex flex-col gap-3 rounded-2xl bg-tint p-6">
                   <CheckCircle2 className="h-8 w-8 text-brand" aria-hidden="true" />
                   <h3 className="text-2xl font-semibold">{t('done.title')}</h3>
                   <p className="text-base leading-relaxed text-ink/80">
@@ -272,7 +286,7 @@ function OptionButton({ label, onClick }: { label: string; onClick: () => void }
     <button
       type="button"
       onClick={onClick}
-      className="min-h-[3.4rem] rounded-2xl border-[1.5px] border-line bg-bg px-5 py-4 text-left text-base transition-colors hover:border-accent hover:bg-[rgb(253,238,237)]"
+      className="min-h-[3.4rem] rounded-2xl border-[1.5px] border-line-strong bg-bg px-5 py-4 text-left text-base transition-colors hover:border-accent hover:bg-accent/8"
     >
       {label}
     </button>
@@ -310,7 +324,7 @@ function Field({ id, label, value, onChange, type = 'text', ...rest }: FieldProp
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
+        className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
         {...rest}
       />
     </div>

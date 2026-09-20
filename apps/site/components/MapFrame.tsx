@@ -40,7 +40,7 @@ export function MapFrame({ title }: { title: string }) {
         <button
           type="button"
           onClick={() => setActive(true)}
-          className="absolute inset-0 flex items-end justify-center bg-transparent pb-6 transition-colors hover:bg-[rgba(8,58,66,0.12)]"
+          className="absolute inset-0 flex items-end justify-center bg-transparent pb-6 transition-colors hover:bg-deep/12"
         >
           <span className="inline-flex items-center gap-2 rounded-xl bg-deep/90 px-5 py-3 text-base font-semibold text-white shadow-lg">
             <MousePointerClick className="h-5 w-5" aria-hidden="true" />

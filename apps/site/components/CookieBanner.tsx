@@ -65,7 +65,7 @@ export function CookieBanner() {
           <button
             type="button"
             onClick={() => decide('necessary')}
-            className="min-h-12 rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold"
+            className="min-h-12 rounded-xl border-[1.5px] border-line-strong px-5 py-3 text-base font-semibold"
           >
             {t('cookie.necessary')}
           </button>

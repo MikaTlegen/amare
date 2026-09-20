@@ -89,7 +89,12 @@ export function DoctorsCarousel() {
           <article
             key={`${doctor.id}-${index}`}
             data-doctor-card
+            // Вторая половина ленты — копии для бесшовной прокрутки. aria-hidden
+            // прятал их от скринридера, но ссылки внутри оставались в табуляции:
+            // с клавиатуры человек попадал в карточки, которых для него нет.
+            // inert выключает и фокус, и чтение разом.
             aria-hidden={index >= DOCTORS.length}
+            inert={index >= DOCTORS.length}
             className='gradient-border group relative flex w-[calc((100%-3.75rem)/4)] min-w-[15rem] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-line bg-surface lg:min-w-0'
           >
             <div className='aspect-4/5 overflow-hidden bg-tint'>

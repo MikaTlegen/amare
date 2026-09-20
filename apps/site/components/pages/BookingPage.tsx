@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Button, Link } from '@/components/Links'
 import { useSearchParams } from 'next/navigation'
@@ -57,6 +57,14 @@ export function BookingPage({ locale }: { locale: Locale }) {
   const [consent, setConsent] = useState(false)
   const [sending, setSending] = useState(false)
   const [done, setDone] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const doneRef = useRef<HTMLDivElement>(null)
+
+  // Форма подменяется блоком успеха. Без переноса фокуса человек со
+  // скринридером нажимает «Записаться» и не узнаёт, что что-то произошло.
+  useEffect(() => {
+    if (done) doneRef.current?.focus()
+  }, [done])
 
   useEffect(() => {
     void getSlots().then((loaded) => {
@@ -91,10 +99,14 @@ export function BookingPage({ locale }: { locale: Locale }) {
   const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (!slotId || !consent) return
+    setFailed(false)
     setSending(true)
     const result = await createBooking({ slotId, name, phone, comment, consent })
     setSending(false)
+    // Отказ нельзя проглатывать: без этой ветки кнопка просто разблокируется,
+    // человек считает, что записался, а заявки нет и ему никто не позвонит
     if (result.ok) setDone(true)
+    else setFailed(true)
   }
 
   return (
@@ -110,7 +122,12 @@ export function BookingPage({ locale }: { locale: Locale }) {
 
       <section className="container-content py-12">
         {done ? (
-          <div className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8">
+          <div
+            ref={doneRef}
+            role="status"
+            tabIndex={-1}
+            className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
+          >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
               {t('done.title')}
@@ -217,7 +234,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
                   required
-                  className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
+                  className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
                 />
               </div>
 
@@ -233,7 +250,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
                   autoComplete="tel"
                   placeholder={t('contacts.phonePlaceholder')}
                   required
-                  className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
+                  className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
                 />
               </div>
 
@@ -247,7 +264,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
                   onChange={(e) => setComment(e.target.value)}
                   rows={3}
                   placeholder={t('contacts.commentPlaceholder')}
-                  className="rounded-xl border-[1.5px] border-line bg-bg px-4 py-3 text-base"
+                  className="rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
                 />
               </div>
 
@@ -267,6 +284,15 @@ export function BookingPage({ locale }: { locale: Locale }) {
               {chosen && (
                 <p className="m-0 rounded-2xl bg-tint px-4 py-3 text-base text-deep">
                   {t('time.chosen', formatSlot(chosen.at))}
+                </p>
+              )}
+
+              {failed && (
+                <p
+                  role="alert"
+                  className="m-0 rounded-2xl border-[1.5px] border-accent bg-accent/10 px-4 py-3 text-base leading-relaxed text-ink"
+                >
+                  {t('submit.error')}
                 </p>
               )}
 

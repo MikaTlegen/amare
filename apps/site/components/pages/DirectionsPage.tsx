@@ -67,7 +67,7 @@ export function DirectionsPage({ locale }: { locale: Locale }) {
                   {text(`${direction.id}.method`)}
                 </span>
 
-                <h2 className="font-display text-2xl font-medium tracking-[-0.04em] sm:text-[1.7rem] leading-8">
+                <h2 className="font-display text-2xl font-medium tracking-[-0.04em] sm:text-3xl leading-8">
                   {text(`${direction.id}.title`)}
                 </h2>
 

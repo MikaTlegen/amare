@@ -50,7 +50,7 @@ export function PageCover({
           {note && <p className="max-w-[34em] text-lg leading-relaxed text-white/80">{note}</p>}
         </div>
       </div>
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[rgba(6,32,42,0.7)] lg:bg-linear-to-r lg:from-[rgba(6,32,42,0.9)] lg:via-[rgba(6,32,42,0.7)] lg:to-[rgba(6,32,42,0.42)]" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-scrim/70 lg:bg-linear-to-r lg:from-scrim/90 lg:via-scrim/72 lg:to-scrim/62" />
     </section>
   )
 }

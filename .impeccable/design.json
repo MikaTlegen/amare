@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-20T00:00:00.000Z",
+  "title": "Design System: Amare Care",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Холодная бумага",
+        "canonical": "rgb(242 247 248)",
+        "tonalRamp": ["#0C1214", "#182428", "#2B3D42", "#456066", "#688891", "#96B4BB", "#C7DCE0", "#F2F7F8"]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Белый лист",
+        "canonical": "rgb(255 255 255)",
+        "tonalRamp": ["#141414", "#262626", "#3D3D3D", "#5C5C5C", "#858585", "#B3B3B3", "#DBDBDB", "#FFFFFF"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Сине-чёрный",
+        "canonical": "rgb(15 26 28)",
+        "tonalRamp": ["#0F1A1C", "#1B2E32", "#2C474D", "#40646B", "#5C868E", "#87AAB1", "#B8CFD4", "#E5EFF1"]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Приглушённый сланец",
+        "canonical": "rgb(76 95 99)",
+        "tonalRamp": ["#111719", "#1F292C", "#313F43", "#4C5F63", "#6B8288", "#95AAB0", "#C0CFD3", "#E8EFF0"]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Линия",
+        "canonical": "rgb(219 231 233)",
+        "tonalRamp": ["#151A1B", "#242E30", "#3A4A4D", "#556B6F", "#7A9296", "#A5BCC0", "#DBE7E9", "#F4F9FA"]
+      },
+      "deep": {
+        "role": "tertiary",
+        "displayName": "Ночная гавань",
+        "canonical": "rgb(8 58 66)",
+        "tonalRamp": ["#04181C", "#083A42", "#0C5462", "#107285", "#1793AB", "#4FBBD0", "#96D9E5", "#D3EFF4"]
+      },
+      "deep-2": {
+        "role": "tertiary",
+        "displayName": "Глубокая вода",
+        "canonical": "rgb(13 82 93)",
+        "tonalRamp": ["#051E22", "#0A3F47", "#0D525D", "#116E7D", "#158FA3", "#45B6CB", "#90D6E3", "#D0EDF3"]
+      },
+      "brand": {
+        "role": "primary",
+        "displayName": "Глубокая бирюза",
+        "canonical": "rgb(9 118 132)",
+        "tonalRamp": ["#04252A", "#06404A", "#085C69", "#097684", "#0C97A9", "#27BCD0", "#7FDCE9", "#CBF1F7"]
+      },
+      "brand-bright": {
+        "role": "primary",
+        "displayName": "Бирюза вывески",
+        "canonical": "rgb(43 196 212)",
+        "tonalRamp": ["#06282C", "#0A464E", "#0F6874", "#158D9D", "#1DAFC2", "#2BC4D4", "#7ADDE8", "#CBF3F8"]
+      },
+      "sky": {
+        "role": "tertiary",
+        "displayName": "Светлая волна",
+        "canonical": "rgb(140 228 238)",
+        "tonalRamp": ["#0A272B", "#10444B", "#17646E", "#1F8694", "#2BA9BA", "#55CBDC", "#8CE4EE", "#D2F5F9"]
+      },
+      "accent": {
+        "role": "secondary",
+        "displayName": "Кирпичное сердце",
+        "canonical": "rgb(201 58 44)",
+        "tonalRamp": ["#2B0C08", "#4C1611", "#71211A", "#9A2C23", "#C93A2C", "#E0685B", "#EE9C94", "#F9D6D2"]
+      },
+      "accent-ink": {
+        "role": "secondary",
+        "displayName": "Белый на акценте",
+        "canonical": "rgb(255 255 255)",
+        "tonalRamp": ["#141414", "#262626", "#3D3D3D", "#5C5C5C", "#858585", "#B3B3B3", "#DBDBDB", "#FFFFFF"]
+      },
+      "tint": {
+        "role": "tertiary",
+        "displayName": "Морская дымка",
+        "canonical": "rgb(224 246 249)",
+        "tonalRamp": ["#0A2226", "#103A41", "#17555F", "#1F747F", "#2B96A4", "#5CBECC", "#9EDCE7", "#E0F6F9"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Только заголовок первого экрана. Максимум один на страницу."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Заголовки разделов; белый на тёмном развороте, ink на светлом."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Заголовки карточек, шагов курса и легенды форм."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Весь текст. 18 px при масштабе 1, колонка ограничена 28-34em."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Надзаголовки разделов и колонки подвала. Капслок, только короткие слова."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-layer",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Слой поверх страницы: выдвижное меню, попап доступности, меню связи, баннер cookie. Значение Tailwind shadow-2xl, не переопределялось."
+      },
+      {
+        "name": "map-caption",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Подпись поверх карты — единственная тень над изображением."
+      },
+      {
+        "name": "cabinet-ring",
+        "value": "0 0 0 4px rgba(11,58,74,0.18)",
+        "purpose": "Мягкое кольцо при наведении на кнопку «Кабинет». Не тень, а подсветка контура."
+      },
+      {
+        "name": "contact-halo",
+        "value": "0 14px 34px rgba(200,53,46,0.4)",
+        "purpose": "Цветной ореол под круглой кнопкой связи. Единственная окрашенная тень системы."
+      }
+    ],
+    "motion": [
+      {
+        "name": "reveal",
+        "value": "0.55s cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Появление блока при въезде в экран: сдвиг на 24px вверх и проявление. Каскад по 0.08-0.15s."
+      },
+      {
+        "name": "hero-fade-up",
+        "value": "0.55s ease-out, stagger 0.13s",
+        "purpose": "Ступенчатый выход элементов первого экрана."
+      },
+      {
+        "name": "state",
+        "value": "0.2s ease",
+        "purpose": "Смена цвета кнопки или ссылки при наведении."
+      },
+      {
+        "name": "nav-underline",
+        "value": "0.3s ease",
+        "purpose": "Рост подчёркивания пункта меню слева направо."
+      },
+      {
+        "name": "gradient-border",
+        "value": "0.35s ease",
+        "purpose": "Проявление переливающейся рамки карточки при наведении и фокусе внутри."
+      },
+      {
+        "name": "marquee",
+        "value": "28s linear infinite",
+        "purpose": "Бегущая строка: сдвиг на треть длины утроенного списка."
+      },
+      {
+        "name": "pulse-ring",
+        "value": "2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "purpose": "Расходящееся кольцо у кнопки связи: масштаб 1 → 1.6 с угасанием."
+      },
+      {
+        "name": "parallax",
+        "value": "±20% по Y, масштаб подложки 1 + strength*0.025",
+        "purpose": "Сдвиг фотографии-подложки. Намеренно умеренный: сильный параллакс вызывает головокружение."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation-duration: 0.01ms; transition-duration: 0.01ms",
+        "purpose": "При prefers-reduced-motion движение не ускоряется, а исчезает: Reveal и ParallaxBand рендерят статичный вариант."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Главное действие страницы: записаться, отправить форму. Не больше одной на экран.",
+      "html": "<button class=\"ds-btn-primary\">Записаться<svg class=\"ds-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"/><path d=\"M7 17 17 7\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0.75rem 1.5rem; border: none; border-radius: 0.875rem; background: rgb(var(--c-accent, 201 58 44)); color: rgb(var(--c-accent-ink, 255 255 255)); font-family: Inter, 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: filter 0.2s, background 0.2s; } .ds-btn-primary:hover { filter: brightness(0.95); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); } .ds-btn-primary .ds-icon { width: 1.25rem; height: 1.25rem; }"
+    },
+    {
+      "name": "Deep Button",
+      "kind": "button",
+      "refersTo": "button-deep",
+      "description": "Вторичное действие: вход в кабинет, переход к форме. Тёмная заливка вместо красной.",
+      "html": "<button class=\"ds-btn-deep\">Войти в кабинет</button>",
+      "css": ".ds-btn-deep { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0.75rem 1.5rem; border: none; border-radius: 0.875rem; background: rgb(var(--c-deep, 8 58 66)); color: #fff; font-family: Inter, 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; } .ds-btn-deep:hover { background: rgb(var(--c-deep-2, 13 82 93)); } .ds-btn-deep:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Третичное действие на светлом фоне. Рамка 1.5px читается как нажимаемая.",
+      "html": "<button class=\"ds-btn-outline\">Подробнее о курсе</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0.75rem 1.5rem; border: 1.5px solid rgb(var(--c-deep, 8 58 66)); border-radius: 0.875rem; background: transparent; color: rgb(var(--c-deep, 8 58 66)); font-family: Inter, 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; } .ds-btn-outline:hover { background: rgb(var(--c-deep, 8 58 66)); color: #fff; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Поле формы записи. Фон темнее карточки, поэтому поле читается как углубление. Подпись всегда отдельным label.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-phone\">Телефон</label><input class=\"ds-input\" id=\"ds-phone\" type=\"tel\" placeholder=\"+7 700 000 00 00\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 0.375rem; font-family: Inter, 'Segoe UI', system-ui, sans-serif; } .ds-field-label { font-size: 1rem; font-weight: 500; color: rgb(var(--c-ink, 15 26 28)); } .ds-input { min-height: 3.2rem; padding: 0.75rem 1rem; border: 1.5px solid rgb(var(--c-line, 219 231 233)); border-radius: 0.875rem; background: rgb(var(--c-bg, 242 247 248)); color: rgb(var(--c-ink, 15 26 28)); font-size: 1rem; font-family: inherit; } .ds-input::placeholder { color: rgb(var(--c-muted, 76 95 99)); } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); }"
+    },
+    {
+      "name": "Header Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Пункт горизонтального меню. Подчёркивание растёт слева направо; у активного пункта развёрнуто постоянно.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-link--active\" href=\"#\">Направления</a><a class=\"ds-nav-link\" href=\"#\">Курс</a><a class=\"ds-nav-link\" href=\"#\">Врачи</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 1rem; font-family: Inter, 'Segoe UI', system-ui, sans-serif; } .ds-nav-link { position: relative; padding: 0.25rem 0; font-size: 1rem; color: rgb(var(--c-muted, 76 95 99)); text-decoration: none; white-space: nowrap; transition: color 0.2s; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -0.125rem; height: 0.125rem; background: rgb(var(--c-accent, 201 58 44)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; } .ds-nav-link:hover { color: rgb(var(--c-ink, 15 26 28)); } .ds-nav-link:hover::after { transform: scaleX(1); } .ds-nav-link--active { color: rgb(var(--c-ink, 15 26 28)); font-weight: 600; } .ds-nav-link--active::after { transform: scaleX(1); } .ds-nav-link:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); border-radius: 0.25rem; }"
+    },
+    {
+      "name": "Surface Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Крупная карточка-«дверь» с развилки на главной. Плоская: рамка и тон вместо тени.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-card-label\">Впервые у нас</span><h3 class=\"ds-card-title\">Подобрать программу восстановления</h3><button class=\"ds-card-action\">Заполнить анкету</button></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.75rem; border: 1px solid rgb(var(--c-line, 219 231 233)); border-radius: 1.375rem; background: rgb(var(--c-surface, 255 255 255)); font-family: Inter, 'Segoe UI', system-ui, sans-serif; } .ds-card-label { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(var(--c-accent, 201 58 44)); } .ds-card-title { margin: 0; font-family: Manrope, system-ui, sans-serif; font-size: 1.5rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.04em; color: rgb(var(--c-ink, 15 26 28)); } .ds-card-action { min-height: 3rem; padding: 0.75rem 1.5rem; border: none; border-radius: 0.875rem; background: rgb(var(--c-deep, 8 58 66)); color: #fff; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; } .ds-card-action:hover { background: rgb(var(--c-deep-2, 13 82 93)); }"
+    },
+    {
+      "name": "Accessibility Trigger",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Кнопка виджета доступности в шапке. Открывает панель с ползунком кегля и контрастной темой — сигнатурный элемент системы.",
+      "html": "<button class=\"ds-a11y\" aria-label=\"Настройки отображения\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg><span aria-hidden=\"true\">А+</span></button>",
+      "css": ".ds-a11y { display: inline-flex; align-items: center; gap: 0.5rem; height: 2.75rem; padding: 0 0.75rem; border: 1.5px solid rgb(var(--c-line, 219 231 233)); border-radius: 0.875rem; background: transparent; color: rgb(var(--c-ink, 15 26 28)); font-family: Inter, 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s; } .ds-a11y:hover { border-color: rgb(var(--c-ink, 15 26 28)); } .ds-a11y:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); } .ds-a11y .ds-icon { width: 1.25rem; height: 1.25rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Клиническая редакция",
+    "overview": "Сайт держится не на карточках и тенях, а на редакционной сетке: двенадцать колонок, крупный набор, тонкая линия вместо рамки, тёмный разворот вместо блока-«баннера». Медицина подана как честный журнал, а не как рекламный буклет клиники: цифры названы прямо, сроки курса — тоже, а фотография работает подложкой под текст, а не украшением рядом с ним. Разделы главной идут длинной вертикальной полосой и чередуют светлый разворот (bg) с тёмным (deep), между ними — одна красная полоса бегущей строки.\n\nГолос — заботливый, доступный, терпеливый. Основная аудитория старше 55 лет, а рядом с ней родственники в стрессе, поэтому доступность здесь не слой поверх дизайна, а его несущая конструкция: базовый кегль 18 px, зона нажатия не меньше 44 px, видимый фокус, контрастная тема и полное выключение движения по prefers-reduced-motion. Виджет доступности меняет две вещи на <html> — переменную --font-scale и атрибут data-contrast — и весь интерфейс масштабируется и перекрашивается целиком.\n\nПалитра снята с логотипа клиники, а не придумана: бирюза и красный — две половины сердца на вывеске. Для текста оба цвета затемнены, потому что чистые не дают 4.5:1 с белым. Стандартная палитра Tailwind отключена целиком: цвет вне бренда физически не соберётся.",
+    "keyCharacteristics": [
+      "Редакционная сетка на 12 колонок, контент до 90rem, поля 1rem → 2rem → 5rem",
+      "Крупный набор Manrope с плотным трекингом (−0.045em … −0.055em) на заголовках",
+      "Плоские поверхности: глубина строится тоном и линией, тень — только у плавающих слоёв",
+      "Базовый кегль 18 px, масштабируемый пользователем до 1.3×",
+      "Две темы из одних и тех же классов: обычная и data-contrast=\"high\"",
+      "Движение сдержанное и полностью отключаемое"
+    ],
+    "rules": [
+      {
+        "name": "Правило одного громкого цвета",
+        "body": "accent занимает считанные проценты экрана: одна главная кнопка, одна полоса бегущей строки, кольцо фокуса. Как только красных пятен на экране становится два и больше, приоритет действия теряется.",
+        "section": "colors"
+      },
+      {
+        "name": "Правило двух источников",
+        "body": "Цвет живёт одновременно в tokens.css (RGB-тройки) и palette.ts (данные для графиков). Меняете один — меняете второй, затем pnpm --filter @amare/ui test: тест сверяет файлы и проверяет контраст. Третьего места для цвета нет — произвольные rgba(...) в компонентах запрещены.",
+        "section": "colors"
+      },
+      {
+        "name": "Правило выключенной палитры",
+        "body": "--color-*: initial гасит всю стандартную палитру Tailwind. Если класс bg-sky-500 не собрался — это не поломка сборки, это защита.",
+        "section": "colors"
+      },
+      {
+        "name": "Правило живого кегля",
+        "body": "Ни один размер не задан в px. html { font-size: calc(18px * var(--font-scale)) }, вся шкала — в rem, поэтому ползунок доступности (1 / 1.15 / 1.3) растягивает интерфейс целиком. Появился px в размере шрифта — сломан весь виджет.",
+        "section": "typography"
+      },
+      {
+        "name": "Правило переносимого заголовка",
+        "body": "До 40rem у h1–h3 включены hyphens: auto и overflow-wrap: break-word: «самостоятельность» в одну строку не помещается и иначе разрывает сетку горизонтальной прокруткой.",
+        "section": "typography"
+      },
+      {
+        "name": "Правило безопасной зоны",
+        "body": "Липкие элементы внизу экрана считают отступ через env(safe-area-inset-bottom), а место под мобильную панель действий держит отдельная распорка-div после подвала — не padding на <main>, иначе панель накрывает лицензию и политику данных.",
+        "section": "layout"
+      },
+      {
+        "name": "Правило обрезки только на телефоне",
+        "body": "overflow-x: clip на html включён лишь до 40rem. На десктопе обрезка спрятала бы уезжающий элемент вместо того, чтобы показать ошибку вёрстки.",
+        "section": "layout"
+      },
+      {
+        "name": "Правило плоскости по умолчанию",
+        "body": "Поверхность в потоке страницы плоская. Нужна граница между блоками — берите тон или линию. Тень разрешена только слою, который лежит поверх страницы и может быть закрыт.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do брать цвет только классом токена (bg-deep, text-brand, border-line). Новый оттенок — сначала в tokens.css и palette.ts, потом в разметку.",
+      "Do держать все размеры шрифта в rem: ползунок доступности масштабирует интерфейс через корневой кегль.",
+      "Do ставить высоту интерактивного элемента не меньше 3rem, а текстовым ссылкам в плотных блоках добавлять tap-target.",
+      "Do выбирать тег по смыслу: переход — <a>/<Link>, действие — <button>.",
+      "Do выключать движение полностью при prefers-reduced-motion, а не ускорять его: быстрый сдвиг для человека с вестибулярным нарушением остаётся сдвигом.",
+      "Do держать вуаль над фотографией не светлее 0.7 — белый текст иначе проваливает 4.5:1 на светлом участке кадра.",
+      "Do прогонять pnpm --filter @amare/ui test после любой правки палитры."
+    ],
+    "donts": [
+      "Don't писать произвольные rgba(...) и hex в компонентах. Тёмная вуаль, кольцо наведения и цветной ореол — исторические исключения, а не образец.",
+      "Don't добавлять тень поверхности, лежащей в потоке страницы. Глубина — тон и линия.",
+      "Don't использовать brand-bright для текста на светлом фоне: контраста не хватает. Только заливки и марка.",
+      "Don't опускать цвет подписи ниже muted — это нижняя граница читаемости (6.2:1).",
+      "Don't ставить больше одного красного пятна на экран.",
+      "Don't прятать фокус: кольцо задано глобально в base.css, переопределять его локально нельзя.",
+      "Don't заменять <label> плейсхолдером и не полагаться на цвет как единственный признак состояния."
+    ]
+  }
+}
