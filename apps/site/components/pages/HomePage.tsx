@@ -54,6 +54,14 @@ function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
 
+  /*
+   * Высота первого экрана считается от окна, а не от кегля: раньше стояло
+   * min-h-[45rem] (810 px при базовом шрифте) плюс lg:min-h-screen и pt-36,
+   * и на ноутбуке 1024×768 единственная кнопка экрана начиналась ниже сгиба.
+   * min(42rem, 88vh) оставляет место под кнопку на любой высоте окна,
+   * а доля vh не даёт экрану выглядеть обрезанным на высоком мониторе.
+   */
+
   // Состояние ведём от самого элемента: браузер может не дать автозапуск,
   // и тогда подпись кнопки должна говорить «Запустить», а не «Остановить»
   function toggleVideo() {
@@ -64,7 +72,7 @@ function Hero() {
   }
 
   return (
-    <section className='relative isolate flex min-h-[45rem] items-end overflow-hidden bg-deep px-4 pb-14 pt-36 text-white sm:px-8 lg:min-h-screen lg:px-20 lg:pb-20'>
+    <section className='relative isolate flex min-h-[min(42rem,88vh)] items-end overflow-hidden bg-deep px-4 pb-12 pt-24 text-white sm:px-8 lg:min-h-[min(46rem,92vh)] lg:px-20 lg:pb-12 lg:pt-20'>
       {/* При prefers-reduced-motion видео не грузится вовсе — постер и есть кадр.
           Остальное движение на сайте так себя и ведёт, а это было единственным,
           что нельзя было ни выключить, ни остановить (WCAG 2.2.2). */}
@@ -118,7 +126,11 @@ function Hero() {
           <motion.p variants={fadeUp} className='m-0 text-sm font-medium uppercase tracking-[0.1em] text-white/65'>
             {t('hero.label')}
           </motion.p>
-          <motion.h1 variants={fadeUp} className='mt-5 max-w-none font-display sm:max-w-[11em] text-2xl font-semibold leading-[1.12] sm:leading-[1.08] tracking-[-0.055em] sm:text-6xl lg:text-7xl'>
+          {/* clamp вместо ступеней text-2xl → sm:text-6xl: в диапазоне
+              375–639 px заголовок застревал на 27 px, то есть на самом частом
+              размере экрана крупной типографики не было вовсе, а на границе
+              брейкпойнта кегль прыгал вдвое. */}
+          <motion.h1 variants={fadeUp} className='mt-5 max-w-none font-display sm:max-w-[11em] text-[clamp(1.75rem,min(7vw,8vh),4.5rem)] font-semibold leading-[1.08] tracking-[-0.055em]'>
             {t('hero.title')}
           </motion.h1>
           <motion.p variants={fadeUp} className='mt-7 max-w-[34em] text-lg leading-relaxed text-white/80'>

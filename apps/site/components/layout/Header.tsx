@@ -11,7 +11,7 @@ import { SiteLogo } from './SiteLogo'
 import { LanguageSwitch } from '@amare/ui'
 import { AccessibilityMenu } from '@amare/ui'
 import { CabinetLink } from './CabinetLink'
-import { ROUTES } from '@/lib/clinic'
+import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 // Подпись каждого пункта берётся из словаря по ключу с тем же именем, что и маршрут
@@ -88,6 +88,18 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2.5">
+          {/* Телефон в шапке: главный вопрос посетителя в остром периоде —
+              «куда звонить», а до правки номер на десктопе был только внутри
+              плавающей кнопки связи и в подвале. Показываем по container-запросу,
+              а не по ширине экрана: так он сам уходит, когда шапке не хватает
+              места из-за крупного кегля, и не выталкивает бургер за край. */}
+          <a
+            href={CLINIC.phones[0].href}
+            className="hidden whitespace-nowrap text-base font-semibold text-ink no-underline transition-colors hover:text-brand @min-[34rem]:inline-flex"
+          >
+            {CLINIC.phones[0].label}
+          </a>
+
           <div className="hidden sm:block">
             <LanguageSwitch />
           </div>
