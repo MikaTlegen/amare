@@ -13,12 +13,12 @@
 # Меняется домен — пересобираем, иначе ссылки уведут на старый.
 #
 # Запуск:
-#   bash scripts/build-static.sh                      # https://amare.tennet.kz
+#   bash scripts/build-static.sh                      # https://amaru.tennet.kz
 #   SITE_URL=https://other.kz bash scripts/build-static.sh
 #
 set -euo pipefail
 
-SITE_URL="${SITE_URL:-https://amare.tennet.kz}"
+SITE_URL="${SITE_URL:-https://amaru.tennet.kz}"
 SITE_URL="${SITE_URL%/}"
 
 # Публичная лид-форма CRM: туда уходят заявки с сайта. Не секрет — этот адрес

@@ -11,7 +11,7 @@ import { localeHref } from '@amare/i18n/locales'
  * всю группу целиком. Поэтому альтернативы собираются в одном месте,
  * а не расставляются руками по страницам (сторожит lib/seo.test.ts).
  */
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amare.tennet.kz').replace(/\/+$/, '')
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amaru.tennet.kz').replace(/\/+$/, '')
 
 type MetaKey = MessageKey<'meta'>
 
