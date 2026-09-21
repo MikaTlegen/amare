@@ -21,6 +21,11 @@ set -euo pipefail
 SITE_URL="${SITE_URL:-https://amare.tennet.kz}"
 SITE_URL="${SITE_URL%/}"
 
+# Публичная лид-форма CRM: туда уходят заявки с сайта. Не секрет — этот адрес
+# виден в любом коде встраивания формы. Пустое значение означало бы, что форма
+# на сайте молча не работает, поэтому адрес задан здесь, а не оставлен на память.
+CRM_LEAD_FORM_URL="${CRM_LEAD_FORM_URL:-https://crm.tennet.kz/api/public/forms/d4ad399c-701d-411e-a884-64881accca18/}"
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/dist-ftp"
 
@@ -28,6 +33,7 @@ echo "Домен сборки: $SITE_URL"
 
 export STATIC_EXPORT=1
 export NEXT_PUBLIC_SITE_URL="$SITE_URL"
+export NEXT_PUBLIC_CRM_LEAD_FORM_URL="$CRM_LEAD_FORM_URL"
 export NEXT_PUBLIC_CARE_URL="$SITE_URL/care"
 export NEXT_PUBLIC_STAFF_URL="$SITE_URL/staff"
 
