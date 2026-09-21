@@ -12,6 +12,10 @@ const envSchema = z.object({
   S3_BUCKET: z.string().min(1),
   S3_ACCESS_KEY_ID: z.string().min(1),
   S3_SECRET_ACCESS_KEY: z.string().min(1),
+  // Адрес публичной лид-формы CRM, куда уходят заявки с сайта
+  CRM_LEAD_FORM_URL: z.url(),
+  // Origin-ы, которым разрешён CORS к API: адреса сайта и кабинетов через запятую
+  SITE_ORIGINS: z.string().min(1),
 });
 
 export type Env = z.infer<typeof envSchema>;
