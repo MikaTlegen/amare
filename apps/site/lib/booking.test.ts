@@ -1,26 +1,72 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BOOKING_HORIZON_DAYS, createBooking, getSlots } from "./booking";
+
+const FORM_URL = "https://crm.example.test/api/public/forms/test/";
+
+beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", FORM_URL);
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
+/** Подменяет сеть: из тестов заявка не должна уходить в настоящую CRM. */
+function stubFetch(ok: boolean): ReturnType<typeof vi.fn> {
+  const fetchMock = vi.fn(async () => ({ ok, status: ok ? 200 : 400 }));
+  vi.stubGlobal("fetch", fetchMock);
+  return fetchMock;
+}
+
 describe("createBooking", () => {
-  it("без согласия на обработку ПД не создаёт запись", async () => {
-    const send = vi.spyOn(console, "info").mockImplementation(() => {});
+  // Сведения о здоровье — особая категория ПД (раздел 4 ТЗ): без согласия ничего не уходит
+  it("без согласия на обработку ПД не создаёт запись и не ходит в CRM", async () => {
+    const fetchMock = stubFetch(true);
 
     const result = await createBooking({ slotId: "s-1", name: "Тест", phone: "+7 700 000 00 00", consent: false });
 
     expect(result).toEqual({ ok: false });
-    expect(send).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("с согласием подтверждает запись", async () => {
-    vi.spyOn(console, "info").mockImplementation(() => {});
+  it("с согласием отправляет имя и телефон в лид-форму CRM", async () => {
+    const fetchMock = stubFetch(true);
 
     const result = await createBooking({ slotId: "s-1", name: "Тест", phone: "+7 700 000 00 00", consent: true });
 
     expect(result).toEqual({ ok: true });
+    const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(url).toBe(FORM_URL);
+    expect(JSON.parse(String(init.body))).toEqual({
+      standard_name: "Тест",
+      standard_phone: "+7 700 000 00 00",
+      website_url: "",
+    });
+  });
+
+  // До этого здесь стояла заглушка: она отвечала ok, никуда не сходив, и человек
+  // видел «вы записаны», хотя заявки не было ни у кого
+  it("возвращает ok: false, когда CRM отклонила заявку", async () => {
+    stubFetch(false);
+
+    const result = await createBooking({ slotId: "s-1", name: "Тест", phone: "+7 700 000 00 00", consent: true });
+
+    expect(result).toEqual({ ok: false });
+  });
+
+  it("возвращает ok: false, когда сеть недоступна", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("Failed to fetch");
+      }),
+    );
+
+    const result = await createBooking({ slotId: "s-1", name: "Тест", phone: "+7 700 000 00 00", consent: true });
+
+    expect(result).toEqual({ ok: false });
   });
 });
 
