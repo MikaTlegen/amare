@@ -10,8 +10,6 @@ const validEnv = {
   S3_BUCKET: "amare",
   S3_ACCESS_KEY_ID: "GKtest",
   S3_SECRET_ACCESS_KEY: "test-secret",
-  CRM_LEAD_FORM_URL: "https://crm.example.test/api/public/forms/test/",
-  SITE_ORIGINS: "http://localhost:3001",
 };
 
 function without(source: Record<string, string>, name: string): Record<string, string> {

@@ -14,12 +14,6 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
 
   const env = app.get<Env>(ENV);
-  // Заявки уходят с другого адреса (сайт и кабинеты), поэтому список origin-ов явный
-  app.enableCors({
-    origin: env.SITE_ORIGINS.split(",").map((origin) => origin.trim()),
-    methods: ["GET", "POST"],
-  });
-
   await app.listen(env.PORT, "0.0.0.0");
   logger.log(`API запущен на порту ${env.PORT}`);
 }

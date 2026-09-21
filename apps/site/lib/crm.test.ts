@@ -1,13 +1,20 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readUtm, submitLead } from "./crm";
+
+const FORM_URL = "https://crm.example.test/api/public/forms/test/";
+
+beforeEach(() => {
+  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", FORM_URL);
+});
 
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 function stubFetch(ok: boolean): ReturnType<typeof vi.fn> {
-  const fetchMock = vi.fn(async () => ({ ok, status: ok ? 202 : 400 }));
+  const fetchMock = vi.fn(async () => ({ ok, status: ok ? 200 : 400 }));
   vi.stubGlobal("fetch", fetchMock);
   return fetchMock;
 }
@@ -23,7 +30,7 @@ describe("submitLead", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("с согласием отправляет заявку на собственный бэкенд", async () => {
+  it("с согласием отправляет имя и телефон в лид-форму CRM", async () => {
     const fetchMock = stubFetch(true);
 
     const result = await submitLead({
@@ -36,13 +43,33 @@ describe("submitLead", () => {
 
     expect(result).toEqual({ ok: true });
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(url).toMatch(/\/leads$/);
+    expect(url).toBe(FORM_URL);
     expect(init.method).toBe("POST");
-    expect(JSON.parse(String(init.body))).toMatchObject({ name: "Тест", source: "quiz", consent: true });
+    expect(JSON.parse(String(init.body))).toEqual({
+      standard_name: "Тест",
+      standard_phone: "+7 700 000 00 00",
+      website_url: "",
+    });
+  });
+
+  // Боту нельзя показывать, что ловушка сработала, иначе он подберёт обход
+  it("не ходит в CRM, если заполнена ловушка для ботов", async () => {
+    const fetchMock = stubFetch(true);
+
+    const result = await submitLead({
+      filledBy: "patient",
+      phone: "+7 700 000 00 00",
+      source: "form",
+      consent: true,
+      websiteUrl: "http://spam.example",
+    });
+
+    expect(result).toEqual({ ok: true });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   // Без этой ветки человек увидит «заявка отправлена», а заявки не будет
-  it("возвращает ok: false, когда бэкенд отклонил заявку", async () => {
+  it("возвращает ok: false, когда CRM отклонила заявку", async () => {
     stubFetch(false);
 
     const result = await submitLead({ filledBy: "patient", phone: "+7 700 000 00 00", source: "form", consent: true });
@@ -61,6 +88,17 @@ describe("submitLead", () => {
     const result = await submitLead({ filledBy: "patient", phone: "+7 700 000 00 00", source: "form", consent: true });
 
     expect(result).toEqual({ ok: false });
+  });
+
+  // Сборка без адреса формы — заявка уйдёт в никуда, честнее показать отказ
+  it("возвращает ok: false, если адрес формы не задан при сборке", async () => {
+    vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", "");
+    const fetchMock = stubFetch(true);
+
+    const result = await submitLead({ filledBy: "patient", phone: "+7 700 000 00 00", source: "form", consent: true });
+
+    expect(result).toEqual({ ok: false });
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

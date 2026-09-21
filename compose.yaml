@@ -11,8 +11,6 @@ x-app-env: &app-env
   S3_BUCKET: ${S3_BUCKET:?}
   S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:?}
   S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?}
-  CRM_LEAD_FORM_URL: ${CRM_LEAD_FORM_URL:?}
-  SITE_ORIGINS: ${SITE_ORIGINS:?}
 
 x-app-depends: &app-depends
   postgres:
