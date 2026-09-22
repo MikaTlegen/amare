@@ -12,6 +12,7 @@ import { FaqPage } from '@/components/pages/FaqPage'
 import { HomePage } from '@/components/pages/HomePage'
 import { IntakeFormPage } from '@/components/pages/IntakeFormPage'
 import { KnowledgePage } from '@/components/pages/KnowledgePage'
+import { PrivacyPage } from '@/components/pages/PrivacyPage'
 import { RemotePage } from '@/components/pages/RemotePage'
 import { ResultsPage } from '@/components/pages/ResultsPage'
 import { ReviewsPage } from '@/components/pages/ReviewsPage'
@@ -51,13 +52,13 @@ export const PAGES: Record<string, PageEntry> = {
   [ROUTES.reviews]: { render: (locale) => <ReviewsPage locale={locale} /> },
   [ROUTES.contacts]: { render: (locale) => <ContactsPage locale={locale} /> },
   [ROUTES.results]: { render: (locale) => <ResultsPage locale={locale} /> },
+  [ROUTES.privacy]: { render: (locale) => <PrivacyPage locale={locale} /> },
 
   // Страницы-заглушки: содержимого ещё нет, но ссылка не должна быть битой
   [ROUTES.relatives]: { render: () => <StubPage /> },
   [ROUTES.about]: { render: () => <StubPage /> },
   [ROUTES.jobs]: { render: () => <StubPage /> },
   [ROUTES.offer]: { render: () => <StubPage /> },
-  [ROUTES.privacy]: { render: () => <StubPage /> },
   [ROUTES.license]: { render: () => <StubPage /> },
 }
 

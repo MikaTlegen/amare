@@ -44,7 +44,7 @@ export function KnowledgePage({ locale }: { locale: Locale }) {
           return (
           <div key={section.id} id={section.id} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <h2 className="m-0 font-display text-3xl font-medium tracking-[-0.045em]">
+              <h2 className="m-0 font-display text-3xl font-medium tracking-[-0.02em]">
                 {text(`section.${section.id}.title`)}
               </h2>
               <p className="m-0 text-lg leading-relaxed text-muted">{text(`section.${section.id}.note`)}</p>
@@ -117,7 +117,7 @@ export function KnowledgePage({ locale }: { locale: Locale }) {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl bg-deep p-8 text-white sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
               {t('emergency.title', { phone: EMERGENCY_PHONE })}
             </h2>
             <p className="m-0 text-base leading-relaxed text-white/75">

@@ -21,7 +21,8 @@ const TRANSLATED = [
   'layout/SiteLogo.tsx',
   'layout/CabinetLink.tsx',
   'layout/SiteShell.tsx',
-  'MobileActionBar.tsx',
+  'layout/MobileMenu.tsx',
+  'BottomNav.tsx',
   'ContactFab.tsx',
   'CookieBanner.tsx',
 ]

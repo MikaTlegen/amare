@@ -30,6 +30,8 @@ const COMPLETE: readonly Namespace[] = [
   "meta",
   "nav",
   "pages",
+  // privacy в список не входит намеренно: тело политики на казахском
+  // откатывается на русский, пока перевод не вычитает юрист (kk/privacy.ts)
   "prices",
   "progress",
   "quiz",

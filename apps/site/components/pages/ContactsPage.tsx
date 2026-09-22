@@ -27,7 +27,7 @@ export function ContactsPage({ locale }: { locale: Locale }) {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <Phone className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
-            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
               {t('phones.title')}
             </h2>
             {CLINIC.phones.map((phone) => (
@@ -50,7 +50,7 @@ export function ContactsPage({ locale }: { locale: Locale }) {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <Clock className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
-            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
               {t('hours.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed">{t('hours')}</p>
@@ -63,7 +63,7 @@ export function ContactsPage({ locale }: { locale: Locale }) {
             <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tint">
               <MapPin className="h-6 w-6 text-deep" aria-hidden="true" />
             </span>
-            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+            <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
               {t('address.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed">{t('addressFull')}</p>

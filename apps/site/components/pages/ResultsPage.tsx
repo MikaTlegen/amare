@@ -38,7 +38,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
             >
               <div className="flex flex-col gap-4 lg:col-span-5">
                 <div className="flex flex-col gap-1">
-                  <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
+                  <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
                     {t('heading', { name, age: story.age })}
                   </h2>
                   <p className="m-0 text-base text-muted">{text(`${story.id}.diagnosis`)}</p>
@@ -46,7 +46,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
 
                 <dl className="m-0 flex flex-col gap-3">
                   <div className="rounded-2xl bg-bg px-5 py-4">
-                    <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-muted">
+                    <dt className="text-sm font-semibold text-muted">
                       {t('beforeLabel')}
                     </dt>
                     <dd className="m-0 mt-1 text-base leading-relaxed">
@@ -54,7 +54,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
                     </dd>
                   </div>
                   <div className="rounded-2xl bg-tint px-5 py-4">
-                    <dt className="text-sm font-semibold uppercase tracking-[0.08em] text-brand">
+                    <dt className="text-sm font-semibold text-brand">
                       {t('afterLabel')}
                     </dt>
                     <dd className="m-0 mt-1 text-base leading-relaxed">
@@ -105,7 +105,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">{t('cta.title')}</h2>
+            <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">{t('cta.title')}</h2>
             <p className="text-base text-ink/75">
               {t('cta.note', { hours: contacts('hours'), freeIntro: price('freeIntro') })}
             </p>

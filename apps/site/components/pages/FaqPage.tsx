@@ -85,7 +85,7 @@ export function FaqPage({ locale }: { locale: Locale }) {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">{t('cta.title')}</h2>
+            <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">{t('cta.title')}</h2>
             <p className="text-base text-ink/75">{t('cta.note')}</p>
           </div>
           <div className="flex flex-wrap gap-3">

@@ -17,7 +17,7 @@ export function SectionHeading({ title, aside, note, onDark = false, className }
       <div className="flex max-w-136 flex-col gap-2">
         <h2
           className={cn(
-            'font-display text-2xl font-medium leading-[1.2] tracking-[-0.045em] sm:text-4xl sm:leading-10',
+            'font-display text-2xl font-medium leading-[1.2] tracking-[-0.02em] sm:text-4xl sm:leading-10',
             onDark ? 'text-white' : 'text-ink',
           )}
         >

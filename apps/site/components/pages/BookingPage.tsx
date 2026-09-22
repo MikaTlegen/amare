@@ -35,6 +35,7 @@ const INTL_TAG: Record<Locale, string> = { ru: 'ru-RU', kk: 'kk-KZ' }
 export function BookingPage({ locale }: { locale: Locale }) {
   const t = useT('booking')
   const price = useT('prices')
+  const common = useT('common')
   const doctorText = useContent('doctors')
 
   // Дата выбранного окна: день и месяц берёт Intl, время — из самой строки
@@ -129,7 +130,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
             className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
           >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
-            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
               {t('done.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed text-muted">
@@ -146,7 +147,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
           <form onSubmit={submit} className="grid gap-8 lg:grid-cols-12">
             <div className="flex flex-col gap-7 lg:col-span-7">
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
+                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.02em]">
                   {t('format.legend')}
                 </legend>
                 <div className="grid gap-3 sm:grid-cols-3">
@@ -178,7 +179,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
               </fieldset>
 
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
+                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.02em]">
                   {t('time.legend')}
                 </legend>
 
@@ -220,7 +221,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
             </div>
 
             <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
-              <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+              <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
                 {t('contacts.legend')}
               </h2>
 
@@ -276,8 +277,14 @@ export function BookingPage({ locale }: { locale: Locale }) {
                   required
                   className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
                 />
+                {/* Ссылка на политику обязана стоять рядом с согласием:
+                    иначе человек соглашается на обработку медданных, не имея
+                    под рукой документа, на который соглашается */}
                 <span className="text-base leading-relaxed text-muted">
-                  {t('contacts.consent')}
+                  {t('contacts.consent')}{' '}
+                  <Link href={ROUTES.privacy} className="tap-target font-semibold text-ink">
+                    {common('policy')}
+                  </Link>
                 </span>
               </label>
 

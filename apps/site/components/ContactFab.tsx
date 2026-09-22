@@ -16,12 +16,14 @@ const CHANNELS = [
 /**
  * Плавающая кнопка связи.
  *
- * На мобильных она не нужна: там внизу и так висит панель «Позвонить /
- * Записаться», две плавающие кнопки друг на друге — это мусор.
- * Поэтому hidden до md.
+ * До lg она не нужна: там внизу висит нижняя навигация со вкладками
+ * «Позвонить» и «Меню», и кнопка поверх неё — мусор. Поэтому hidden до lg,
+ * по той же границе, по которой уходит панель.
  *
- * Пульсация — единственная постоянная анимация на сайте, и она отключается
- * при prefers-reduced-motion вместе с раскрытием меню.
+ * Пульсации и красного ореола больше нет: постоянно мигающее красное пятно
+ * на каждой странице — самый громкий элемент интерфейса, а клиника
+ * нейрореабилитации не должна дёргать человека. Красный остался там, где
+ * он значит действие: на кнопке «Записаться».
  *
  * Раскрытие — на Radix Popover, как шапка и виджет доступности. Раньше меню
  * было самодельным: aria-expanded стоял, но Escape не закрывал, фокус не
@@ -39,19 +41,13 @@ export function ContactFab() {
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
-      <div className="fixed bottom-10 right-10 z-40 hidden md:block">
+      <div className="fixed bottom-10 right-10 z-40 hidden lg:block">
         <Popover.Trigger asChild>
           <button
             type="button"
             aria-label={t(open ? 'contact.close' : 'contact.open')}
-            className="halo-accent relative flex h-16 w-16 items-center justify-center rounded-full bg-accent text-accent-ink transition-transform hover:scale-105"
+            className="relative flex h-16 w-16 items-center justify-center rounded-full bg-deep text-white shadow-lg transition-transform hover:scale-105"
           >
-            {!open && !reduced && (
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 animate-pulse-ring rounded-full bg-accent"
-              />
-            )}
             <span className="relative">
               {open ? (
                 <X className="h-7 w-7" aria-hidden="true" />

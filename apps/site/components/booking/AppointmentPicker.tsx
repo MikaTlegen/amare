@@ -114,7 +114,7 @@ export function AppointmentPicker({ slots, selectedId, onSelect, locale }: Props
         {activeDay ? (
           <>
             <div className="flex flex-col">
-              <span className="font-display text-lg font-medium tracking-[-0.03em]">
+              <span className="font-display text-lg font-medium tracking-[-0.02em]">
                 {monthDay.format(activeDay)}
               </span>
               <span className="text-base text-muted">{weekday.format(activeDay)}</span>

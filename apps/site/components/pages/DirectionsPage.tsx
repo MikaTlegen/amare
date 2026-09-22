@@ -67,7 +67,7 @@ export function DirectionsPage({ locale }: { locale: Locale }) {
                   {text(`${direction.id}.method`)}
                 </span>
 
-                <h2 className="font-display text-2xl font-medium tracking-[-0.04em] sm:text-3xl leading-8">
+                <h2 className="font-display text-2xl font-medium tracking-[-0.02em] sm:text-3xl leading-8">
                   {text(`${direction.id}.title`)}
                 </h2>
 
@@ -93,7 +93,7 @@ export function DirectionsPage({ locale }: { locale: Locale }) {
         инсульт» и не знал, что делать дальше. Теперь следующий шаг очевиден.
       */}
       <section className="container-content flex flex-col gap-5 pb-14">
-        <h2 className="font-display text-3xl font-medium tracking-[-0.045em]">
+        <h2 className="font-display text-3xl font-medium tracking-[-0.02em]">
           {t('conditions.title')}
         </h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
@@ -125,7 +125,7 @@ export function DirectionsPage({ locale }: { locale: Locale }) {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">
               {t('cta.title')}
             </h2>
             <p className="text-base text-ink/75">{t('cta.note')}</p>

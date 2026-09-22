@@ -14,6 +14,7 @@ import { legal } from "./legal";
 import { meta } from "./meta";
 import { nav } from "./nav";
 import { prices } from "./prices";
+import { privacy } from "./privacy";
 import { progress } from "./progress";
 import { quiz } from "./quiz";
 import { remote } from "./remote";
@@ -45,6 +46,7 @@ export const ru = {
   nav,
   pages,
   prices,
+  privacy,
   progress,
   quiz,
   remote,

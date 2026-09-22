@@ -30,7 +30,7 @@ export function ClinicMap({ className }: { className?: string }) {
         </span>
 
         <div className="flex flex-col gap-2">
-          <h3 className="m-0 font-display text-xl font-medium leading-snug tracking-[-0.035em]">
+          <h3 className="m-0 font-display text-xl font-medium leading-snug tracking-[-0.02em]">
             {CLINIC.name}
           </h3>
           <p className="m-0 text-base leading-relaxed text-muted">{t('addressFull')}</p>

@@ -82,8 +82,8 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
               {doctor.photo ? <img src={doctor.photo} alt={t('card.photoAlt', { role, name })} className='aspect-4/5 h-full w-full object-cover object-top' /> : null}
             </div>
             <div className='min-w-0 lg:col-span-7 lg:col-start-6'>
-              <p className='text-sm font-semibold uppercase tracking-[0.08em] text-brand'>{role}</p>
-              <h1 className='mt-3 max-w-[14ch] font-display text-3xl font-semibold leading-tight tracking-[-0.05em] text-ink sm:text-6xl'>{name}</h1>
+              <p className='text-sm font-semibold text-brand'>{role}</p>
+              <h1 className='mt-3 max-w-[14ch] font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-6xl'>{name}</h1>
               <p className='mt-5 text-lg leading-relaxed text-muted'>{text(`${doctor.id}.about`)}</p>
               <div className='mt-7 flex flex-wrap gap-3'>
                 <span className='bg-bg px-4 py-2 text-sm font-semibold text-ink'>{text(`${doctor.id}.experience`)}</span>
@@ -100,7 +100,7 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
       */}
       <section className='mx-auto grid max-w-content gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
         <div className='min-w-0 lg:col-span-5'>
-          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.045em] text-ink sm:text-3xl'>
+          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-ink sm:text-3xl'>
             {t('profile.conditions')}
           </h2>
           <ul className='mt-6 flex list-none flex-col p-0'>
@@ -113,7 +113,7 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
         </div>
 
         <div className='min-w-0 lg:col-span-6 lg:col-start-7'>
-          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.045em] text-ink sm:text-3xl'>
+          <h2 className='font-display text-2xl font-semibold leading-[1.2] tracking-[-0.02em] text-ink sm:text-3xl'>
             {t('profile.certificates')}
           </h2>
           {doctor.certificates.length > 0 ? (
@@ -147,8 +147,8 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
 
       <section className='mx-auto grid max-w-content gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
         <div className='min-w-0 lg:col-span-5'>
-          <p className='text-sm font-semibold uppercase tracking-[0.08em] text-brand'>{t('profile.bookingLabel')}</p>
-          <h2 className='mt-4 font-display text-3xl font-semibold tracking-[-0.045em] text-ink sm:text-4xl'>{t('profile.bookingTitle')}</h2>
+          <p className='text-sm font-semibold text-brand'>{t('profile.bookingLabel')}</p>
+          <h2 className='mt-4 font-display text-3xl font-semibold tracking-[-0.02em] text-ink sm:text-4xl'>{t('profile.bookingTitle')}</h2>
           <p className='mt-5 text-base leading-relaxed text-muted'>{t('profile.bookingNote')}</p>
           {closestSlot ? <p className='mt-6 inline-flex items-center gap-2 bg-tint px-4 py-3 text-sm font-semibold text-deep'><Clock3 className='h-4 w-4' aria-hidden='true' />{t('profile.closest', { slot: `${dayFormat.format(slotDate(closestSlot.at))} ${closestSlot.at.slice(11, 16)}` })}</p> : null}
         </div>
