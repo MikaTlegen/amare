@@ -9,6 +9,8 @@ export const home = {
   "hero.videoPause": "Остановить видео",
   "hero.videoPlay": "Запустить видео",
 
+  marquee: ["Нейрореабилитация", "Индивидуальный план", "Команда специалистов", "Астана"],
+
   "facts.label": "Коротко о клинике",
   "facts.rating.value": "{value} на {source}",
   "facts.rating.note.one": "{count} оценка",

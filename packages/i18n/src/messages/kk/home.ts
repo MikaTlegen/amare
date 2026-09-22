@@ -11,6 +11,8 @@ export const home: Translation<"home"> = {
   "hero.videoPause": "Бейнені тоқтату",
   "hero.videoPlay": "Бейнені қосу",
 
+  marquee: ["Нейрооңалту", "Жеке жоспар", "Мамандар командасы", "Астана"],
+
   "facts.label": "Клиника туралы қысқаша",
   "facts.rating.value": "{source} ішінде {value}",
   // В казахском существительное после числа не меняет форму

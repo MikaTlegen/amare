@@ -8,7 +8,7 @@ import { Reveal } from '@amare/ui'
 import { COURSE_STEPS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
 import { DOCTORS } from '@/data/doctors'
-import { useContent, usePlural, useT } from '@amare/i18n/react'
+import { useContent, useContentList, usePlural, useT } from '@amare/i18n/react'
 import { DoctorsCarousel } from '@/components/home/DoctorsCarousel'
 import { TwoDoors } from '@/components/home/TwoDoors'
 import { Quiz } from '@/components/home/Quiz'
@@ -29,6 +29,7 @@ export function HomePage() {
   return (
     <>
       <Hero />
+      <Marquee />
       <Facts />
       <EntryPoints />
       <Directions />
@@ -153,6 +154,40 @@ function Hero() {
         </motion.p>
       </div>
     </section>
+  )
+}
+
+/*
+ * Строка тегов под первым экраном.
+ *
+ * Громкой её делали не движение само по себе, а всё разом: красная плашка
+ * во всю ширину, капслок с разрядкой и «✦» между словами — так набирают
+ * рекламу, а не клинику. Осталась светлая плашка, обычный регистр, точка
+ * вместо звезды и вдвое более медленный ход.
+ *
+ * При prefers-reduced-motion движение не запускается вовсе.
+ */
+function Marquee() {
+  const list = useContentList('home')
+  const reduced = useReducedMotion()
+  const marquee = list('marquee')
+  const items = [...marquee, ...marquee, ...marquee]
+
+  return (
+    <div className='overflow-hidden border-y border-line bg-tint py-3.5 text-deep'>
+      <motion.div
+        className='flex w-max items-center gap-6 whitespace-nowrap text-sm font-medium'
+        animate={reduced ? undefined : { x: ['0%', '-33.333%'] }}
+        transition={reduced ? undefined : { duration: 56, ease: 'linear', repeat: Infinity }}
+      >
+        {items.map((item, index) => (
+          <span key={`${item}-${index}`} className='flex items-center gap-6'>
+            {item}
+            <span aria-hidden='true' className='text-brand'>·</span>
+          </span>
+        ))}
+      </motion.div>
+    </div>
   )
 }
 
