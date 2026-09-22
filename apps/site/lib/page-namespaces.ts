@@ -31,7 +31,7 @@ export const PAGE_NAMESPACES: Record<string, readonly Namespace[]> = {
   [ROUTES.about]: ['legal', 'meta', 'contacts'],
   [ROUTES.jobs]: ['legal', 'meta', 'contacts'],
   [ROUTES.offer]: ['legal', 'meta', 'contacts'],
-  [ROUTES.privacy]: ['legal', 'meta', 'contacts'],
+  [ROUTES.privacy]: ['privacy', 'contacts', 'nav'],
   [ROUTES.license]: ['legal', 'meta', 'contacts'],
 }
 

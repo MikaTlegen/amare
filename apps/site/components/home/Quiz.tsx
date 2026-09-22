@@ -4,8 +4,8 @@ import { useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Phone, Info, CheckCircle2, ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/Links'
-import { CLINIC } from '@/lib/clinic'
+import { Button, Link } from '@/components/Links'
+import { CLINIC, ROUTES } from '@/lib/clinic'
 import { readUtm, submitLead, type LeadPayload } from '@/lib/crm'
 import { cn } from '@amare/ui'
 import { useContent, useT } from '@amare/i18n/react'
@@ -241,8 +241,14 @@ export function Quiz() {
                       className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
                       required
                     />
+                    {/* Ссылка на политику обязана стоять рядом с согласием:
+                        иначе человек соглашается на обработку медданных, не
+                        имея под рукой документа, на который соглашается */}
                     <span className="text-base leading-relaxed text-muted">
-                      {t('contacts.consent')}
+                      {t('contacts.consent')}{' '}
+                      <Link href={ROUTES.privacy} className="tap-target font-semibold text-ink">
+                        {common('policy')}
+                      </Link>
                     </span>
                   </label>
 

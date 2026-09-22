@@ -24,7 +24,6 @@ const NAMES: Record<string, string> = {
   [ROUTES.about]: 'about',
   [ROUTES.jobs]: 'jobs',
   [ROUTES.offer]: 'offer',
-  [ROUTES.privacy]: 'privacy',
   [ROUTES.license]: 'license',
 }
 

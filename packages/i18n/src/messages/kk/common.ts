@@ -16,6 +16,8 @@ export const common: Translation<"common"> = {
   "contact.whatsapp": "WhatsApp",
   "contact.instagram": "Instagram",
 
+  policy: "Деректерді өңдеу саясаты",
+
   "cookie.region": "Cookie файлдарын пайдалануға келісім",
   "cookie.text":
     "Сайт cookie файлдарын пайдаланады. 2GIS картасы бөгде серверден жүктеледі және өз cookie файлдарын қояды.",

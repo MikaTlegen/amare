@@ -35,6 +35,7 @@ const INTL_TAG: Record<Locale, string> = { ru: 'ru-RU', kk: 'kk-KZ' }
 export function BookingPage({ locale }: { locale: Locale }) {
   const t = useT('booking')
   const price = useT('prices')
+  const common = useT('common')
   const doctorText = useContent('doctors')
 
   // Дата выбранного окна: день и месяц берёт Intl, время — из самой строки
@@ -276,8 +277,14 @@ export function BookingPage({ locale }: { locale: Locale }) {
                   required
                   className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
                 />
+                {/* Ссылка на политику обязана стоять рядом с согласием:
+                    иначе человек соглашается на обработку медданных, не имея
+                    под рукой документа, на который соглашается */}
                 <span className="text-base leading-relaxed text-muted">
-                  {t('contacts.consent')}
+                  {t('contacts.consent')}{' '}
+                  <Link href={ROUTES.privacy} className="tap-target font-semibold text-ink">
+                    {common('policy')}
+                  </Link>
                 </span>
               </label>
 

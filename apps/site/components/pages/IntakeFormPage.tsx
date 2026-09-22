@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { CheckCircle2, Upload } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
-import { Button } from '@/components/Links'
+import { Button, Link } from '@/components/Links'
 import { submitLead, readUtm, type LeadPayload } from '@/lib/crm'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
@@ -201,8 +201,14 @@ export function IntakeFormPage() {
                 required
                 className="mt-1 h-5 w-5 shrink-0 accent-[rgb(var(--c-accent))]"
               />
+              {/* Ссылка на политику обязана стоять рядом с согласием:
+                  иначе человек соглашается на обработку медданных, не имея
+                  под рукой документа, на который соглашается */}
               <span className="text-base leading-relaxed text-muted">
-                {t('contacts.consent')}
+                {t('contacts.consent')}{' '}
+                <Link href={ROUTES.privacy} className="tap-target font-semibold text-ink">
+                  {common('policy')}
+                </Link>
               </span>
             </label>
 
