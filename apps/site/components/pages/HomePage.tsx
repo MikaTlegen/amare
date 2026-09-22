@@ -162,28 +162,36 @@ function Hero() {
  *
  * Громкой её делали не движение само по себе, а всё разом: красная плашка
  * во всю ширину, капслок с разрядкой и «✦» между словами — так набирают
- * рекламу, а не клинику. Осталась светлая плашка, обычный регистр, точка
+ * рекламу, а не клинику. Осталась светлая плашка, обычный регистр, кружок
  * вместо звезды и вдвое более медленный ход.
  *
- * При prefers-reduced-motion движение не запускается вовсе.
+ * К общим тегам добавлены заголовки направлений — из того же словаря, что и
+ * сам раздел, расходиться им нельзя. Дело не только в смысле: четырёх тегов
+ * не хватало по ширине. Один цикл занимал 801 px, и на мониторе 1600 px в
+ * кадр попадали два одинаковых повтора подряд — строка выглядела пустой.
+ * Девять тегов дают цикл шире любого экрана.
+ *
+ * Копии две, поэтому и сдвиг на 50%: лента бесшовна, пока одна копия шире
+ * окна. При prefers-reduced-motion движение не запускается вовсе.
  */
 function Marquee() {
   const list = useContentList('home')
+  const text = useContent('directions')
   const reduced = useReducedMotion()
-  const marquee = list('marquee')
-  const items = [...marquee, ...marquee, ...marquee]
+  const tags = [...list('marquee'), ...DIRECTIONS.map((direction) => text(`${direction.id}.title`))]
+  const items = [...tags, ...tags]
 
   return (
-    <div className='overflow-hidden border-y border-line bg-tint py-3.5 text-deep'>
+    <div className='overflow-hidden border-y border-line bg-tint py-4 text-deep'>
       <motion.div
-        className='flex w-max items-center gap-6 whitespace-nowrap text-sm font-medium'
-        animate={reduced ? undefined : { x: ['0%', '-33.333%'] }}
-        transition={reduced ? undefined : { duration: 56, ease: 'linear', repeat: Infinity }}
+        className='flex w-max items-center gap-6 whitespace-nowrap text-sm font-medium sm:text-base lg:gap-10 lg:text-lg'
+        animate={reduced ? undefined : { x: ['0%', '-50%'] }}
+        transition={reduced ? undefined : { duration: 90, ease: 'linear', repeat: Infinity }}
       >
         {items.map((item, index) => (
-          <span key={`${item}-${index}`} className='flex items-center gap-6'>
+          <span key={`${item}-${index}`} className='flex items-center gap-6 lg:gap-10'>
             {item}
-            <span aria-hidden='true' className='text-brand'>·</span>
+            <span aria-hidden='true' className='h-1.5 w-1.5 shrink-0 rounded-full bg-brand/45' />
           </span>
         ))}
       </motion.div>
