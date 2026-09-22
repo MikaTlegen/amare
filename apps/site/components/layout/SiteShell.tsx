@@ -2,11 +2,11 @@ import type { ReactNode } from 'react'
 import { getT, pickMessages, type Locale } from '@amare/i18n'
 import { I18nProvider } from '@amare/i18n/react'
 import { SpinningFavicon } from '@amare/ui'
+import { BottomNav } from '@/components/BottomNav'
 import { ContactFab } from '@/components/ContactFab'
 import { CookieBanner } from '@/components/CookieBanner'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
-import { MobileActionBar } from '@/components/MobileActionBar'
 import { CLINIC } from '@/lib/clinic'
 import { absoluteUrl } from '@/lib/seo'
 import { inter, manrope } from '@/app/fonts'
@@ -89,12 +89,11 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
 
           <Footer locale={locale} />
 
-          {/* Место под липкую панель действий держит она сама: рисует в потоке
-              невидимую копию своей строки. Раньше здесь стояла распорка с
-              фиксированной высотой, и на крупном кегле, когда кнопки
-              переносятся на второй ряд, панель накрывала юрблок подвала. */}
+          {/* Место под нижнюю навигацию держит она сама: рисует в потоке
+              распорку своей высоты. Иначе панель накрывает юрблок подвала
+              с лицензией и политикой обработки данных. */}
           <ContactFab />
-          <MobileActionBar locale={locale} />
+          <BottomNav />
           <CookieBanner />
         </I18nProvider>
       </body>

@@ -23,10 +23,10 @@ export function TwoDoors() {
         className="flex flex-col items-start gap-4 rounded-3xl border border-line bg-surface p-7 sm:flex-row sm:items-center sm:gap-6"
       >
         <div className="flex flex-1 flex-col gap-2">
-          <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+          <span className="text-sm font-semibold text-brand">
             {t('doors.newLabel')}
           </span>
-          <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em]">
+          <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.02em]">
             {t('doors.newTitle')}
           </h2>
         </div>
@@ -41,10 +41,10 @@ export function TwoDoors() {
         className="flex flex-col items-start gap-4 rounded-3xl border border-tint bg-tint p-7 sm:flex-row sm:items-center sm:gap-6"
       >
         <div className="flex flex-1 flex-col gap-2">
-          <span className="text-sm font-semibold uppercase tracking-widest text-deep">
+          <span className="text-sm font-semibold text-deep">
             {t('doors.currentLabel')}
           </span>
-          <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em]">
+          <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.02em]">
             {t('doors.currentTitle')}
           </h2>
         </div>

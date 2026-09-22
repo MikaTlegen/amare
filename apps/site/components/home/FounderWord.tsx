@@ -33,7 +33,7 @@ export function FounderWord() {
               aria-hidden="true"
               className="mx-auto flex aspect-square w-full max-w-sm items-center justify-center rounded-3xl bg-tint"
             >
-              <span className="font-display text-6xl font-semibold tracking-[-0.05em] text-deep">
+              <span className="font-display text-6xl font-semibold tracking-[-0.02em] text-deep">
                 {FOUNDER.initials}
               </span>
             </div>
@@ -43,7 +43,7 @@ export function FounderWord() {
         <div className="flex flex-col gap-5 lg:col-span-7 lg:col-start-6">
           <Quote className="h-8 w-8 text-brand" aria-hidden="true" />
 
-          <p className="m-0 font-display text-2xl font-medium leading-[1.3] tracking-[-0.035em] text-ink sm:text-3xl">
+          <p className="m-0 font-display text-2xl font-medium leading-[1.3] tracking-[-0.02em] text-ink sm:text-3xl">
             {t('founder.quote')}
           </p>
 

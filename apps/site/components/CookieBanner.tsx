@@ -20,6 +20,12 @@ const STORAGE_KEY = 'amare:cookie-choice'
  *
  * TODO: связать выбор с загрузкой аналитики — пока подключать нечего,
  * поэтому решение только сохраняется.
+ *
+ * Габарит: карточка, а не полоса во всю ширину. Полоса с отступом под панель
+ * действий закрывала на телефоне половину первого экрана — заголовок и кнопка
+ * оказывались под ней. Ниже lg карточка стоит над нижней навигацией (отступ
+ * снизу больше её высоты — сторожит mobile-layout.test.ts), с lg — в левом
+ * нижнем углу: справа там висит круглая кнопка связи, и карточка её накрывала.
  */
 export function CookieBanner() {
   const t = useT('common')
@@ -49,34 +55,34 @@ export function CookieBanner() {
     <div
       role="region"
       aria-label={t('cookie.region')}
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-surface px-4 pt-4 pb-[calc(6rem_+_env(safe-area-inset-bottom))] shadow-2xl sm:px-8 md:pb-4"
+      className="fixed left-4 right-4 bottom-[calc(5rem_+_env(safe-area-inset-bottom))] z-50 rounded-2xl border border-line bg-surface p-4 shadow-xl lg:right-auto lg:bottom-6 lg:left-6 lg:max-w-sm"
     >
-      <div className="mx-auto flex max-w-content flex-col gap-4 lg:flex-row lg:items-center">
-        <Cookie className="h-6 w-6 shrink-0 text-brand" aria-hidden="true" />
+      <div className="flex gap-3">
+        <Cookie className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
 
-        <p className="m-0 flex-1 text-base leading-relaxed">
+        <p className="m-0 text-sm leading-snug text-muted">
           {t('cookie.text')}{' '}
-          <Link href={ROUTES.privacy} className="tap-target font-semibold">
+          <Link href={ROUTES.privacy} className="tap-target font-semibold text-ink">
             {t('cookie.policy')}
           </Link>
         </p>
+      </div>
 
-        <div className="flex flex-wrap gap-2.5">
-          <button
-            type="button"
-            onClick={() => decide('necessary')}
-            className="min-h-12 rounded-xl border-[1.5px] border-line-strong px-5 py-3 text-base font-semibold"
-          >
-            {t('cookie.necessary')}
-          </button>
-          <button
-            type="button"
-            onClick={() => decide('all')}
-            className="min-h-12 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white"
-          >
-            {t('cookie.acceptAll')}
-          </button>
-        </div>
+      <div className="mt-3 flex gap-2">
+        <button
+          type="button"
+          onClick={() => decide('necessary')}
+          className="min-h-11 flex-1 rounded-xl border-[1.5px] border-line-strong px-3 text-sm font-semibold"
+        >
+          {t('cookie.necessary')}
+        </button>
+        <button
+          type="button"
+          onClick={() => decide('all')}
+          className="min-h-11 flex-1 rounded-xl bg-deep px-3 text-sm font-semibold text-white"
+        >
+          {t('cookie.acceptAll')}
+        </button>
       </div>
     </div>
   )

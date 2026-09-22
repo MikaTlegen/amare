@@ -9,6 +9,7 @@ export const nav = {
 
   mainLabel: "Основная навигация",
   mobileLabel: "Мобильная навигация",
+  bottomLabel: "Нижняя навигация",
   menuTitle: "Меню",
   menuOpen: "Открыть меню",
   menuClose: "Закрыть меню",

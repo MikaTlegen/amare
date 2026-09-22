@@ -49,7 +49,7 @@ export function StubPage() {
           <Construction className="h-6 w-6 text-deep" aria-hidden="true" />
         </span>
 
-        <h1 className="m-0 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
+        <h1 className="m-0 font-display text-3xl font-medium tracking-[-0.02em] sm:text-4xl">
           {title}
         </h1>
 

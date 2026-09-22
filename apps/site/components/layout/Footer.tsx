@@ -108,7 +108,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
           {COLUMNS.map((column) => (
             <nav key={column.title} className="flex flex-col gap-2.5 lg:col-span-2">
-              <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">{t(column.title)}</h3>
+              <h3 className="text-sm text-white/50">{t(column.title)}</h3>
               {column.links.map((link) => (
                 <Link
                   key={link.key}
@@ -122,7 +122,7 @@ export function Footer({ locale }: { locale: Locale }) {
           ))}
 
           <nav className="flex flex-col gap-2.5 lg:col-span-2">
-            <h3 className="text-sm uppercase tracking-[0.08em] text-white/50">{t('column.cabinets')}</h3>
+            <h3 className="text-sm text-white/50">{t('column.cabinets')}</h3>
             {CABINET_LINKS.map((link) => (
               <a
                 key={link.key}

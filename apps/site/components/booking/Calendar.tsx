@@ -31,7 +31,7 @@ export function Calendar({
     months: 'relative flex flex-col gap-4',
     month: 'w-full',
     month_caption: 'relative mx-11 mb-2 flex h-11 items-center justify-center',
-    caption_label: 'truncate font-display text-lg font-medium tracking-[-0.03em] capitalize',
+    caption_label: 'truncate font-display text-lg font-medium tracking-[-0.02em] capitalize',
     nav: 'absolute top-0 flex w-full justify-between',
     button_previous:
       'inline-flex size-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-tint hover:text-ink disabled:opacity-35',

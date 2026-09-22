@@ -8,7 +8,7 @@ import { Reveal } from '@amare/ui'
 import { COURSE_STEPS } from '@/data/course'
 import { DIRECTIONS } from '@/data/directions'
 import { DOCTORS } from '@/data/doctors'
-import { useContent, useContentList, usePlural, useT } from '@amare/i18n/react'
+import { useContent, usePlural, useT } from '@amare/i18n/react'
 import { DoctorsCarousel } from '@/components/home/DoctorsCarousel'
 import { TwoDoors } from '@/components/home/TwoDoors'
 import { Quiz } from '@/components/home/Quiz'
@@ -29,7 +29,6 @@ export function HomePage() {
   return (
     <>
       <Hero />
-      <Marquee />
       <Facts />
       <EntryPoints />
       <Directions />
@@ -120,17 +119,17 @@ function Hero() {
         <motion.div
           initial={reduced ? false : 'hidden'}
           animate='visible'
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.13 } } }}
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
           className='min-w-0 lg:col-span-8'
         >
-          <motion.p variants={fadeUp} className='m-0 text-sm font-medium uppercase tracking-[0.1em] text-white/65'>
+          <motion.p variants={fadeUp} className='m-0 text-sm font-medium text-white/65'>
             {t('hero.label')}
           </motion.p>
           {/* clamp вместо ступеней text-2xl → sm:text-6xl: в диапазоне
               375–639 px заголовок застревал на 27 px, то есть на самом частом
               размере экрана крупной типографики не было вовсе, а на границе
               брейкпойнта кегль прыгал вдвое. */}
-          <motion.h1 variants={fadeUp} className='mt-5 max-w-none font-display sm:max-w-[11em] text-[clamp(1.75rem,min(7vw,8vh),4.5rem)] font-semibold leading-[1.08] tracking-[-0.055em]'>
+          <motion.h1 variants={fadeUp} className='mt-5 max-w-none font-display sm:max-w-[11em] text-[clamp(1.75rem,min(6vw,7vh),3.25rem)] font-semibold leading-[1.08] tracking-[-0.02em]'>
             {t('hero.title')}
           </motion.h1>
           <motion.p variants={fadeUp} className='mt-7 max-w-[34em] text-lg leading-relaxed text-white/80'>
@@ -147,37 +146,13 @@ function Hero() {
         <motion.p
           initial={reduced ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: reduced ? 0 : 0.7, duration: 0.5 }}
+          transition={{ delay: reduced ? 0 : 0.3, duration: 0.45 }}
           className='hidden border-l border-white/45 pl-6 text-sm leading-relaxed text-white lg:col-span-3 lg:block'
         >
           {t('hero.aside')}
         </motion.p>
       </div>
     </section>
-  )
-}
-
-function Marquee() {
-  const list = useContentList('home')
-  const reduced = useReducedMotion()
-  const marquee = list('marquee')
-  const items = [...marquee, ...marquee, ...marquee]
-
-  return (
-    <div className='overflow-hidden bg-accent py-4 text-accent-ink'>
-      <motion.div
-        className='flex w-max items-center gap-8 whitespace-nowrap text-sm font-semibold uppercase tracking-[0.09em]'
-        animate={reduced ? undefined : { x: ['0%', '-33.333%'] }}
-        transition={reduced ? undefined : { duration: 28, ease: 'linear', repeat: Infinity }}
-      >
-        {items.map((item, index) => (
-          <span key={`${item}-${index}`} className='flex items-center gap-8'>
-            {item}
-            <span aria-hidden='true'>✦</span>
-          </span>
-        ))}
-      </motion.div>
-    </div>
   )
 }
 
@@ -205,8 +180,8 @@ function Facts() {
   return (
     <section aria-label={t('facts.label')} className='mx-auto grid max-w-content gap-x-8 gap-y-10 px-4 py-20 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-20'>
       {facts.map((fact, index) => (
-        <Reveal key={fact.value} delay={index * 0.08} className='border-t border-line pt-5'>
-          <p className='m-0 font-display text-3xl font-semibold tracking-[-0.045em] text-ink'>{fact.value}</p>
+        <Reveal key={fact.value} delay={index * 0.04} className='border-t border-line pt-5'>
+          <p className='m-0 font-display text-3xl font-semibold tracking-[-0.02em] text-ink'>{fact.value}</p>
           <p className='mt-2 text-base leading-relaxed text-muted'>{fact.note}</p>
         </Reveal>
       ))}
@@ -232,8 +207,8 @@ function Directions() {
     <section className='bg-deep px-4 py-20 text-white sm:px-8 lg:px-20'>
       <div className='mx-auto grid max-w-content gap-16 lg:grid-cols-12'>
         <Reveal className='lg:col-span-5'>
-          <p className='text-sm font-medium uppercase tracking-[0.08em] text-sky'>{t('directions.label')}</p>
-          <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.045em] sm:text-5xl'>
+          <p className='text-sm font-medium text-sky'>{t('directions.label')}</p>
+          <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.02em] sm:text-5xl'>
             {t('directions.title')}
           </h2>
           <p className='mt-6 max-w-[30em] text-lg leading-relaxed text-white/75'>
@@ -246,7 +221,7 @@ function Directions() {
         </Reveal>
         <div className='lg:col-span-6 lg:col-start-7'>
           {DIRECTIONS.slice(0, 5).map((direction, index) => (
-            <Reveal key={direction.id} delay={index * 0.1} className='border-t border-white/20 py-5'>
+            <Reveal key={direction.id} delay={index * 0.05} className='border-t border-white/20 py-5'>
               <Link href={`${ROUTES.directions}#${direction.id}`} className='tap-target group flex items-baseline justify-between gap-6 text-xl text-white no-underline sm:text-2xl'>
                 <span>{text(`${direction.id}.title`)}</span>
                 <ArrowRight className='h-5 w-5 shrink-0 text-sky transition-transform group-hover:translate-x-1' aria-hidden='true' />
@@ -266,8 +241,8 @@ function Course() {
   return (
     <section className='mx-auto grid max-w-content gap-16 px-4 py-24 sm:px-8 lg:grid-cols-12 lg:px-20'>
       <Reveal className='lg:col-span-5'>
-        <p className='text-sm font-medium uppercase tracking-[0.08em] text-brand'>{t('course.label')}</p>
-        <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.045em] text-ink sm:text-5xl'>
+        <p className='text-sm font-medium text-brand'>{t('course.label')}</p>
+        <h2 className='mt-4 font-display text-2xl font-semibold leading-[1.2] sm:leading-[1.15] tracking-[-0.02em] text-ink sm:text-5xl'>
           {t('course.title')}
         </h2>
         <p className='mt-6 max-w-[28em] text-lg leading-relaxed text-muted'>
@@ -280,7 +255,7 @@ function Course() {
       </Reveal>
       <div className='lg:col-span-6 lg:col-start-7'>
         {COURSE_STEPS.map((step, index) => (
-          <Reveal key={step.n} delay={index * 0.1} className='flex items-baseline gap-6 border-t border-line py-5'>
+          <Reveal key={step.n} delay={index * 0.05} className='flex items-baseline gap-6 border-t border-line py-5'>
             <span className='font-display text-sm text-brand'>{step.n}</span>
             <div>
               <h3 className='m-0 text-xl font-medium text-ink'>{text(`step.${step.n}.title`)}</h3>
@@ -301,8 +276,8 @@ function Team() {
       <div className='mx-auto max-w-content'>
         <Reveal className='flex flex-col justify-between gap-6 sm:flex-row sm:items-end'>
           <div>
-            <p className='text-sm font-medium uppercase tracking-[0.08em] text-deep'>{t('team.label')}</p>
-            <h2 className='mt-4 max-w-[16em] font-display text-3xl font-semibold leading-[1.15] tracking-[-0.045em] text-ink sm:text-5xl'>
+            <p className='text-sm font-medium text-deep'>{t('team.label')}</p>
+            <h2 className='mt-4 max-w-[16em] font-display text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-ink sm:text-5xl'>
               {t('team.title')}
             </h2>
           </div>
@@ -334,8 +309,8 @@ function Contact() {
       <div aria-hidden='true' className='absolute inset-0 -z-10 bg-deep/75' />
       <div className='mx-auto grid max-w-content gap-12 lg:grid-cols-12 lg:items-end'>
         <Reveal className='min-w-0 lg:col-span-8'>
-          <p className='text-sm font-medium uppercase tracking-[0.08em] text-white/60'>{t('contact.label')}</p>
-          <h2 className='mt-4 max-w-[14em] font-display text-2xl font-semibold leading-[1.18] sm:leading-[1.12] tracking-[-0.05em] sm:text-6xl'>
+          <p className='text-sm font-medium text-white/60'>{t('contact.label')}</p>
+          <h2 className='mt-4 max-w-[14em] font-display text-2xl font-semibold leading-[1.18] sm:leading-[1.12] tracking-[-0.02em] sm:text-5xl'>
             {t('contact.title')}
           </h2>
           <p className='mt-7 max-w-[32em] text-lg leading-relaxed text-white/75'>{contacts('addressFull')}</p>
@@ -356,6 +331,6 @@ function Contact() {
 }
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' as const } },
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' as const } },
 }

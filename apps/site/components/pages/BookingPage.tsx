@@ -129,7 +129,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
             className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
           >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
-            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
               {t('done.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed text-muted">
@@ -146,7 +146,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
           <form onSubmit={submit} className="grid gap-8 lg:grid-cols-12">
             <div className="flex flex-col gap-7 lg:col-span-7">
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
+                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.02em]">
                   {t('format.legend')}
                 </legend>
                 <div className="grid gap-3 sm:grid-cols-3">
@@ -178,7 +178,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
               </fieldset>
 
               <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
+                <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.02em]">
                   {t('time.legend')}
                 </legend>
 
@@ -220,7 +220,7 @@ export function BookingPage({ locale }: { locale: Locale }) {
             </div>
 
             <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
-              <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+              <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
                 {t('contacts.legend')}
               </h2>
 

@@ -88,7 +88,7 @@ export function IntakeFormPage() {
             className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
           >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
-            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
               {t('done.title')}
             </h2>
             <p className="m-0 text-lg leading-relaxed text-muted">
@@ -232,7 +232,7 @@ export function IntakeFormPage() {
 function Group({ legend, children }: { legend: string; children: ReactNode }) {
   return (
     <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
-      <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.035em]">
+      <legend className="mb-1 p-0 font-display text-xl font-medium tracking-[-0.02em]">
         {legend}
       </legend>
       {children}

@@ -57,7 +57,7 @@ export function TeamPage() {
 
       {/* Фильтр по состоянию */}
       <section className="container-content flex flex-col gap-4 pt-10">
-        <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
+        <h2 className="m-0 font-display text-xl font-medium tracking-[-0.02em]">
           {t('filter.title')}
         </h2>
         <ul className="flex flex-wrap gap-2.5">
@@ -166,7 +166,7 @@ export function TeamPage() {
       {/* Состав МДГ */}
       <section className="container-content grid items-center gap-8 pb-14 lg:grid-cols-12">
         <div className="flex flex-col gap-4 lg:col-span-7">
-          <h2 className="m-0 font-display text-2xl font-medium leading-[1.16] tracking-[-0.045em] sm:text-3xl sm:leading-9">
+          <h2 className="m-0 font-display text-2xl font-medium leading-[1.16] tracking-[-0.02em] sm:text-3xl sm:leading-9">
             {t('team.title')}
           </h2>
           {/*
@@ -209,7 +209,7 @@ export function TeamPage() {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl bg-deep p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.04em] text-white">
+            <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em] text-white">
               {t('cta.title')}
             </h2>
             <p className="m-0 text-base text-white/70">

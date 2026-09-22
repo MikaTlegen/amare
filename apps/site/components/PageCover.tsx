@@ -46,7 +46,7 @@ export function PageCover({
             <span aria-hidden="true">/</span>
             <span className="text-white">{crumb}</span>
           </nav>
-          <h1 className="max-w-[16em] font-display text-2xl font-semibold leading-[1.18] tracking-[-0.045em] text-white sm:text-5xl sm:leading-none">{title}</h1>
+          <h1 className="max-w-[16em] font-display text-2xl font-semibold leading-[1.18] tracking-[-0.02em] text-white sm:text-5xl sm:leading-none">{title}</h1>
           {note && <p className="max-w-[34em] text-lg leading-relaxed text-white/80">{note}</p>}
         </div>
       </div>

@@ -108,10 +108,10 @@ export function Quiz() {
     <section id="quiz" className="container-content py-16">
       <div className="grid gap-10 rounded-3xl border border-line bg-surface p-7 sm:p-10 lg:grid-cols-12">
         <div className="flex flex-col gap-4 lg:col-span-5">
-          <span className="text-sm font-semibold uppercase tracking-widest text-accent">
+          <span className="text-sm font-semibold text-accent">
             {t('label')}
           </span>
-          <h2 className="font-display text-2xl font-medium leading-[1.24] sm:text-3xl sm:leading-[1.18] tracking-[-0.04em]">
+          <h2 className="font-display text-2xl font-medium leading-[1.24] sm:text-3xl sm:leading-[1.18] tracking-[-0.02em]">
             {t('title')}
           </h2>
           <p className="text-base leading-relaxed text-muted">

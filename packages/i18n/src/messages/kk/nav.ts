@@ -11,6 +11,7 @@ export const nav: Translation<"nav"> = {
 
   mainLabel: "Негізгі навигация",
   mobileLabel: "Мобильді навигация",
+  bottomLabel: "Төменгі навигация",
   menuTitle: "Мәзір",
   menuOpen: "Мәзірді ашу",
   menuClose: "Мәзірді жабу",

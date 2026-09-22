@@ -34,6 +34,26 @@ describe("липкие панели", () => {
   });
 });
 
+describe("карточка куки над нижней навигацией", () => {
+  // Свести эти два числа в одну константу нельзя: Tailwind собирает классы
+  // по тексту исходников и вычисленную строку не увидит. Поэтому их
+  // согласованность сторожит тест.
+  const rem = (name: string, pattern: RegExp) => {
+    const source = sources.find((file) => file.name.endsWith(name));
+    const value = source?.text.match(pattern)?.[1];
+
+    expect(value, `${name}: не найден размер по образцу ${pattern}`).toBeDefined();
+    return Number(value);
+  };
+
+  it("отступ карточки больше высоты панели — иначе карточка ляжет на вкладки", () => {
+    const navHeight = rem("BottomNav.tsx", /h-\[calc\(([\d.]+)rem_\+_env\(safe-area-inset-bottom\)\)\]/);
+    const cardOffset = rem("CookieBanner.tsx", /bottom-\[calc\(([\d.]+)rem_\+_env\(safe-area-inset-bottom\)\)\]/);
+
+    expect(cardOffset).toBeGreaterThan(navHeight);
+  });
+});
+
 describe("боковые отступы", () => {
   // Гаттер страницы один на весь сайт: px-4 sm:px-8 lg:px-20 (как container-content).
   it.each(sources)("$name — не смешивает px-5 с sm:px-8", ({ text }) => {

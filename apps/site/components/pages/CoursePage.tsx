@@ -44,7 +44,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
                   {step.n}
                 </span>
 
-                <h2 className="font-display text-xl font-medium tracking-[-0.04em] text-ink lg:col-span-3">
+                <h2 className="font-display text-xl font-medium tracking-[-0.02em] text-ink lg:col-span-3">
                   {text(`step.${step.n}.title`)}
                 </h2>
 
@@ -54,7 +54,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
 
                 <div className="flex items-center gap-2 lg:col-span-2 lg:justify-end">
                   {step.priceKey ? (
-                    <span className="font-display text-xl font-semibold tracking-[-0.04em] text-ink">
+                    <span className="font-display text-xl font-semibold tracking-[-0.02em] text-ink">
                       {price(step.priceKey)}
                     </span>
                   ) : (
@@ -85,7 +85,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
       </section>
 
       <section className="container-content flex flex-col gap-6 pb-14">
-        <h2 className="font-display text-3xl font-medium tracking-[-0.045em]">
+        <h2 className="font-display text-3xl font-medium tracking-[-0.02em]">
           {t('formats.title')}
         </h2>
 
@@ -100,7 +100,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
             <Reveal as="li" key={format.id} delay={i * 0.05}>
               <article className="flex h-full flex-col gap-2.5 rounded-3xl border border-line bg-surface p-6">
                 <h3 className="text-lg font-semibold">{text(`format.${format.id}.title`)}</h3>
-                <span className="font-display text-2xl font-semibold tracking-[-0.04em]">
+                <span className="font-display text-2xl font-semibold tracking-[-0.02em]">
                   {priceOf(format.priceKey)}
                 </span>
                 <p className="text-base leading-relaxed text-muted">
@@ -135,7 +135,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
           className="rounded-3xl"
         >
           <div className="flex max-w-136 flex-col items-start gap-4 p-8 sm:p-10">
-            <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.04em] text-white sm:text-3xl sm:leading-9">
+            <h2 className="font-display text-2xl font-medium leading-tight tracking-[-0.02em] text-white sm:text-3xl sm:leading-9">
               {t('remote.title')}
             </h2>
             <p className="text-base leading-relaxed text-white/80">{t('remote.note')}</p>
@@ -149,7 +149,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
       <section className="container-content pb-16">
         <div className="flex flex-col items-start gap-5 rounded-3xl border border-tint bg-tint p-8 sm:flex-row sm:items-center sm:gap-8">
           <div className="flex flex-1 flex-col gap-1.5">
-            <h2 className="font-display text-2xl font-medium tracking-[-0.04em]">
+            <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">
               {t('cta.title')}
             </h2>
             <p className="text-base text-ink/75">
