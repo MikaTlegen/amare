@@ -13,7 +13,7 @@ import {
   type CrmService,
   type CrmSlot,
 } from '@/lib/booking-crm'
-import { cn } from '@amare/ui'
+import { cn, formatKzPhone } from '@amare/ui'
 import type { Locale } from '@amare/i18n'
 import { useT } from '@amare/i18n/react'
 
@@ -254,9 +254,10 @@ export function DoctorBooking({
             id="db-phone"
             type="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(formatKzPhone(e.target.value))}
             autoComplete="tel"
             placeholder={t('contacts.phonePlaceholder')}
+            maxLength={18}
             required
             className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-bg px-4 py-3 text-base"
           />

@@ -20,7 +20,7 @@ export const PAGE_NAMESPACES: Record<string, readonly Namespace[]> = {
   [ROUTES.team]: ['doctors', 'prices', 'nav'],
   [ROUTES.login]: ['pages'],
   [ROUTES.booking]: ['booking', 'prices', 'doctors', 'nav'],
-  [ROUTES.form]: ['forms', 'contacts', 'nav'],
+  [ROUTES.form]: ['forms', 'contacts', 'booking', 'nav'],
   [ROUTES.remote]: [],
   [ROUTES.knowledge]: [],
   [ROUTES.faq]: [],

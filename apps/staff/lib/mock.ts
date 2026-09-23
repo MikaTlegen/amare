@@ -60,12 +60,12 @@ export function resetMockState() {
  * Демо-вход специалиста.
  *
  * Роль выбирается кнопкой только в демо. В бою она приходит с сервера:
- * клиент не должен иметь возможности назвать себя админом.
+ * клиент не должен иметь возможности назвать себя модератором.
  *
  * TODO AUTH: заменить на вход по телефону с кодом из SMS, как в care.
  */
 export async function signInAsStaff(role: StaffRole): Promise<User> {
-  const user = role === 'admin' ? DEMO_USERS.admin : role === 'moderator' ? DEMO_USERS.moderator : DEMO_USERS.staff
+  const user = role === 'moderator' ? DEMO_USERS.moderator : DEMO_USERS.staff
   if (!user) throw new Error(`Нет демо-пользователя для роли `)
   return delay(user)
 }

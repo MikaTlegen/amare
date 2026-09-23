@@ -40,7 +40,7 @@ export const quiz = {
   "contacts.title": "Куда отправить предварительный план?",
   "contacts.name": "Как к вам обращаться",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.consent":
     "Согласен на обработку персональных данных, включая сведения о здоровье, и на звонок от клиники.",
   "contacts.sending": "Отправляем…",

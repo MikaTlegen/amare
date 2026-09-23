@@ -49,7 +49,7 @@ export const booking: Translation<"booking"> = {
   "contacts.legend": "3. Сіздің байланыстарыңыз",
   "contacts.name": "Сізге қалай жүгінейік",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.comment": "Дәрігердің білгені маңызды нәрсе",
   "contacts.commentPlaceholder": "Инсульт қашан болды, адам қалай қозғалады",
   "contacts.consent":

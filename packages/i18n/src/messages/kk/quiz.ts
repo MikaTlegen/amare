@@ -40,7 +40,7 @@ export const quiz: Translation<"quiz"> = {
   "contacts.title": "Алдын ала жоспарды қайда жіберейік?",
   "contacts.name": "Сізге қалай жүгінейік",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.consent":
     "Дербес деректерді, оның ішінде денсаулық туралы мәліметтерді өңдеуге және клиниканың қоңырауына келісемін.",
   "contacts.sending": "Жіберілуде…",

@@ -29,8 +29,8 @@ describe('staffLoginUrl', () => {
     expect(staffLoginUrl('curator')).toBe('http://localhost:3003/vhod?role=curator')
   })
 
-  it('знает все три роли сотрудников', () => {
-    expect(STAFF_ROLES).toEqual(['curator', 'moderator', 'admin'])
+  it('знает обе роли сотрудников', () => {
+    expect(STAFF_ROLES).toEqual(['curator', 'moderator'])
     for (const role of STAFF_ROLES) {
       expect(staffLoginUrl(role)).toBe(`http://localhost:3003/vhod?role=${role}`)
     }

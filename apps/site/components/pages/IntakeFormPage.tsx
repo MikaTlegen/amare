@@ -8,7 +8,7 @@ import { BookingWidget } from '@/components/booking/BookingWidget'
 import { Button, Link } from '@/components/Links'
 import { submitLead, readUtm, type LeadPayload } from '@/lib/crm'
 import { CLINIC, ROUTES } from '@/lib/clinic'
-import { cn } from '@amare/ui'
+import { cn, formatKzPhone } from '@amare/ui'
 import { useContent, useLocale, useT } from '@amare/i18n/react'
 
 // Подписи вариантов лежат в словаре forms по ключу `<группа>.<id>`
@@ -192,9 +192,10 @@ export function IntakeFormPage() {
                     id="f-phone"
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(formatKzPhone(e.target.value))}
                     autoComplete="tel"
                     placeholder={t('contacts.phonePlaceholder')}
+                    maxLength={18}
                     required
                     className="min-h-[3.2rem] rounded-xl border-[1.5px] border-line-strong bg-surface px-4 py-3 text-base"
                   />

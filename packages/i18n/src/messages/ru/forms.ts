@@ -42,7 +42,7 @@ export const forms = {
   "contacts.legend": "Контакты",
   "contacts.name": "Как к вам обращаться",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.consent":
     "Согласен на обработку персональных данных, включая сведения о здоровье, и на звонок от клиники. Данные хранятся на территории Республики Казахстан.",
 

@@ -7,7 +7,7 @@ export const ROUTES = {
 } as const
 
 /** Роли сотрудников: их рабочее место живёт в отдельном приложении staff. */
-export const STAFF_ROLES = ['curator', 'moderator', 'admin'] as const
+export const STAFF_ROLES = ['curator', 'moderator'] as const
 
 export type StaffRoleId = (typeof STAFF_ROLES)[number]
 

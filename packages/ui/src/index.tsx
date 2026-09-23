@@ -11,9 +11,11 @@ export { cn } from "./cn";
 export { LanguageSwitch } from "./language-switch";
 export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
 export { ParallaxBand } from "./parallax-band";
+export { formatKzPhone } from "./phone";
 export { Reveal } from "./reveal";
 export { SectionHeading } from "./section-heading";
 export { SpinningFavicon } from "./spinning-favicon";
+export { StatBarChart } from "./stat-bar-chart";
 export {
   COLOR_TOKENS,
   contrastRatio,

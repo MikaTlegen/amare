@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, UserRound, HeartHandshake, Stethoscope, ShieldCheck, LibraryBig } from 'lucide-react'
+import { ArrowLeft, UserRound, HeartHandshake, Stethoscope, ShieldCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useContent, useT } from '@amare/i18n/react'
 import { LanguageSwitch, useSetCabinetLocale } from '@amare/ui'
@@ -14,7 +14,6 @@ import { ROUTES, SITE_URL, safeRedirectPath, staffLoginUrl, type StaffRoleId } f
 const STAFF_DEMO_ROLES: { role: StaffRoleId; Icon: LucideIcon }[] = [
   { role: 'curator', Icon: Stethoscope },
   { role: 'moderator', Icon: ShieldCheck },
-  { role: 'admin', Icon: LibraryBig },
 ]
 
 const DEMO_ROLES: { role: CareRole; Icon: LucideIcon }[] = [

@@ -7,7 +7,7 @@ import { Phone, Info, CheckCircle2, ArrowLeft } from 'lucide-react'
 import { Button, Link } from '@/components/Links'
 import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 import { readUtm, submitLead, type LeadPayload } from '@/lib/crm'
-import { cn } from '@amare/ui'
+import { cn, formatKzPhone } from '@amare/ui'
 import { useContent, useLocale, useT } from '@amare/i18n/react'
 
 type Step = 'when' | 'mobility' | 'contacts' | 'urgent' | 'done'
@@ -225,9 +225,10 @@ export function Quiz() {
                       label={t('contacts.phone')}
                       type="tel"
                       value={phone}
-                      onChange={setPhone}
+                      onChange={(value) => setPhone(formatKzPhone(value))}
                       autoComplete="tel"
                       placeholder={t('contacts.phonePlaceholder')}
+                      maxLength={18}
                       required
                     />
                   </div>
@@ -328,6 +329,7 @@ interface FieldProps {
   placeholder?: string
   autoComplete?: string
   required?: boolean
+  maxLength?: number
 }
 
 function Field({ id, label, value, onChange, type = 'text', ...rest }: FieldProps) {

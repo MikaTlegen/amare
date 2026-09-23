@@ -49,7 +49,6 @@ export function HomePage() {
 
 function Hero() {
   const t = useT('home')
-  const price = useT('prices')
   const reduced = useReducedMotion()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
@@ -141,7 +140,7 @@ function Hero() {
               {t('hero.book')}
               <ArrowDownRight className='h-5 w-5' aria-hidden='true' />
             </Button>
-            <span className='text-sm text-white/65'>{price('freeIntro')}</span>
+            <span className='text-sm text-white/65'>{t('hero.freeIntro')}</span>
           </motion.div>
         </motion.div>
         <motion.p

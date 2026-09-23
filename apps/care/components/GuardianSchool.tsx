@@ -86,17 +86,29 @@ export function GuardianSchool() {
                 <span className="text-base text-muted">{t('school.lessonMinutes', { count: lesson.minutes })}</span>
               </div>
 
-              <button
-                type="button"
-                onClick={() => void mark(lesson.id)}
-                disabled={busy === lesson.id}
-                className={cn(
-                  'min-h-[3.2rem] shrink-0 rounded-xl px-5 py-3 text-base font-semibold disabled:opacity-60',
-                  lesson.done ? 'border-[1.5px] border-line' : 'bg-deep text-white',
+              <div className="flex shrink-0 flex-wrap gap-2">
+                {lesson.videoUrl && (
+                  <a
+                    href={lesson.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-[3.2rem] items-center justify-center rounded-xl border-[1.5px] border-line px-5 py-3 text-base font-semibold no-underline"
+                  >
+                    {t('school.watch')}
+                  </a>
                 )}
-              >
-                {lesson.done ? t('school.passed') : t('school.mark')}
-              </button>
+                <button
+                  type="button"
+                  onClick={() => void mark(lesson.id)}
+                  disabled={busy === lesson.id}
+                  className={cn(
+                    'min-h-[3.2rem] rounded-xl px-5 py-3 text-base font-semibold disabled:opacity-60',
+                    lesson.done ? 'border-[1.5px] border-line' : 'bg-deep text-white',
+                  )}
+                >
+                  {lesson.done ? t('school.passed') : t('school.mark')}
+                </button>
+              </div>
             </li>
           ))}
         </ul>

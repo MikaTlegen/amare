@@ -129,6 +129,7 @@ export const cabinet: Translation<"cabinet"> = {
   "school.title": "Қамқоршы мектебі",
   "school.passed": "Өтілді",
   "school.mark": "Белгілеу",
+  "school.watch": "Бейнені көру",
   "school.lessonMinutes": "{count} мин",
   "school.checklist": "Қауіпсіз пәтер тізімі",
   "school.checklistNote":
@@ -205,12 +206,10 @@ export const cabinet: Translation<"cabinet"> = {
   "login.curatorNote": "Тапсырмалар кезегі, науқастар, дабыл сигналдары, бейнені тексеру",
   "login.moderator": "Модератор ретінде кіру",
   "login.moderatorNote": "Жаттығулар, материалдар, нұсқалар және үлгілерді тексеру",
-  "login.admin": "Әкімші ретінде кіру",
-  "login.adminNote": "Науқастар мен кураторлар, кесте, төлемдер",
 
   "login.future": "Бұл былай жұмыс істейтін болады",
   "login.phone": "Телефон нөмірі",
-  "login.phonePlaceholder": "+7 ___ ___ __ __",
+  "login.phonePlaceholder": "+7 (___) ___-__-__",
   "login.code": "SMS коды",
   "login.getCode": "Код алу",
   "login.futurePatient":

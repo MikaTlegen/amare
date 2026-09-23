@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Stethoscope, ShieldCheck } from 'lucide-react'
 import { useT } from '@amare/i18n/react'
 import { LanguageSwitch, useSetCabinetLocale } from '@amare/ui'
 import type { LucideIcon } from 'lucide-react'
@@ -22,12 +22,6 @@ const DEMO_ROLES: { role: StaffRole; title: string; note: string; Icon: LucideIc
     note: 'Упражнения, материалы, версии и проверка шаблонов',
     Icon: ShieldCheck,
   },
-  {
-    role: 'admin',
-    title: 'Войти как администратор',
-    note: 'Пациенты и кураторы, расписание, оплаты',
-    Icon: LibraryBig,
-  },
 ]
 
 /** Общий вход клиники живёт в care. Адрес публичный, не секрет. */
@@ -40,15 +34,15 @@ const COMMON_LOGIN_URL = `${(process.env.NEXT_PUBLIC_CARE_URL ?? 'http://localho
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001').replace(/\/+$/, '')
 
 function isStaffRole(value: string | null): value is StaffRole {
-  return value === 'curator' || value === 'admin' || value === 'moderator'
+  return value === 'curator' || value === 'moderator'
 }
 
 /**
  * Вход в рабочее место.
  *
- * Три роли, потому что это разные работы: куратор ведёт людей, модератор —
- * содержимое, администратор — расписание и оплаты. Курсы загружает не куратор:
- * иначе шаблон правит тот, кто между делом закрывает двадцать задач.
+ * Две роли, потому что это разные работы: куратор ведёт людей, модератор —
+ * содержимое. Курсы загружает не куратор: иначе шаблон правит тот, кто
+ * между делом закрывает двадцать задач.
  *
  * Общий вход клиники живёт в care и присылает сюда `?role=`: в демо это
  * заменяет общую сессию, которой без бэкенда нет. Значение проверяется по

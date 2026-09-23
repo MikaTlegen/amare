@@ -3,15 +3,12 @@ import type { Translation } from "../../types";
 /** Черновик перевода. Вычитывает клиника — см. docs/DECISIONS.md. */
 export const staff: Translation<"staff"> = {
   "role.curator": "Куратор",
-  "role.admin": "Әкімші",
   "role.moderator": "Контент модераторы",
 
   "title.curator": "Дәрігер-куратордың жұмыс орны",
   "title.moderator": "Курстар мен контентті модерациялау",
-  "title.admin": "Клиниканы операциялық басқару",
   "subtitle.curator": "Ашық тапсырмалар: {tasks} · науқастар: {patients}",
   "subtitle.moderator": "Жаттығулар, материалдар және үлгі нұсқалары",
-  "subtitle.admin": "Науқастар, кураторлар, кесте және төлемдер",
 
   "tab.queue": "Тапсырмалар кезегі",
   "tab.patients": "Менің науқастарым",

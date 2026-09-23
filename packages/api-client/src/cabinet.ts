@@ -13,11 +13,11 @@ export type Role = "patient" | "guardian" | "staff";
  * Роль сотрудника внутри рабочего места.
  *
  * Куратор ведёт пациентов: очередь задач, алерты, видео, разборы.
- * Админ отвечает за содержимое — шаблоны курсов и назначение программ.
- * Разделение из раздела 6 ТЗ: методист и контент-менеджер там отдельная
- * роль, а не обязанность куратора.
+ * Модератор отвечает за содержимое — шаблоны курсов и библиотеку
+ * упражнений/материалов. Раньше здесь была отдельная роль «админ», но
+ * на практике это тот же человек — роли объединены (см. docs/DECISIONS.md).
  */
-export type StaffRole = "curator" | "admin" | "moderator";
+export type StaffRole = "curator" | "moderator";
 
 export interface User {
   id: string;
@@ -196,13 +196,6 @@ export const DEMO_USERS: Record<string, User> = {
     role: "staff",
     speciality: "Модератор курсов и контента",
     staffRole: "moderator",
-  },
-  admin: {
-    id: "u-admin",
-    name: "Динара Сатпаева",
-    role: "staff",
-    speciality: "Методист клиники",
-    staffRole: "admin",
   },
 };
 
@@ -577,6 +570,8 @@ export interface GuardianLesson {
   minutes: number;
   summary: string;
   done: boolean;
+  /** Видео урока. Без ссылки кнопка просмотра не показывается. */
+  videoUrl?: string;
 }
 
 export type VideoVerdict = "ok" | "partial" | "wrong";
@@ -746,6 +741,9 @@ export const DEMO_CARE_TASKS: CareTask[] = [
   { id: "ct-5", title: "Стул и диурез", period: "раз в сутки", doneAt: null },
 ];
 
+/** Демо-ролик один на все уроки — реальные съёмки появятся с админкой (M2). */
+const GUARDIAN_LESSON_VIDEO = "https://www.youtube.com/watch?v=oCTAxHgJdW8";
+
 export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
   {
     id: "gl-1",
@@ -753,6 +751,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 9,
     summary: "Как поднять и пересадить человека, не сорвав спину и не повредив ему плечо.",
     done: true,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
   {
     id: "gl-2",
@@ -760,6 +759,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 7,
     summary: "Положение парализованной руки и ноги в постели и в кресле.",
     done: true,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
   {
     id: "gl-3",
@@ -767,6 +767,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 6,
     summary: "С какой стороны идти, где держать, когда не идти вовсе.",
     done: false,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
   {
     id: "gl-4",
@@ -774,6 +775,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 8,
     summary: "Поза, консистенция, признаки поперхивания и что делать.",
     done: false,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
   {
     id: "gl-5",
@@ -781,6 +783,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 10,
     summary: "График поворотов, осмотр кожи, безопасная квартира.",
     done: false,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
   {
     id: "gl-6",
@@ -788,6 +791,7 @@ export const DEMO_GUARDIAN_LESSONS: GuardianLesson[] = [
     minutes: 5,
     summary: "Как спрашивать и сколько ждать ответа. Чего делать не нужно.",
     done: false,
+    videoUrl: GUARDIAN_LESSON_VIDEO,
   },
 ];
 

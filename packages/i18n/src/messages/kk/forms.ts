@@ -38,7 +38,7 @@ export const forms: Translation<"forms"> = {
   "contacts.legend": "Байланыстар",
   "contacts.name": "Сізге қалай жүгінейік",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.consent":
     "Дербес деректерді, оның ішінде денсаулық туралы мәліметтерді өңдеуге және клиниканың қоңырауына келісемін. Деректер Қазақстан Республикасының аумағында сақталады.",
 

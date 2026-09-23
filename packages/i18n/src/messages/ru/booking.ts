@@ -51,7 +51,7 @@ export const booking = {
   "contacts.legend": "3. Ваши контакты",
   "contacts.name": "Как к вам обращаться",
   "contacts.phone": "Телефон",
-  "contacts.phonePlaceholder": "+7 ___ ___ __ __",
+  "contacts.phonePlaceholder": "+7 (___) ___-__-__",
   "contacts.comment": "Что важно знать врачу",
   "contacts.commentPlaceholder": "Когда был инсульт, как человек передвигается",
   "contacts.consent": "Согласен на обработку персональных данных, включая сведения о здоровье.",

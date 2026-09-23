@@ -18,7 +18,7 @@ interface AuthValue {
 const AuthContext = createContext<AuthValue | null>(null)
 
 function isStaffRole(value: string | null): value is StaffRole {
-  return value === 'curator' || value === 'admin' || value === 'moderator'
+  return value === 'curator' || value === 'moderator'
 }
 
 /**
@@ -29,7 +29,7 @@ function isStaffRole(value: string | null): value is StaffRole {
  *
  * TODO AUTH: в бою сессия живёт в httpOnly-cookie, которую ставит сервер,
  * а клиент узнаёт пользователя запросом /api/me. Роль тоже приходит
- * с сервера: возможность выбрать «войти как админ» на клиенте — это
+ * с сервера: возможность выбрать «войти как модератор» на клиенте — это
  * повышение привилегий одной строкой в localStorage.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -92,6 +92,5 @@ export function useAuth() {
 /** Ключ названия роли в словаре staff — подпись рисует шапка кабинета. */
 export const STAFF_ROLE_KEY: Record<StaffRole, string> = {
   curator: 'role.curator',
-  admin: 'role.admin',
   moderator: 'role.moderator',
 }

@@ -127,6 +127,7 @@ export const cabinet = {
   "school.title": "Школа опекуна",
   "school.passed": "Пройден",
   "school.mark": "Отметить",
+  "school.watch": "Смотреть видео",
   "school.lessonMinutes": "{count} мин",
   "school.checklist": "Чек-лист безопасной квартиры",
   "school.checklistNote":
@@ -203,12 +204,10 @@ export const cabinet = {
   "login.curatorNote": "Очередь задач, пациенты, тревожные сигналы, проверка видео",
   "login.moderator": "Войти как модератор",
   "login.moderatorNote": "Упражнения, материалы, версии и проверка шаблонов",
-  "login.admin": "Войти как администратор",
-  "login.adminNote": "Пациенты и кураторы, расписание, оплаты",
 
   "login.future": "Так это будет работать",
   "login.phone": "Номер телефона",
-  "login.phonePlaceholder": "+7 ___ ___ __ __",
+  "login.phonePlaceholder": "+7 (___) ___-__-__",
   "login.code": "Код из SMS",
   "login.getCode": "Получить код",
   "login.futurePatient":
