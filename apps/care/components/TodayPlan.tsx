@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Check, Clock, Play, Info, PlayCircle } from 'lucide-react'
-import type { DayPlan, ExerciseDifficulty } from '@amare/api-client'
+import type { DayPlan, Exercise, ExerciseDifficulty } from '@amare/api-client'
 import { cn } from '@amare/ui'
 import { useT } from '@amare/i18n/react'
 import { completeExercise, getDayPlan, setExerciseFeedback } from '@/lib/mock'
@@ -76,6 +76,14 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
           </p>
         )}
       </div>
+
+      {/*
+       * Сводка по оценкам «как далось упражнение» — только опекуну, рядом
+       * со списком, тем же вариантом обратной связи, что видит пациент
+       * построчно (см. ниже, {done && readOnly && exercise.feedback}).
+       * Пациенту сводка не нужна: он и так видит и ставит каждую оценку сам.
+       */}
+      {readOnly && <FeedbackSummary exercises={plan.exercises} />}
 
       <ul className="flex flex-col gap-3">
         {plan.exercises.map((exercise) => {
@@ -193,5 +201,42 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
         </p>
       )}
     </div>
+  )
+}
+
+const DIFFICULTY_LEVELS: readonly ExerciseDifficulty[] = [1, 2, 3]
+
+/** Сводка «сколько упражнений какой оценки» — для опекуна, компактно, над списком. */
+function FeedbackSummary({ exercises }: { exercises: Exercise[] }) {
+  const t = useT('cabinet')
+  const counts = exercises.reduce(
+    (acc, exercise) => {
+      if (exercise.feedback) acc[exercise.feedback] += 1
+      return acc
+    },
+    { 1: 0, 2: 0, 3: 0 } as Record<ExerciseDifficulty, number>,
+  )
+  const total = counts[1] + counts[2] + counts[3]
+  if (total === 0) return null
+
+  return (
+    <ul className="m-0 flex flex-wrap list-none gap-2.5 p-0">
+      {DIFFICULTY_LEVELS.filter((level) => counts[level] > 0).map((level) => (
+        <li
+          key={level}
+          className={cn(
+            'flex items-center gap-2 rounded-xl px-3.5 py-2',
+            level === 1 && 'bg-tint',
+            level === 2 && 'bg-bg',
+            level === 3 && 'bg-[rgb(253,238,237)]',
+          )}
+        >
+          <span className="font-display text-lg font-semibold tracking-[-0.02em]">
+            {t('guardian.feedback.count', { count: counts[level] })}
+          </span>
+          <span className="text-base">{t(`plan.difficulty${level}`)}</span>
+        </li>
+      ))}
+    </ul>
   )
 }

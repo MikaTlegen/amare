@@ -19,6 +19,11 @@ const EMERGENCY_PHONE = '103'
  *   — звонок 103 в одно касание;
  *   — есть экран «что делать до приезда скорой».
  *
+ * Раньше кнопка плавала поверх контента (fixed, правый нижний угол) и
+ * перекрывала нижние элементы форм — по отзыву перенесена в шапку
+ * CabinetShell, рядом с переключателем языка и доступностью: она всё ещё
+ * видна с любого экрана кабинета, но больше не мешает контенту под собой.
+ *
  * Диалог сделан на нативном <dialog>: он сам ставит фокус, запирает его
  * внутри и закрывается по Escape. Для аудитории 55+ важнее, что это
  * работает даже если JS-обработчики где-то отвалятся, чем красота.
@@ -44,19 +49,20 @@ export function SosButton() {
   return (
     <>
       {/*
-       * Цвет — спокойный «deep» из общей палитры, тот же, что у обычных
-       * первичных кнопок кабинета, а не тревожный красный: кнопка стоит на
-       * экране постоянно, и агрессивный вид на каждом шаге приучает его
-       * не замечать. Смысл (признаки инсульта, звонок 103) не меняется —
-       * это внутри диалога, и там звонок остаётся заметно красным.
+       * Иконка-кнопка среди обычных элементов шапки (язык, доступность) —
+       * тот же размер и стиль контурной кнопки, не тревожный сплошной
+       * красный: кнопка стоит на экране постоянно, и агрессивный вид на
+       * каждом шаге приучает его не замечать. Смысл (признаки инсульта,
+       * звонок 103) не меняется — это внутри диалога, и там звонок
+       * остаётся заметно красным.
        */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-4 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-40 inline-flex min-h-16 items-center gap-2 rounded-full bg-deep px-5 text-lg font-bold text-white shadow-lg shadow-ink/20 sm:right-5 sm:gap-3 sm:px-7 sm:text-xl"
+        aria-label={t('sos.open')}
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-accent transition-colors hover:border-ink"
       >
-        <TriangleAlert className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
-        SOS
+        <TriangleAlert className="h-5 w-5" aria-hidden="true" />
       </button>
 
       <dialog
@@ -122,9 +128,6 @@ export function SosButton() {
           </p>
         </div>
       </dialog>
-
-      {/* Место под плавающую кнопку: иначе она накрывает конец страницы */}
-      <div aria-hidden="true" className="h-[calc(6rem_+_env(safe-area-inset-bottom))] md:hidden" />
     </>
   )
 }

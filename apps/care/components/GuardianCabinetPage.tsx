@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Phone, FileText, Video, TriangleAlert } from 'lucide-react'
 import { CabinetShell, DemoNotice, ChatPanel, cn, type Tab } from '@amare/ui'
-import type { DayPlan, ExerciseDifficulty, PatientCard } from '@amare/api-client'
+import type { PatientCard } from '@amare/api-client'
 import { TodayPlan } from './TodayPlan'
 import { ProgressPanel } from './ProgressPanel'
 import { DiaryPanel } from './DiaryPanel'
@@ -13,7 +13,7 @@ import { GuardianSchool } from './GuardianSchool'
 import { SosButton } from './SosButton'
 import { useT } from '@amare/i18n/react'
 import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
-import { getDayPlan, getMessages, getPatientCard, sendMessage } from '@/lib/mock'
+import { getMessages, getPatientCard, sendMessage } from '@/lib/mock'
 import { CLINIC_PHONE } from '@/lib/clinic'
 
 const TAB_KEYS = [
@@ -46,40 +46,35 @@ export function GuardianCabinetPage() {
 
   const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
   const [card, setCard] = useState<PatientCard | null>(null)
-  const [plan, setPlan] = useState<DayPlan | null>(null)
 
   useEffect(() => {
     void getPatientCard().then(setCard)
-    void getDayPlan().then(setPlan)
   }, [])
 
   return (
-    <>
-      <CabinetShell
-        title={t('guardian.title')}
-        subtitle={card ? t('guardian.subtitle', { name: card.name }) : undefined}
-        tabs={tabs}
-        active={tab}
-        onTabChange={setTab}
-        userName={user?.name ?? ''}
-        roleLabel={t(ROLE_KEY.guardian)}
-    homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
-        onSignOut={signOut}
-      >
-        <DemoNotice />
+    <CabinetShell
+      title={t('guardian.title')}
+      subtitle={card ? t('guardian.subtitle', { name: card.name }) : undefined}
+      tabs={tabs}
+      active={tab}
+      onTabChange={setTab}
+      userName={user?.name ?? ''}
+      roleLabel={t(ROLE_KEY.guardian)}
+      homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
+      onSignOut={signOut}
+      headerExtra={<SosButton />}
+    >
+      <DemoNotice />
 
-        {tab === 'ward' && card && <WardSummary card={card} plan={plan} />}
-        {tab === 'care' && <CareLogPanel />}
-        {tab === 'plan' && <TodayPlan readOnly />}
-        {tab === 'diary' && <DiaryPanel byGuardian />}
-        {tab === 'meds' && <MedsPanel byGuardian />}
-        {tab === 'progress' && <ProgressPanel />}
-        {tab === 'school' && <GuardianSchool />}
-        {tab === 'chat' && <ChatPanel api={CHAT_API} readOnly />}
-      </CabinetShell>
-
-      <SosButton />
-    </>
+      {tab === 'ward' && card && <WardSummary card={card} />}
+      {tab === 'care' && <CareLogPanel />}
+      {tab === 'plan' && <TodayPlan readOnly />}
+      {tab === 'diary' && <DiaryPanel byGuardian />}
+      {tab === 'meds' && <MedsPanel byGuardian />}
+      {tab === 'progress' && <ProgressPanel />}
+      {tab === 'school' && <GuardianSchool />}
+      {tab === 'chat' && <ChatPanel api={CHAT_API} readOnly />}
+    </CabinetShell>
   )
 }
 
@@ -91,7 +86,7 @@ export function GuardianCabinetPage() {
  * сейчас. Если сначала показать возраст и диагноз, предупреждение
  * о двух днях без активности он пролистает.
  */
-function WardSummary({ card, plan }: { card: PatientCard; plan: DayPlan | null }) {
+function WardSummary({ card }: { card: PatientCard }) {
   const t = useT('cabinet')
 
   return (
@@ -115,8 +110,6 @@ function WardSummary({ card, plan }: { card: PatientCard; plan: DayPlan | null }
           ))}
         </ul>
       )}
-
-      {plan && <FeedbackSummary plan={plan} />}
 
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
@@ -185,55 +178,3 @@ function WardSummary({ card, plan }: { card: PatientCard; plan: DayPlan | null }
   )
 }
 
-const DIFFICULTY_LEVELS: readonly ExerciseDifficulty[] = [1, 2, 3]
-
-/**
- * Сводка по оценкам «как далось упражнение» за сегодня.
- *
- * Саму оценку ставит пациент (см. TodayPlan) — опекун её не меняет, это
- * его медицинская запись. Но видеть общую картину, а не только заходить
- * во вкладку «План» построчно, опекуну полезно: по ней сразу ясно, тяжело
- * ли сегодня дался день, ещё до разбора с куратором.
- */
-function FeedbackSummary({ plan }: { plan: DayPlan }) {
-  const t = useT('cabinet')
-  const counts = plan.exercises.reduce(
-    (acc, exercise) => {
-      if (exercise.feedback) acc[exercise.feedback] += 1
-      return acc
-    },
-    { 1: 0, 2: 0, 3: 0 } as Record<ExerciseDifficulty, number>,
-  )
-  const total = counts[1] + counts[2] + counts[3]
-
-  return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-12">
-      <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-        {t('guardian.feedback.title')}
-      </h2>
-
-      {total === 0 ? (
-        <p className="m-0 text-base leading-relaxed text-muted">{t('guardian.feedback.empty')}</p>
-      ) : (
-        <ul className="m-0 flex flex-wrap list-none gap-3 p-0">
-          {DIFFICULTY_LEVELS.filter((level) => counts[level] > 0).map((level) => (
-            <li
-              key={level}
-              className={cn(
-                'flex items-center gap-2.5 rounded-2xl px-4 py-3',
-                level === 1 && 'bg-tint',
-                level === 2 && 'bg-bg',
-                level === 3 && 'bg-[rgb(253,238,237)]',
-              )}
-            >
-              <span className="font-display text-2xl font-semibold tracking-[-0.03em]">
-                {t('guardian.feedback.count', { count: counts[level] })}
-              </span>
-              <span className="text-base">{t(`plan.difficulty${level}`)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  )
-}

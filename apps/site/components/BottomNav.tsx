@@ -1,12 +1,11 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { Activity, CalendarCheck, House, Menu, Phone } from 'lucide-react'
+import { Activity, CalendarCheck, House, Phone, UserRound } from 'lucide-react'
 import { stripLocale } from '@amare/i18n/locales'
 import { useT } from '@amare/i18n/react'
-import { cn } from '@amare/ui'
+import { cn, InstallPwaBadge } from '@amare/ui'
 import { Link } from '@/components/Links'
-import { MobileMenu } from '@/components/layout/MobileMenu'
 import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 
 /**
@@ -111,12 +110,16 @@ export function BottomNav() {
           <span className={LABEL}>{common('call')}</span>
         </a>
 
-        <MobileMenu>
-          <button type="button" className={tabClass(false)}>
-            <Menu className={iconClass(false)} aria-hidden="true" />
-            <span className={LABEL}>{nav('menuTitle')}</span>
-          </button>
-        </MobileMenu>
+        {/* Раньше здесь была вкладка «Меню», открывавшая выдвижную панель
+            с пунктом «Вход» внутри — вход в кабинет убирали лишним шагом.
+            Установка PWA держится значком поверх иконки: отдельного слота
+            в сетке из пяти вкладок для неё нет, и она не должна теснить
+            вход, когда доступна */}
+        <Link href={ROUTES.login} className={cn(tabClass(false), 'relative')}>
+          <UserRound className={iconClass(false)} aria-hidden="true" />
+          <InstallPwaBadge className="absolute -right-1 -top-1" />
+          <span className={LABEL}>{nav('cabinetEnter')}</span>
+        </Link>
       </nav>
     </>
   )

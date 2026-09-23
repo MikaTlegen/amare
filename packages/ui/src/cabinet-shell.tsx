@@ -23,6 +23,8 @@ interface Props {
   roleLabel: string
   homeHref: string
   onSignOut: () => void
+  /** Доп. кнопка рядом с языком и доступностью — например, вызов SOS в care. */
+  headerExtra?: ReactNode
   children: ReactNode
 }
 
@@ -58,6 +60,7 @@ export function CabinetShell({
   roleLabel,
   homeHref,
   onSignOut,
+  headerExtra,
   children,
 }: Props) {
   const t = useT('ui')
@@ -79,6 +82,7 @@ export function CabinetShell({
             <div className="flex shrink-0 items-center gap-2">
               <LanguageSwitch onChange={setLocale} />
               <AccessibilityMenu />
+              {headerExtra}
             </div>
 
             {/* min-w-0 и truncate: без них карточка не сжимается ниже своего

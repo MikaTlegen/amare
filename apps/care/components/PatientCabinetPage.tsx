@@ -46,31 +46,28 @@ export function PatientCabinetPage() {
   const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
 
   return (
-    <>
-      <CabinetShell
-        title={t('patient.title')}
-        subtitle={t('patient.subtitle', { curator: CURATOR_NAME })}
-        tabs={tabs}
-        active={tab}
-        onTabChange={setTab}
-        userName={user?.name ?? ''}
-        roleLabel={t(ROLE_KEY.patient)}
-    homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
-        onSignOut={signOut}
-      >
-        <DemoNotice />
-        {tab === 'plan' && <TodayPlan />}
-        {tab === 'diary' && <DiaryPanel />}
-        {tab === 'meds' && <MedsPanel />}
-        {tab === 'progress' && <ProgressPanel />}
-        {tab === 'materials' && <MaterialsPanel />}
-        {tab === 'docs' && <DocsPanel />}
-        {tab === 'more' && <UpsellPanel />}
-        {tab === 'chat' && <ChatPanel api={CHAT_API} />}
-      </CabinetShell>
-
-      {/* SOS доступен с любой вкладки — это требование P-06, а не украшение */}
-      <SosButton />
-    </>
+    <CabinetShell
+      title={t('patient.title')}
+      subtitle={t('patient.subtitle', { curator: CURATOR_NAME })}
+      tabs={tabs}
+      active={tab}
+      onTabChange={setTab}
+      userName={user?.name ?? ''}
+      roleLabel={t(ROLE_KEY.patient)}
+      homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001'}
+      onSignOut={signOut}
+      // SOS доступен с любой вкладки (P-06) — иконка в шапке, а не плавающая кнопка
+      headerExtra={<SosButton />}
+    >
+      <DemoNotice />
+      {tab === 'plan' && <TodayPlan />}
+      {tab === 'diary' && <DiaryPanel />}
+      {tab === 'meds' && <MedsPanel />}
+      {tab === 'progress' && <ProgressPanel />}
+      {tab === 'materials' && <MaterialsPanel />}
+      {tab === 'docs' && <DocsPanel />}
+      {tab === 'more' && <UpsellPanel />}
+      {tab === 'chat' && <ChatPanel api={CHAT_API} />}
+    </CabinetShell>
   )
 }
