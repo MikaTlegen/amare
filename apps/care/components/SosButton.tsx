@@ -43,10 +43,17 @@ export function SosButton() {
 
   return (
     <>
+      {/*
+       * Цвет — спокойный «deep» из общей палитры, тот же, что у обычных
+       * первичных кнопок кабинета, а не тревожный красный: кнопка стоит на
+       * экране постоянно, и агрессивный вид на каждом шаге приучает его
+       * не замечать. Смысл (признаки инсульта, звонок 103) не меняется —
+       * это внутри диалога, и там звонок остаётся заметно красным.
+       */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-4 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-40 inline-flex min-h-16 items-center gap-2 rounded-full bg-[rgb(179,38,30)] px-5 text-lg font-bold text-white shadow-[0_14px_34px_rgba(179,38,30,0.45)] sm:right-5 sm:gap-3 sm:px-7 sm:text-xl"
+        className="fixed right-4 bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] z-40 inline-flex min-h-16 items-center gap-2 rounded-full bg-deep px-5 text-lg font-bold text-white shadow-lg shadow-ink/20 sm:right-5 sm:gap-3 sm:px-7 sm:text-xl"
       >
         <TriangleAlert className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
         SOS

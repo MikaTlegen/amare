@@ -46,4 +46,12 @@ export const ui: Translation<"ui"> = {
   "lang.group": "Сайт тілі",
   "lang.ru": "РУС",
   "lang.kk": "ҚАЗ",
+
+  "pwa.install": "Қосымшаны орнату",
+  "pwa.installShort": "Орнату",
+  "pwa.iosTitle": "iPhone немесе iPad-қа орнату",
+  "pwa.iosStep1": "Safari экранының төменгі жағындағы «Бөлісу» түймесін басыңыз.",
+  "pwa.iosStep2": "«Үй экранына қосу» дегенді таңдаңыз.",
+  "pwa.iosStep3": "Қосуды растаңыз — таңбаша басқа қосымшалардың қатарында пайда болады.",
+  "pwa.close": "Жабу",
 };

@@ -8,6 +8,7 @@ import { DiaryPanel } from './DiaryPanel'
 import { MedsPanel } from './MedsPanel'
 import { MaterialsPanel } from './MaterialsPanel'
 import { DocsPanel } from './DocsPanel'
+import { UpsellPanel } from './UpsellPanel'
 import { SosButton } from './SosButton'
 import { useT } from '@amare/i18n/react'
 import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
@@ -25,6 +26,7 @@ const TAB_KEYS = [
   ['progress', 'tab.myProgress'],
   ['materials', 'tab.materials'],
   ['docs', 'tab.docsAccess'],
+  ['more', 'tab.more'],
   ['chat', 'tab.chat'],
 ] as const
 
@@ -63,6 +65,7 @@ export function PatientCabinetPage() {
         {tab === 'progress' && <ProgressPanel />}
         {tab === 'materials' && <MaterialsPanel />}
         {tab === 'docs' && <DocsPanel />}
+        {tab === 'more' && <UpsellPanel />}
         {tab === 'chat' && <ChatPanel api={CHAT_API} />}
       </CabinetShell>
 

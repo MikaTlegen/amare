@@ -12,6 +12,7 @@ export { LanguageSwitch } from "./language-switch";
 export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
 export { ParallaxBand } from "./parallax-band";
 export { formatKzPhone } from "./phone";
+export { InstallPwaButton, RegisterServiceWorker } from "./pwa-install";
 export { Reveal } from "./reveal";
 export { SectionHeading } from "./section-heading";
 export { SpinningFavicon } from "./spinning-favicon";

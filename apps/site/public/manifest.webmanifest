@@ -1,0 +1,16 @@
+{
+  "name": "Amare — клиника реабилитации",
+  "short_name": "Amare",
+  "description": "Запись на консультацию, направления и материалы клиники реабилитации Amare.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f2f7f8",
+  "theme_color": "#083a42",
+  "lang": "ru",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

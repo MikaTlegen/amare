@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { getT, pickMessages, type Locale } from '@amare/i18n'
 import { I18nProvider } from '@amare/i18n/react'
-import { SpinningFavicon } from '@amare/ui'
+import { RegisterServiceWorker, SpinningFavicon } from '@amare/ui'
 import { BottomNav } from '@/components/BottomNav'
 import { ContactFab } from '@/components/ContactFab'
 import { CookieBanner } from '@/components/CookieBanner'
@@ -67,6 +67,7 @@ export function SiteShell({ locale, children }: { locale: Locale; children: Reac
     <html lang={locale} className={`${manrope.variable} ${inter.variable}`}>
       <body>
         <SpinningFavicon />
+        <RegisterServiceWorker swUrl="/sw.js" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(clinicJsonLd(locale)) }}

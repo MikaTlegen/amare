@@ -49,4 +49,12 @@ export const ui = {
   "lang.group": "Язык сайта",
   "lang.ru": "РУС",
   "lang.kk": "ҚАЗ",
+
+  "pwa.install": "Установить приложение",
+  "pwa.installShort": "Установить",
+  "pwa.iosTitle": "Установка на iPhone или iPad",
+  "pwa.iosStep1": "Нажмите «Поделиться» внизу экрана Safari.",
+  "pwa.iosStep2": "Выберите «На экран «Домой»».",
+  "pwa.iosStep3": "Подтвердите добавление — значок появится рядом с остальными приложениями.",
+  "pwa.close": "Закрыть",
 } as const;

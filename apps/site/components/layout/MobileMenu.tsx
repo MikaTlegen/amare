@@ -6,7 +6,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { UserRound, X } from 'lucide-react'
 import { stripLocale } from '@amare/i18n/locales'
 import { useT } from '@amare/i18n/react'
-import { LanguageSwitch, cn } from '@amare/ui'
+import { InstallPwaButton, LanguageSwitch, cn } from '@amare/ui'
 import { Link } from '@/components/Links'
 import { ROUTES } from '@/lib/clinic'
 
@@ -77,14 +77,21 @@ export function MobileMenu({ children }: { children: ReactNode }) {
             ))}
           </nav>
 
-          <Link
-            href={ROUTES.login}
-            onClick={() => setOpen(false)}
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-deep px-5 py-3.5 text-base font-semibold text-white no-underline"
-          >
-            <UserRound className="h-5 w-5" aria-hidden="true" />
-            {t('cabinetEnter')}
-          </Link>
+          <div className="flex flex-col gap-2.5">
+            <Link
+              href={ROUTES.login}
+              onClick={() => setOpen(false)}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-deep px-5 py-3.5 text-base font-semibold text-white no-underline"
+            >
+              <UserRound className="h-5 w-5" aria-hidden="true" />
+              {t('cabinetEnter')}
+            </Link>
+
+            {/* Рядом со входом, а не вместо: часть посетителей ставит
+                приложение сразу, но прямой путь в кабинет без установки
+                должен остаться — не у всех есть повод ставить PWA сейчас */}
+            <InstallPwaButton />
+          </div>
 
           <div className="mt-auto">
             <LanguageSwitch />
