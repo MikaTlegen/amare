@@ -1,20 +1,15 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { Activity, CalendarCheck, House, Phone, UserRound } from 'lucide-react'
-import { stripLocale } from '@amare/i18n/locales'
+import { UserRound } from 'lucide-react'
 import { useT } from '@amare/i18n/react'
-import { cn, InstallPwaBadge } from '@amare/ui'
+import { InstallPwaBadge } from '@amare/ui'
 import { Link } from '@/components/Links'
-import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
+import { ROUTES } from '@/lib/clinic'
 
 /**
  * Высота панели. Задана явно, а не содержимым: её же должна занять распорка
  * в потоке, и от неё считается отступ карточки куки.
  *
- * Прежняя панель из двух кнопок высоту фиксировать не могла — на крупном кегле
- * кнопки переносились на второй ряд. У вкладок переноса нет по построению:
- * подпись в одну строку, а когда она перестаёт помещаться, уходит в sr-only.
  * Значение в rem, поэтому панель растёт вместе с ползунком доступности
  * (--font-scale), а не остаётся на месте, пока текст внутри распухает.
  *
@@ -22,54 +17,26 @@ import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
  * высоты. Числа держит врозь сторож mobile-layout.test.ts: свести их в одну
  * константу нельзя, Tailwind собирает классы по тексту исходников.
  */
-const SHELL_H = 'h-[calc(4.25rem_+_env(safe-area-inset-bottom))]'
-
-/*
- * Подпись прячется по container-запросу, а не по ширине экрана: медиазапросы
- * считают rem от 16 px и про --font-scale не знают. 18.5rem подобраны так,
- * что на обычном телефоне при базовом кегле подписи стоят, а начиная со
- * среднего деления ползунка доступности остаются одни иконки.
- *
- * sr-only, а не hidden: без подписи у вкладки не остаётся доступного имени.
- */
-const LABEL = 'max-w-full truncate text-[0.625rem] font-medium tracking-[-0.015em] @max-[18.5rem]:sr-only'
-
-const tabClass = (active: boolean) =>
-  cn(
-    'flex min-w-0 flex-col items-center justify-center gap-1 text-center no-underline transition-colors',
-    active ? 'font-semibold text-brand' : 'text-muted',
-  )
-
-const iconClass = (accent: boolean) => cn('h-6 w-6 shrink-0', accent && 'text-accent')
+const SHELL_H = 'h-[calc(4.5rem_+_env(safe-area-inset-bottom))]'
 
 /**
- * Нижняя навигация, как в мобильном приложении.
+ * Нижняя панель — только вход в кабинет.
  *
- * Была панель из двух кнопок «Позвонить» и «Записаться» во всю ширину: она
- * съедала 6rem высоты, а перейти с телефона хоть куда-то можно было только
- * через бургер в шапке. Пять вкладок занимают меньше места и дают собственно
- * навигацию, а оба прежних действия среди вкладок сохранились.
+ * Раньше здесь была строка из пяти вкладок (главная, направления, запись,
+ * звонок, меню). По отзыву панель мешала и дублировала бургер в шапке —
+ * теперь всю остальную навигацию открывает он (виден на телефоне,
+ * см. Header.tsx), а внизу остаётся только самое частое действие с
+ * телефона, которому раньше было некуда деться без лишнего экрана.
  *
- * Показывается до lg. Выше работает шапка: с lg до 2xl бургер, с 2xl пункты
- * в строку. По той же границе поднята и плавающая кнопка связи — иначе на
- * планшете она висела бы поверх панели.
+ * Установка PWA — значком у кнопки, не внутри неё: кнопка внутри ссылки
+ * (`<button>` в `<a>`) — невалидный HTML, браузер ломает такую ссылку и
+ * перестаёт по ней переходить. Бейдж и ссылка — соседние элементы в общей
+ * рамке, каждый кликабелен сам по себе.
+ *
+ * Показывается до lg. Выше работает шапка целиком.
  */
 export function BottomNav() {
   const nav = useT('nav')
-  const common = useT('common')
-  // Маршруты в ROUTES без префикса локали: на /kk/ его надо снять
-  const pathname = stripLocale(usePathname())
-
-  const links = [
-    { to: ROUTES.home, Icon: House, label: nav('home'), active: pathname === ROUTES.home, accent: false },
-    {
-      to: ROUTES.directions,
-      Icon: Activity,
-      label: nav('directions'),
-      active: pathname.startsWith(ROUTES.directions),
-      accent: false,
-    },
-  ]
 
   return (
     <>
@@ -79,47 +46,20 @@ export function BottomNav() {
 
       <nav
         aria-label={nav('bottomLabel')}
-        className={cn(
-          '@container fixed inset-x-0 bottom-0 z-40 grid grid-cols-5',
-          'border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm lg:hidden',
-          SHELL_H,
-        )}
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm lg:hidden ${SHELL_H}`}
       >
-        {links.map(({ to, Icon, label, active, accent }) => (
-          <Link key={to} href={to} aria-current={active ? 'page' : undefined} className={tabClass(active)}>
-            <Icon className={iconClass(accent)} aria-hidden="true" />
-            <span className={LABEL}>{label}</span>
-          </Link>
-        ))}
-
-        {/* Запись ведёт прямо в календарь CRM, а не на свою страницу:
-            лишний шаг между решением и выбором времени теряет людей.
-            Единственное цветное пятно панели — ради этого сюда и пришли */}
-        <a
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={tabClass(false)}
-        >
-          <CalendarCheck className={iconClass(true)} aria-hidden="true" />
-          <span className={LABEL}>{common('book')}</span>
-        </a>
-
-        <a href={CLINIC.phones[0].href} className={tabClass(false)}>
-          <Phone className={iconClass(false)} aria-hidden="true" />
-          <span className={LABEL}>{common('call')}</span>
-        </a>
-
-        {/* Раньше здесь была вкладка «Меню», открывавшая выдвижную панель
-            с пунктом «Вход» внутри — вход в кабинет убирали лишним шагом.
-            Установка PWA держится значком поверх иконки: отдельного слота
-            в сетке из пяти вкладок для неё нет, и она не должна теснить
-            вход, когда доступна */}
-        <Link href={ROUTES.login} className={cn(tabClass(false), 'relative')}>
-          <UserRound className={iconClass(false)} aria-hidden="true" />
-          <InstallPwaBadge className="absolute -right-1 -top-1" />
-          <span className={LABEL}>{nav('cabinetEnter')}</span>
-        </Link>
+        <div className="container-content flex h-full items-center justify-center">
+          <div className="relative w-full max-w-sm">
+            <Link
+              href={ROUTES.login}
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-deep px-6 text-base font-semibold text-white no-underline shadow-md shadow-ink/10 transition-shadow hover:ring-4 hover:ring-deep/20"
+            >
+              <UserRound className="h-5 w-5" aria-hidden="true" />
+              {nav('cabinetEnter')}
+            </Link>
+            <InstallPwaBadge className="absolute -right-2 -top-2" />
+          </div>
+        </div>
       </nav>
     </>
   )

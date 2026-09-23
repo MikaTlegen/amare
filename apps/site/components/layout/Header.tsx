@@ -37,8 +37,16 @@ import { cn } from '@amare/ui'
  * 86rem (~1570 px) — места хватает на всё: телефон и подпись «Кабинет»
  *   возвращаются.
  *
- * Ниже lg бургера нет совсем: там то же меню открывает вкладка нижней
- * навигации (BottomNav), и два входа в одну панель были бы дублем.
+ * Бургер виден на всех ширинах до появления горизонтального меню
+ * (@min-[58rem]) — включая телефон: нижняя навигация (BottomNav) больше
+ * не дублирует эту панель, там теперь только вход в кабинет.
+ *
+ * Языковой переключатель и доступность на телефоне не прячутся ни при
+ * каких обстоятельствах (см. их комментарий ниже и S-13) — а логотип,
+ * они и бургер рядом уже не помещаются в одну строку на самых узких
+ * экранах. Поэтому правый блок икон при нехватке места переносится под
+ * логотип целиком (w-full), а не обрезается: 27rem подобраны по замеру
+ * суммарной ширины языка + доступности + бургера.
  */
 export function Header() {
   const t = useT('nav')
@@ -60,7 +68,7 @@ export function Header() {
         scrolled ? 'border-b border-line bg-bg/85 backdrop-blur-xl' : 'bg-bg',
       )}
     >
-      <div className="@container container-content flex items-center gap-3 py-3 lg:gap-6">
+      <div className="@container container-content flex flex-wrap items-center gap-3 py-3 lg:gap-6">
         <SiteLogo textClassName="@max-[17rem]:hidden @min-[58rem]:hidden @min-[78rem]:inline" />
 
         <nav aria-label={t('mainLabel')} className="hidden flex-1 gap-3 @min-[58rem]:flex">
@@ -83,7 +91,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2.5">
+        <div className="flex w-full items-center justify-end gap-2.5 @min-[27rem]:ml-auto @min-[27rem]:w-auto">
           {/* Телефон в шапке: главный вопрос посетителя в остром периоде —
               «куда звонить», а до правки номер на десктопе был только внутри
               плавающей кнопки связи и в подвале. Уходит дважды: на узкой строке
@@ -105,13 +113,13 @@ export function Header() {
 
           <CabinetLink />
 
-          {/* Бургер — только между lg и 70rem: ниже lg ту же панель открывает
-              вкладка нижней навигации, выше пункты стоят в строку */}
+          {/* Бургер — на телефоне и до появления горизонтального меню; выше
+              @min-[58rem] пункты уже стоят в строку, панель не нужна */}
           <MobileMenu>
             <button
               type="button"
               aria-label={t('menuOpen')}
-              className="hidden h-11 w-11 items-center justify-center rounded-xl bg-ink text-bg lg:inline-flex @min-[58rem]:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-ink text-bg @min-[58rem]:hidden"
             >
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
