@@ -35,6 +35,7 @@ export function Quiz() {
   const t = useT('quiz')
   const text = useContent('quiz')
   const contacts = useT('contacts')
+  const booking = useT('booking')
   const reduced = useReducedMotion()
   const [step, setStep] = useState<Step>('when')
   /** История шагов — чтобы можно было вернуться и исправить ответ. */
@@ -274,9 +275,17 @@ export function Quiz() {
                   <p className="text-base leading-relaxed text-ink/80">
                     {t('done.note', { hours: contacts('hours') })}
                   </p>
-                  <Button href={CLINIC.phones[0].href} variant="outline" className="self-start">
-                    {CLINIC.phones[0].label}
-                  </Button>
+                  {/*
+                   * Виджет записи сюда не встраиваем: он занимает около 700 px
+                   * и разорвал бы карточку на главной. Ведём на страницу записи,
+                   * где он стоит целиком.
+                   */}
+                  <div className="flex flex-wrap gap-3">
+                    <Button to={ROUTES.booking}>{booking('widget.title')}</Button>
+                    <Button href={CLINIC.phones[0].href} variant="outline">
+                      {CLINIC.phones[0].label}
+                    </Button>
+                  </div>
                 </div>
               )}
             </motion.div>

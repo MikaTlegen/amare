@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { CheckCircle2, Upload } from 'lucide-react'
 import { PageCover } from '@/components/PageCover'
+import { BookingWidget } from '@/components/booking/BookingWidget'
 import { Button, Link } from '@/components/Links'
 import { submitLead, readUtm, type LeadPayload } from '@/lib/crm'
 import { CLINIC, ROUTES } from '@/lib/clinic'
@@ -27,6 +28,7 @@ export function IntakeFormPage() {
   const text = useContent('forms')
   const contacts = useT('contacts')
   const common = useT('common')
+  const booking = useT('booking')
 
   const [filledBy, setFilledBy] = useState<'patient' | 'relative'>('relative')
   const [when, setWhen] = useState<string>('')
@@ -81,11 +83,12 @@ export function IntakeFormPage() {
 
       <section className="container-content py-12">
         {done ? (
+          <div className="mx-auto flex max-w-3xl flex-col gap-8">
           <div
             ref={doneRef}
             role="status"
             tabIndex={-1}
-            className="mx-auto flex max-w-2xl flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
+            className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-8"
           >
             <CheckCircle2 className="h-10 w-10 text-brand" aria-hidden="true" />
             <h2 className="m-0 font-display text-2xl font-medium tracking-[-0.02em]">
@@ -100,6 +103,10 @@ export function IntakeFormPage() {
                 {t('done.home')}
               </Button>
             </div>
+          </div>
+
+          {/* Не заставляем ждать звонка: человек может сам выбрать время */}
+          <BookingWidget hint={booking('widget.note')} />
           </div>
         ) : (
           <form onSubmit={submit} className="mx-auto flex max-w-3xl flex-col gap-8">

@@ -26,6 +26,10 @@ SITE_URL="${SITE_URL%/}"
 # на сайте молча не работает, поэтому адрес задан здесь, а не оставлен на память.
 CRM_LEAD_FORM_URL="${CRM_LEAD_FORM_URL:-https://crm.tennet.kz/api/public/forms/d4ad399c-701d-411e-a884-64881accca18/}"
 
+# Виджет онлайн-записи CRM: стоит на странице записи и в профилях врачей.
+# Тоже не секрет — адрес виден в коде страницы.
+CRM_BOOKING_URL="${CRM_BOOKING_URL:-https://crm.tennet.kz/booking/05a40895-39c2-4a5e-8b9d-21ec43b01bbb/}"
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/dist-ftp"
 
@@ -34,6 +38,7 @@ echo "Домен сборки: $SITE_URL"
 export STATIC_EXPORT=1
 export NEXT_PUBLIC_SITE_URL="$SITE_URL"
 export NEXT_PUBLIC_CRM_LEAD_FORM_URL="$CRM_LEAD_FORM_URL"
+export NEXT_PUBLIC_CRM_BOOKING_URL="$CRM_BOOKING_URL"
 export NEXT_PUBLIC_CARE_URL="$SITE_URL/care"
 export NEXT_PUBLIC_STAFF_URL="$SITE_URL/staff"
 
