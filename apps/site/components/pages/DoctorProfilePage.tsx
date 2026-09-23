@@ -105,6 +105,46 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
         </div>
       </section>
 
+      {/*
+       * Пара снимков «до/после». Плашка «пример оформления» обязательна:
+       * без неё заглушка читается как заявление о результате лечения,
+       * которое нельзя проверить. Так же подписан график Бартел на главной.
+       */}
+      <section className='mx-auto max-w-content px-4 pb-4 sm:px-8 lg:px-20'>
+        <div className='flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6'>
+          <div className='flex flex-wrap items-center gap-3'>
+            <h2 className='m-0 font-display text-2xl font-medium tracking-[-0.02em]'>
+              {t('showcase.title')}
+            </h2>
+            <span className='rounded-full bg-tint px-3 py-1 text-sm font-semibold text-deep'>
+              {t('showcase.demo')}
+            </span>
+          </div>
+
+          <div className='grid gap-4 sm:grid-cols-2'>
+            {(['before', 'after'] as const).map((side) => (
+              <figure key={side} className='m-0 flex flex-col gap-2'>
+                <figcaption className='text-base font-semibold'>{t(`showcase.${side}`)}</figcaption>
+                {doctor.showcase ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={doctor.showcase[side]}
+                    alt={`${t(`showcase.${side}`)} — ${text(`${doctor.id}.name`)}`}
+                    className='aspect-[4/3] w-full rounded-2xl object-cover'
+                  />
+                ) : (
+                  <div className='flex aspect-[4/3] w-full items-center justify-center rounded-2xl border border-dashed border-line bg-bg px-4 text-center text-base text-muted'>
+                    {t('showcase.empty')}
+                  </div>
+                )}
+              </figure>
+            ))}
+          </div>
+
+          <p className='m-0 text-base leading-relaxed text-muted'>{t('showcase.note')}</p>
+        </div>
+      </section>
+
       <section className='mx-auto grid max-w-content gap-12 px-4 py-16 sm:px-8 lg:grid-cols-12 lg:px-20'>
         <div className='min-w-0 lg:col-span-5'>
           <p className='text-sm font-semibold text-brand'>{t('profile.bookingLabel')}</p>

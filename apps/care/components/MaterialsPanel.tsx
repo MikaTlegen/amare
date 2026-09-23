@@ -48,13 +48,25 @@ export function MaterialsPanel() {
                 {item.assignedBy}
               </span>
 
-              <button
-                type="button"
-                disabled
-                className="min-h-[3.2rem] rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white opacity-50"
-              >
-                {item.kind === 'video' ? t('materials.watch') : t('materials.read')}
-              </button>
+              {/* Без ссылки материал виден, но открыть его нечем — кнопка гаснет */}
+              {item.url ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[3.2rem] items-center justify-center rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white no-underline"
+                >
+                  {item.kind === 'video' ? t('materials.watch') : t('materials.read')}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="min-h-[3.2rem] rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white opacity-50"
+                >
+                  {item.kind === 'video' ? t('materials.watch') : t('materials.read')}
+                </button>
+              )}
             </li>
           )
         })}

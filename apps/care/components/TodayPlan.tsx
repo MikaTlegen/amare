@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Clock, Play, Info } from 'lucide-react'
+import { Check, Clock, Play, Info, PlayCircle } from 'lucide-react'
 import type { DayPlan } from '@amare/api-client'
 import { cn } from '@amare/ui'
 import { useT } from '@amare/i18n/react'
@@ -111,6 +111,39 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                     {exercise.hint}
                   </span>
                 )}
+
+                <span className="flex flex-wrap items-center gap-3 text-base text-muted">
+                  {/*
+                   * Сложность подписана словом, а не только точками: форма и
+                   * цвет — не признак для того, кто их не различает.
+                   */}
+                  <span className="flex items-center gap-1.5">
+                    <span aria-hidden="true" className="flex gap-1">
+                      {[1, 2, 3].map((level) => (
+                        <span
+                          key={level}
+                          className={cn(
+                            'h-2 w-2 rounded-full',
+                            level <= exercise.difficulty ? 'bg-deep' : 'bg-line',
+                          )}
+                        />
+                      ))}
+                    </span>
+                    {t('plan.difficulty', { level: t(`plan.difficulty${exercise.difficulty}`) })}
+                  </span>
+
+                  {exercise.videoUrl && (
+                    <a
+                      href={exercise.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-medium text-deep"
+                    >
+                      <PlayCircle className="h-4 w-4" aria-hidden="true" />
+                      {t('plan.video')}
+                    </a>
+                  )}
+                </span>
               </div>
 
               <span className="text-base text-muted sm:w-20 sm:text-right">

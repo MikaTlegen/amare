@@ -33,6 +33,9 @@ export interface User {
 
 export type ExerciseStatus = "done" | "now" | "todo";
 
+/** Сложность упражнения: 1 — лёгкое, 3 — тяжёлое. Подписи в словаре cabinet. */
+export type ExerciseDifficulty = 1 | 2 | 3;
+
 export interface Exercise {
   id: string;
   title: string;
@@ -41,6 +44,9 @@ export interface Exercise {
   /** К какому направлению относится — для группировки и статистики. */
   direction: string;
   hint?: string;
+  difficulty: ExerciseDifficulty;
+  /** Разбор упражнения на видео. Внешняя ссылка: плеер в кабинет не встраиваем. */
+  videoUrl?: string;
 }
 
 export interface DayPlan {
@@ -237,6 +243,8 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "done",
       direction: "hand",
       hint: "Медленно, до лёгкого сопротивления. Боли быть не должно.",
+      difficulty: 1,
+      videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
       id: "e-2",
@@ -245,6 +253,8 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "done",
       direction: "speech",
       hint: "Перед зеркалом, десять повторов каждого упражнения.",
+      difficulty: 2,
+      videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
       id: "e-3",
@@ -253,6 +263,8 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "now",
       direction: "walking",
       hint: "Обязательно рядом с устойчивой опорой и в присутствии близкого.",
+      difficulty: 3,
+      videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
       id: "e-4",
@@ -261,6 +273,7 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "todo",
       direction: "walking",
       hint: "В комфортном темпе, с остановками.",
+      difficulty: 2,
     },
   ],
 };
@@ -519,6 +532,8 @@ export interface Material {
   minutes: number;
   assignedBy: string;
   note: string;
+  /** Куда ведёт кнопка «Смотреть». Без ссылки материал показан, но недоступен. */
+  url?: string;
 }
 
 export type ConsentState = "active" | "revoked";
@@ -647,6 +662,7 @@ export const DEMO_MATERIALS: Material[] = [
     minutes: 6,
     assignedBy: "Логопед-дефектолог",
     note: "Посмотрите вместе с тем, кто вас кормит.",
+    url: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
   },
   {
     id: "mat-2",
@@ -663,6 +679,7 @@ export const DEMO_MATERIALS: Material[] = [
     minutes: 8,
     assignedBy: "Индира Жумабекова",
     note: "То же упражнение, что у вас в плане на день.",
+    url: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
   },
 ];
 

@@ -8,6 +8,14 @@ import type { Translation } from "../../types";
  * в собственных документах: имя человека важнее правила.
  */
 export const doctors: Translation<"doctors"> = {
+  "showcase.title": "Жағдай қалай өзгереді",
+  "showcase.before": "Курсқа дейін",
+  "showcase.after": "Курстан кейін",
+  "showcase.demo": "Ресімдеу үлгісі",
+  "showcase.note":
+    "Блок екі суреттің қалай көрінетінін көрсетеді. Нақты фотосуреттер науқастың жазбаша келісімімен ғана шығады.",
+  "showcase.empty": "Мұнда фотосурет пайда болады",
+
   "kuspanova.name": "Құспанова Айгүл Нұрғалиқызы",
   "kuspanova.role": "Дәрігер-реабилитолог",
   "kuspanova.experience": "15 жыл өтілі",
