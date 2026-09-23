@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import * as Dialog from '@radix-ui/react-dialog'
-import { UserRound, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { stripLocale } from '@amare/i18n/locales'
 import { useT } from '@amare/i18n/react'
 import { InstallPwaButton, LanguageSwitch, cn } from '@amare/ui'
@@ -77,21 +77,10 @@ export function MobileMenu({ children }: { children: ReactNode }) {
             ))}
           </nav>
 
-          <div className="flex flex-col gap-2.5">
-            <Link
-              href={ROUTES.login}
-              onClick={() => setOpen(false)}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-deep px-5 py-3.5 text-base font-semibold text-white no-underline"
-            >
-              <UserRound className="h-5 w-5" aria-hidden="true" />
-              {t('cabinetEnter')}
-            </Link>
-
-            {/* Рядом со входом, а не вместо: часть посетителей ставит
-                приложение сразу, но прямой путь в кабинет без установки
-                должен остаться — не у всех есть повод ставить PWA сейчас */}
-            <InstallPwaButton />
-          </div>
+          {/* Входа в кабинет здесь нет: на телефоне он всегда виден в нижней
+              панели (BottomNav), на планшете — в шапке. Дубль в меню убран
+              по просьбе. Установка PWA остаётся — другого места у неё в меню нет */}
+          <InstallPwaButton />
 
           <div className="mt-auto">
             <LanguageSwitch />
