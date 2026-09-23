@@ -5,7 +5,8 @@ export { AttachmentChip, KIND_ICON, KIND_KEY, useKindLabel } from "./attachment-
 export { BarthelChart } from "./barthel-chart";
 export { Button } from "./button";
 export { CabinetLocaleProvider, useSetCabinetLocale } from "./cabinet-locale";
-export { CabinetShell, DemoNotice, type Tab } from "./cabinet-shell";
+export { CabinetShell, DemoNotice, type Tab, type TabGroup } from "./cabinet-shell";
+export { resolveGroups, tabFromSearch, useCabinetTab } from "./cabinet-nav";
 export { ChatPanel, type ChatApi } from "./chat-panel";
 export { cn } from "./cn";
 export { LanguageSwitch } from "./language-switch";

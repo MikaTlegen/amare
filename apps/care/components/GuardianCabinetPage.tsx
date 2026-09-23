@@ -1,8 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Phone, FileText, Video, TriangleAlert } from 'lucide-react'
-import { CabinetShell, DemoNotice, ChatPanel, cn, type Tab } from '@amare/ui'
+import {
+  CalendarCheck,
+  ClipboardList,
+  FileText,
+  GraduationCap,
+  HeartHandshake,
+  Info,
+  MessageCircle,
+  NotebookPen,
+  Phone,
+  Pill,
+  TrendingUp,
+  TriangleAlert,
+  Video,
+} from 'lucide-react'
+import { CabinetShell, DemoNotice, ChatPanel, cn, useCabinetTab, type Tab, type TabGroup } from '@amare/ui'
 import type { PatientCard } from '@amare/api-client'
 import { TodayPlan } from './TodayPlan'
 import { ProgressPanel } from './ProgressPanel'
@@ -11,21 +25,33 @@ import { MedsPanel } from './MedsPanel'
 import { CareLogPanel } from './CareLogPanel'
 import { GuardianSchool } from './GuardianSchool'
 import { SosButton } from './SosButton'
-import { useT } from '@amare/i18n/react'
+import { usePlural, useT } from '@amare/i18n/react'
 import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
 import { getMessages, getPatientCard, sendMessage } from '@/lib/mock'
 import { CLINIC_PHONE } from '@/lib/clinic'
 
 const TAB_KEYS = [
-  ['ward', 'tab.person'],
-  ['care', 'tab.care'],
-  ['plan', 'tab.plan'],
-  ['diary', 'tab.diary'],
-  ['meds', 'tab.meds'],
-  ['progress', 'tab.progress'],
-  ['school', 'tab.school'],
-  ['chat', 'tab.chat'],
+  ['ward', 'tab.person', HeartHandshake],
+  ['care', 'tab.care', ClipboardList],
+  ['plan', 'tab.plan', CalendarCheck],
+  ['diary', 'tab.diary', NotebookPen],
+  ['meds', 'tab.meds', Pill],
+  ['progress', 'tab.progress', TrendingUp],
+  ['school', 'tab.school', GraduationCap],
+  ['chat', 'tab.chat', MessageCircle],
 ] as const
+
+const TAB_IDS = TAB_KEYS.map(([id]) => id)
+
+/** Группы меню: всё о близком человеке, затем своё — учёба и связь. */
+const GROUP_KEYS = [
+  ['group.ward', ['ward', 'care', 'plan', 'diary', 'meds', 'progress']],
+  ['group.guardian', ['school']],
+  ['group.contact', ['chat']],
+] as const
+
+/** Нижняя панель на телефоне: сводка, свои отметки ухода и связь с куратором. */
+const MOBILE_BAR = ['ward', 'care', 'chat']
 
 // См. PatientCabinetPage.tsx — та же стабильная ссылка на api для ChatPanel.
 const CHAT_API = { getMessages, sendMessage }
@@ -42,9 +68,10 @@ const CHAT_API = { getMessages, sendMessage }
 export function GuardianCabinetPage() {
   const t = useT('cabinet')
   const { user, signOut } = useAuth()
-  const [tab, setTab] = useState('ward')
+  const [tab, setTab] = useCabinetTab(TAB_IDS, 'ward')
 
-  const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
+  const tabs: Tab[] = TAB_KEYS.map(([id, key, icon]) => ({ id, label: t(key), icon }))
+  const groups: TabGroup[] = GROUP_KEYS.map(([key, ids]) => ({ label: t(key), ids }))
   const [card, setCard] = useState<PatientCard | null>(null)
 
   useEffect(() => {
@@ -56,6 +83,8 @@ export function GuardianCabinetPage() {
       title={t('guardian.title')}
       subtitle={card ? t('guardian.subtitle', { name: card.name }) : undefined}
       tabs={tabs}
+      groups={groups}
+      mobileBar={MOBILE_BAR}
       active={tab}
       onTabChange={setTab}
       userName={user?.name ?? ''}
@@ -88,6 +117,7 @@ export function GuardianCabinetPage() {
  */
 function WardSummary({ card }: { card: PatientCard }) {
   const t = useT('cabinet')
+  const plural = usePlural('cabinet')
 
   return (
     <div className="grid gap-5 lg:grid-cols-12">
@@ -103,7 +133,13 @@ function WardSummary({ card }: { card: PatientCard }) {
                 alert.level === 'danger' && 'border-[rgb(179,38,30)] bg-[rgb(255,235,233)]',
               )}
             >
-              <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+              {/* Справочное событие (плановая переоценка) — не тревога: красный
+                  треугольник на каждом сообщении приучает не замечать настоящие */}
+              {alert.level === 'info' ? (
+                <Info className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden="true" />
+              ) : (
+                <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+              )}
               <span className="flex-1 text-base leading-relaxed">{alert.text}</span>
               <span className="shrink-0 text-sm text-muted">{alert.at}</span>
             </li>
@@ -113,7 +149,7 @@ function WardSummary({ card }: { card: PatientCard }) {
 
       <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
-          {t('guardian.age', { name: card.name, age: card.age })}
+          {plural('guardian.age', card.age, { name: card.name })}
         </h2>
 
         <dl className="m-0 grid gap-3 sm:grid-cols-2">

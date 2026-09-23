@@ -55,14 +55,18 @@ export function SosButton() {
        * каждом шаге приучает его не замечать. Смысл (признаки инсульта,
        * звонок 103) не меняется — это внутри диалога, и там звонок
        * остаётся заметно красным.
+       *
+       * Подпись «SOS» видна всегда: один треугольник в стрессе можно не
+       * узнать, а слово читается сразу, на любом языке кабинета.
        */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t('sos.open')}
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-accent transition-colors hover:border-ink"
+        className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line px-2.5 font-display text-base font-semibold text-accent transition-colors hover:border-ink"
       >
         <TriangleAlert className="h-5 w-5" aria-hidden="true" />
+        <span aria-hidden="true">SOS</span>
       </button>
 
       <dialog

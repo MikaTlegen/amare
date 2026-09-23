@@ -2,6 +2,7 @@ import {
   DEMO_DOCUMENTS,
   DEMO_MESSAGES,
   DEMO_PROGRAMS,
+  DEMO_STAFF_MEMBERS,
   DEMO_STAFF_PATIENTS,
   DEMO_STAFF_TASKS,
   DEMO_USERS,
@@ -14,6 +15,7 @@ import {
   type Message,
   type PatientCard,
   type ProgramTemplate,
+  type StaffMember,
   type StaffRole,
   type StaffTask,
   type User,
@@ -21,6 +23,7 @@ import {
   type VideoVerdict,
   type WeeklyReview,
 } from '@amare/api-client'
+import { courseIssues, isPublished, osmsWarning, type CourseIssue } from './courses'
 
 /**
  * Мок-клиент рабочего места специалиста.
@@ -104,8 +107,13 @@ export async function uploadPatientDocument(patientId: string, files: File[]): P
   )
 }
 
+/**
+ * Курсы, которые куратор может назначить: только опубликованные.
+ * Берутся из той же библиотеки, что правит модератор в конструкторе, —
+ * опубликовал курс, и он сразу доступен при назначении программы.
+ */
 export async function getProgramTemplates(): Promise<ProgramTemplate[]> {
-  return delay(PROGRAM_TEMPLATES)
+  return delay(templates.filter(isPublished))
 }
 
 export async function getPatientPrograms(patientId: string): Promise<AssignedProgram[]> {
@@ -126,7 +134,8 @@ export async function assignProgram(input: {
   comment: string
   assignedBy: string
 }): Promise<AssignedProgram[]> {
-  const template = PROGRAM_TEMPLATES.find((t) => t.id === input.templateId)
+  // Черновик назначить нельзя, даже если id известен: его ещё не утвердили
+  const template = templates.filter(isPublished).find((t) => t.id === input.templateId)
   if (!template) return delay(programs.filter((p) => p.patientId === input.patientId))
 
   programs = [
@@ -288,4 +297,43 @@ export async function addTemplate(
 
   templates = [...templates, { ...draft, note, id: `tpl-${Date.now()}` }]
   return delay(templates, 200)
+}
+
+export interface SaveCourseResult {
+  templates: ProgramTemplate[]
+  /** Пусто — сохранено. Иначе курс не опубликован, причины — здесь. */
+  issues: CourseIssue[]
+}
+
+/**
+ * Сохранение курса из конструктора: новый добавляется, существующий
+ * заменяется по id.
+ *
+ * Публикация проверяется здесь, а не только в форме: опубликованный курс
+ * куратор назначает пациенту, и курс без упражнений или без куратора не
+ * должен попасть в библиотеку ни из какой формы. Черновик сохраняется
+ * всегда.
+ *
+ * TODO BACKEND: публиковать вправе только модератор — проверяет сервер.
+ */
+export async function saveCourse(course: ProgramTemplate): Promise<SaveCourseResult> {
+  const issues = course.status === 'published' ? courseIssues(course) : []
+  if (issues.length) return delay({ templates, issues }, 200)
+
+  const note =
+    osmsWarning(course.days) && !course.note
+      ? 'Вне ОСМС: стандарт РК требует не менее 14 дней на II–III этапах.'
+      : course.note
+  const saved = { ...course, note, id: course.id || `tpl-${Date.now()}` }
+  const exists = templates.some((item) => item.id === saved.id)
+
+  templates = exists
+    ? templates.map((item) => (item.id === saved.id ? saved : item))
+    : [...templates, saved]
+  return delay({ templates, issues: [] }, 200)
+}
+
+/** Кураторы и модераторы клиники — для назначения на курс. */
+export async function getStaffMembers(): Promise<StaffMember[]> {
+  return delay(DEMO_STAFF_MEMBERS)
 }

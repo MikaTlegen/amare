@@ -1,7 +1,16 @@
 'use client'
 
-import { useState } from 'react'
-import { CabinetShell, DemoNotice, ChatPanel, type Tab } from '@amare/ui'
+import {
+  BookOpen,
+  CalendarCheck,
+  FileLock2,
+  MessageCircle,
+  NotebookPen,
+  Pill,
+  Sparkles,
+  TrendingUp,
+} from 'lucide-react'
+import { CabinetShell, DemoNotice, ChatPanel, useCabinetTab, type Tab, type TabGroup } from '@amare/ui'
 import { TodayPlan } from './TodayPlan'
 import { ProgressPanel } from './ProgressPanel'
 import { DiaryPanel } from './DiaryPanel'
@@ -20,15 +29,32 @@ import { getMessages, sendMessage } from '@/lib/mock'
  * на что смотрят (прогресс, материалы, документы), и в конце связь.
  */
 const TAB_KEYS = [
-  ['plan', 'tab.today'],
-  ['diary', 'tab.diary'],
-  ['meds', 'tab.meds'],
-  ['progress', 'tab.myProgress'],
-  ['materials', 'tab.materials'],
-  ['docs', 'tab.docsAccess'],
-  ['more', 'tab.more'],
-  ['chat', 'tab.chat'],
+  ['plan', 'tab.today', CalendarCheck],
+  ['diary', 'tab.diary', NotebookPen],
+  ['meds', 'tab.meds', Pill],
+  ['progress', 'tab.myProgress', TrendingUp],
+  ['materials', 'tab.materials', BookOpen],
+  ['docs', 'tab.docsAccess', FileLock2],
+  ['more', 'tab.more', Sparkles],
+  ['chat', 'tab.chat', MessageCircle],
 ] as const
+
+const TAB_IDS = TAB_KEYS.map(([id]) => id)
+
+/**
+ * Группы бокового меню — те же три смысла, что и порядок вкладок:
+ * что сделать сегодня, как идут дела, с кем связаться. Документы и
+ * доп. услуги — отдельно и последними: туда заходят редко.
+ */
+const GROUP_KEYS = [
+  ['group.today', ['plan', 'diary', 'meds']],
+  ['group.progress', ['progress', 'materials']],
+  ['group.contact', ['chat']],
+  ['group.docs', ['docs', 'more']],
+] as const
+
+/** Нижняя панель на телефоне: самое частое за день, остальное — в «Ещё». */
+const MOBILE_BAR = ['plan', 'diary', 'chat']
 
 // Модульная константа: getMessages/sendMessage стабильны, ChatPanel не перезапрашивает
 // сообщения на каждый ре-рендер родителя (объект-литерал внутри JSX пересоздавался бы).
@@ -41,15 +67,18 @@ const CURATOR_NAME = 'Индира Жумабекова'
 export function PatientCabinetPage() {
   const t = useT('cabinet')
   const { user, signOut } = useAuth()
-  const [tab, setTab] = useState('plan')
+  const [tab, setTab] = useCabinetTab(TAB_IDS, 'plan')
 
-  const tabs: Tab[] = TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
+  const tabs: Tab[] = TAB_KEYS.map(([id, key, icon]) => ({ id, label: t(key), icon }))
+  const groups: TabGroup[] = GROUP_KEYS.map(([key, ids]) => ({ label: t(key), ids }))
 
   return (
     <CabinetShell
       title={t('patient.title')}
       subtitle={t('patient.subtitle', { curator: CURATOR_NAME })}
       tabs={tabs}
+      groups={groups}
+      mobileBar={MOBILE_BAR}
       active={tab}
       onTabChange={setTab}
       userName={user?.name ?? ''}

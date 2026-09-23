@@ -115,6 +115,28 @@ export interface Message {
   attachments?: Attachment[];
 }
 
+/**
+ * Статус курса в библиотеке. Черновик видит только модератор;
+ * назначить пациенту можно лишь опубликованный курс.
+ */
+export type CourseStatus = "draft" | "published";
+
+/** Упражнение внутри этапа курса — те же поля, что у упражнения в плане дня. */
+export interface CourseExercise {
+  id: string;
+  title: string;
+  minutes: number;
+  hint?: string;
+  videoUrl?: string;
+}
+
+/** Этап курса: неделя, месяц — как решит модератор. */
+export interface CourseStage {
+  id: string;
+  title: string;
+  exercises: CourseExercise[];
+}
+
 /** Шаблон программы из конструктора курсов (модуль M4 ТЗ). */
 export interface ProgramTemplate {
   id: string;
@@ -123,6 +145,23 @@ export interface ProgramTemplate {
   /** Из чего состоит: короткий список направлений. */
   includes: string[];
   note: string;
+  /** Пусто у шаблонов до конструктора — они считаются опубликованными. */
+  status?: CourseStatus;
+  /** Пресет длительности: 1, 6 или 12 месяцев. Пусто — длительность в днях. */
+  durationMonths?: number;
+  stages?: CourseStage[];
+  /** Кто ведёт пациентов по этому курсу. */
+  curatorIds?: string[];
+  /** Кто отвечает за содержание курса. */
+  moderatorIds?: string[];
+}
+
+/** Сотрудник клиники в списке для назначения на курс. */
+export interface StaffMember {
+  id: string;
+  name: string;
+  staffRole: StaffRole;
+  speciality: string;
 }
 
 export interface AssignedProgram {
@@ -459,6 +498,44 @@ export const PROGRAM_TEMPLATES: ProgramTemplate[] = [
     includes: ["ЛФК", "Массаж"],
     note: "Только вне ОСМС: стандарт РК требует не менее 14 дней на II–III этапах.",
   },
+  {
+    id: "tpl-home-6m",
+    title: "Домашнее восстановление, полгода",
+    days: 182,
+    durationMonths: 6,
+    includes: ["ЛФК", "Эрготерапия", "Логопед"],
+    note: "После выписки: занятия дома с еженедельным разбором у куратора.",
+    status: "draft",
+    stages: [
+      {
+        id: "st-1",
+        title: "Месяц 1 — возвращаем опору",
+        exercises: [
+          { id: "ce-1", title: "Перенос веса стоя", minutes: 10, hint: "Рядом с устойчивой опорой." },
+          { id: "ce-2", title: "Разработка кисти", minutes: 15 },
+        ],
+      },
+      {
+        id: "st-2",
+        title: "Месяцы 2–3 — ходьба и речь",
+        exercises: [{ id: "ce-3", title: "Ходьба по коридору", minutes: 15 }],
+      },
+    ],
+    curatorIds: ["st-curator-1"],
+    moderatorIds: ["st-moderator-1"],
+  },
+];
+
+/**
+ * Сотрудники для назначения на курсы. Вымышленные, как и все DEMO_*:
+ * первые двое совпадают с демо-входом staff.
+ */
+export const DEMO_STAFF_MEMBERS: StaffMember[] = [
+  { id: "st-curator-1", name: "Индира Жумабекова", staffRole: "curator", speciality: "Врач-реабилитолог" },
+  { id: "st-curator-2", name: "Ержан Касымов", staffRole: "curator", speciality: "Кинезиотерапевт" },
+  { id: "st-curator-3", name: "Динара Оспанова", staffRole: "curator", speciality: "Логопед-афазиолог" },
+  { id: "st-moderator-1", name: "Алия Турсунова", staffRole: "moderator", speciality: "Модератор курсов и контента" },
+  { id: "st-moderator-2", name: "Марат Сагинтаев", staffRole: "moderator", speciality: "Методист ЛФК" },
 ];
 
 export const DEMO_PROGRAMS: AssignedProgram[] = [

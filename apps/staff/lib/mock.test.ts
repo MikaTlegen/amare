@@ -5,12 +5,15 @@ import {
   closeTask,
   getEditableTemplates,
   getPatientPrograms,
+  getProgramTemplates,
+  getStaffMembers,
   getStaffPatients,
   getStaffTasks,
   getVideoReviews,
   getWeeklyReview,
   resetMockState,
   reviewVideo,
+  saveCourse,
   sendWeeklyReview,
 } from './mock'
 
@@ -148,5 +151,76 @@ describe('addTemplate', () => {
     })
 
     expect(after.at(-1)?.note).toBe('Только платно, по решению врача')
+  })
+})
+
+describe('saveCourse', () => {
+  const draft = {
+    id: '',
+    title: 'Речь дома, месяц',
+    days: 30,
+    durationMonths: 1,
+    includes: ['Логопед'],
+    note: '',
+    status: 'draft' as const,
+    stages: [{ id: 's-1', title: 'Неделя 1', exercises: [{ id: 'e-1', title: 'Артикуляция', minutes: 10 }] }],
+    curatorIds: ['st-curator-3'],
+    moderatorIds: ['st-moderator-1'],
+  }
+
+  it('сохраняет черновик, но куратору он не виден', async () => {
+    resetMockState()
+    const { templates, issues } = await saveCourse(draft)
+    const saved = templates.at(-1)
+
+    expect(issues).toEqual([])
+    expect(saved?.id).toBeTruthy()
+    expect((await getProgramTemplates()).some((item) => item.id === saved?.id)).toBe(false)
+  })
+
+  it('публикует полный курс — и куратор может его назначить', async () => {
+    resetMockState()
+    const { templates } = await saveCourse(draft)
+    const id = templates.at(-1)?.id ?? ''
+    await saveCourse({ ...draft, id, status: 'published' })
+
+    expect((await getProgramTemplates()).some((item) => item.id === id)).toBe(true)
+    const programs = await assignProgram({ patientId: 'p-2', templateId: id, startAt: '', comment: '', assignedBy: 'Куратор' })
+    expect(programs.at(-1)?.title).toBe('Речь дома, месяц')
+  })
+
+  it('не публикует курс без упражнений и куратора — и не меняет библиотеку', async () => {
+    resetMockState()
+    const before = await getEditableTemplates()
+    const { templates, issues } = await saveCourse({ ...draft, status: 'published', stages: [], curatorIds: [] })
+
+    expect(issues).toEqual(['exercises', 'curators'])
+    expect(templates).toHaveLength(before.length)
+  })
+
+  it('заменяет существующий курс по id, а не дублирует', async () => {
+    resetMockState()
+    const { templates } = await saveCourse(draft)
+    const id = templates.at(-1)?.id ?? ''
+    const after = await saveCourse({ ...draft, id, title: 'Речь дома, 30 дней' })
+
+    expect(after.templates).toHaveLength(templates.length)
+    expect(after.templates.find((item) => item.id === id)?.title).toBe('Речь дома, 30 дней')
+  })
+
+  it('черновик из демо-библиотеки нельзя назначить пациенту', async () => {
+    resetMockState()
+    const before = await getPatientPrograms('p-2')
+    const after = await assignProgram({ patientId: 'p-2', templateId: 'tpl-home-6m', startAt: '', comment: '', assignedBy: 'Куратор' })
+
+    expect(after).toHaveLength(before.length)
+  })
+})
+
+describe('getStaffMembers', () => {
+  it('отдаёт и кураторов, и модераторов', async () => {
+    const members = await getStaffMembers()
+    expect(members.some((member) => member.staffRole === 'curator')).toBe(true)
+    expect(members.some((member) => member.staffRole === 'moderator')).toBe(true)
   })
 })

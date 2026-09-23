@@ -1,21 +1,67 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import {
+  Archive,
+  Blocks,
+  BookOpen,
+  ClipboardCheck,
+  FileCheck2,
+  LayoutDashboard,
+  LibraryBig,
+  ListTodo,
+  Users,
+  UsersRound,
+  Video,
+} from "lucide-react"
 import type { PatientCard, StaffTask } from "@amare/api-client"
-import { CabinetShell, DemoNotice, StatBarChart, type Tab } from "@amare/ui"
+import { CabinetShell, DemoNotice, useCabinetTab, type Tab, type TabGroup } from "@amare/ui"
 import { useContent, useT } from "@amare/i18n/react"
 import { STAFF_ROLE_KEY, useAuth } from "@/auth/AuthContext"
 import { getStaffPatients, getStaffTasks } from "@/lib/mock"
 import { ContentApprovalPanel } from "./ContentApprovalPanel"
+import { CourseBuilder } from "./CourseBuilder"
+import { CourseLibrary } from "./CourseLibrary"
 import { ModeratorContentPanel } from "./ModeratorContentPanel"
+import { ModeratorDashboard } from "./ModeratorDashboard"
 import { PatientDetail } from "./PatientDetail"
 import { PatientsBoard } from "./PatientsBoard"
 import { TaskQueue } from "./TaskQueue"
+import { TeamPanel } from "./TeamPanel"
 import { VideoReviewPanel } from "./VideoReviewPanel"
 
-/** Вкладки куратора: подписи берутся из словаря staff. */
-const CURATOR_TAB_KEYS = [["queue", "tab.queue"], ["patients", "tab.patients"], ["video", "tab.video"], ["content-review", "tab.contentReview"]] as const
-const MODERATOR_TABS: Tab[] = [{ id: "dashboard", label: "Сводка" }, { id: "library", label: "Контент и шаблоны" }, { id: "review", label: "На проверке" }, { id: "archive", label: "Архив" }]
+/** Разделы куратора: подписи берутся из словаря staff. */
+const CURATOR_TABS = [
+  ["queue", "tab.queue", ListTodo],
+  ["patients", "tab.patients", Users],
+  ["video", "tab.video", Video],
+  ["content-review", "tab.contentReview", FileCheck2],
+] as const
+
+/**
+ * Разделы модератора — как меню TecHR: обзор, курсы (библиотека и
+ * конструктор), контент (прежние экраны модерации без изменений) и команда.
+ */
+const MODERATOR_TABS = [
+  ["dashboard", "tab.dashboard", LayoutDashboard],
+  ["courses", "tab.courses", LibraryBig],
+  ["builder", "tab.builder", Blocks],
+  ["library", "tab.contentLibrary", BookOpen],
+  ["review", "tab.moderation", ClipboardCheck],
+  ["archive", "tab.archive", Archive],
+  ["team", "tab.team", UsersRound],
+] as const
+
+const CURATOR_GROUPS = [["group.work", ["queue", "patients", "video", "content-review"]]] as const
+const MODERATOR_GROUPS = [
+  ["group.overview", ["dashboard"]],
+  ["group.courses", ["courses", "builder"]],
+  ["group.content", ["library", "review", "archive"]],
+  ["group.team", ["team"]],
+] as const
+
+const CURATOR_IDS = CURATOR_TABS.map(([id]) => id)
+const MODERATOR_IDS = MODERATOR_TABS.map(([id]) => id)
 
 export function StaffCabinetPage() {
   const t = useT("staff")
@@ -23,30 +69,38 @@ export function StaffCabinetPage() {
   const { user, signOut } = useAuth()
   const role = user?.staffRole ?? "curator"
   const isModerator = role === "moderator"
-  const curatorTabs: Tab[] = CURATOR_TAB_KEYS.map(([id, key]) => ({ id, label: t(key) }))
-  const tabs = isModerator ? MODERATOR_TABS : curatorTabs
-  const [tab, setTab] = useState(tabs[0]?.id ?? "queue")
+
+  const source = isModerator ? MODERATOR_TABS : CURATOR_TABS
+  const tabs: Tab[] = source.map(([id, key, icon]) => ({ id, label: t(key), icon }))
+  const groups: TabGroup[] = (isModerator ? MODERATOR_GROUPS : CURATOR_GROUPS).map(([key, ids]) => ({ label: t(key), ids }))
+  const [tab, setTab] = useCabinetTab(isModerator ? MODERATOR_IDS : CURATOR_IDS, isModerator ? "dashboard" : "queue")
+
   const [tasks, setTasks] = useState<StaffTask[]>([])
   const [patients, setPatients] = useState<PatientCard[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  /** Какой курс открыт в конструкторе; null — новый курс. */
+  const [editingId, setEditingId] = useState<string | null>(null)
   useEffect(() => { if (!isModerator) { void getStaffPatients().then(setPatients); void getStaffTasks().then(setTasks) } }, [isModerator])
   const selected = patients.find((patient) => patient.id === selectedId) ?? null
   const openPatient = (id: string) => { setSelectedId(id); setTab("patients") }
+  const openCourse = (id: string | null) => { setEditingId(id); setTab("builder") }
+  // Пункт «Конструктор» в меню — всегда новый курс; правка открывается из библиотеки
+  const changeTab = (id: string) => { if (id === "builder") setEditingId(null); setTab(id) }
+
   const subtitle = isModerator
     ? t("subtitle.moderator")
     : t("subtitle.curator", { tasks: tasks.filter((task) => !task.done).length, patients: patients.length })
-  return <CabinetShell title={t(isModerator ? "title.moderator" : "title.curator")} subtitle={subtitle} tabs={tabs} active={tab} onTabChange={setTab} userName={user?.name ?? ""} roleLabel={text(STAFF_ROLE_KEY[role])} homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"} onSignOut={signOut}>
+
+  return <CabinetShell title={t(isModerator ? "title.moderator" : "title.curator")} subtitle={subtitle} tabs={tabs} groups={groups} active={tab} onTabChange={changeTab} userName={user?.name ?? ""} roleLabel={text(STAFF_ROLE_KEY[role])} homeHref={process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001"} onSignOut={signOut}>
     <DemoNotice />
-    {isModerator && tab === "dashboard" && <ModeratorDashboard />}
-    {isModerator && tab !== "dashboard" && <ModeratorContentPanel view={tab as "library" | "review" | "archive"} />}
+    {isModerator && tab === "dashboard" && <ModeratorDashboard onOpenCourses={() => setTab("courses")} />}
+    {isModerator && tab === "courses" && <CourseLibrary onEdit={openCourse} />}
+    {isModerator && tab === "builder" && <CourseBuilder key={editingId ?? "new"} courseId={editingId} onBack={() => setTab("courses")} />}
+    {isModerator && tab === "team" && <TeamPanel />}
+    {isModerator && (tab === "library" || tab === "review" || tab === "archive") && <ModeratorContentPanel view={tab} />}
     {!isModerator && tab === "queue" && <TaskQueue tasks={tasks} onTasksChange={setTasks} onOpenPatient={openPatient} />}
     {!isModerator && tab === "video" && <VideoReviewPanel />}
     {!isModerator && tab === "content-review" && <ContentApprovalPanel />}
     {!isModerator && tab === "patients" && (selected ? <PatientDetail patient={selected} canAssign onBack={() => setSelectedId(null)} /> : <PatientsBoard patients={patients} onOpen={setSelectedId} />)}
   </CabinetShell>
-}
-
-function ModeratorDashboard() {
-  const items = [{ label: "Черновики", value: 4, note: "требуют подготовки" }, { label: "На проверке", value: 2, note: "ожидают врача-куратора" }, { label: "Утверждено", value: 12, note: "доступно для курсов" }, { label: "Новые версии", value: 1, note: "создана сегодня" }]
-  return <div className="grid gap-5"><section className="rounded-3xl border border-line bg-surface p-6"><h2 className="m-0 font-display text-xl font-medium">Контент по статусам</h2><div className="mt-4"><StatBarChart data={items.map(({ label, value }) => ({ label, value }))} /></div><div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{items.map((item) => <div key={item.label} className="rounded-2xl bg-bg p-4"><p className="m-0 text-2xl font-semibold">{item.value}</p><p className="mb-0 mt-1 text-sm font-medium">{item.label}</p><p className="mb-0 mt-1 text-xs text-muted">{item.note}</p></div>)}</div></section><div className="grid gap-5 xl:grid-cols-2"><section className="rounded-3xl border border-line bg-surface p-6"><h2 className="m-0 font-display text-xl font-medium">Ближайшие действия</h2><div className="mt-4 grid gap-3"><p className="m-0 rounded-2xl bg-bg p-4"><strong>Речь и глотание v1.0</strong><br /><span className="text-sm text-muted">Отправлено врачу на проверку сегодня.</span></p><p className="m-0 rounded-2xl bg-bg p-4"><strong>Комплексный курс v1.1</strong><br /><span className="text-sm text-muted">Черновик: добавить упражнения второй недели.</span></p></div></section><section className="rounded-3xl border border-line bg-surface p-6"><h2 className="m-0 font-display text-xl font-medium">Статус библиотеки</h2><dl className="mt-4 grid gap-3"><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Упражнений в библиотеке</dt><dd className="m-0 font-semibold">38</dd></div><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Материалов для пациентов</dt><dd className="m-0 font-semibold">16</dd></div><div className="flex justify-between rounded-2xl bg-bg p-4"><dt>Версий в архиве</dt><dd className="m-0 font-semibold">7</dd></div></dl></section></div></div>
 }
