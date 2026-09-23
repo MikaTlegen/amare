@@ -45,7 +45,6 @@ export const cabinet = {
   "plan.exerciseMinutes": "{count} мин",
   "plan.feedbackAsk": "Как далось упражнение?",
   "plan.feedbackDone": "Ваша оценка: {level}",
-  "plan.feedbackPatient": "Оценка пациента: {level}",
   "plan.difficulty1": "легко",
   "plan.difficulty2": "нормально",
   "plan.difficulty3": "тяжело",
@@ -162,7 +161,6 @@ export const cabinet = {
   "guardian.reportsNote": "Материалы доступны только вам и лечащей команде.",
   "guardian.reports": "Отчёты с занятий",
 
-  "guardian.feedback.count": "{count}",
 
   "sos.open": "Признаки инсульта и вызов скорой",
   "sos.close": "Закрыть",

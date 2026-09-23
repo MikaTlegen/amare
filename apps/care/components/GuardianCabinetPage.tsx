@@ -11,6 +11,7 @@ import {
   NotebookPen,
   Phone,
   Pill,
+  Sparkles,
   TrendingUp,
   TriangleAlert,
 } from 'lucide-react'
@@ -25,6 +26,7 @@ import { MedsPanel } from './MedsPanel'
 import { CareLogPanel } from './CareLogPanel'
 import { GuardianSchool } from './GuardianSchool'
 import { SosButton } from './SosButton'
+import { UpsellPanel } from './UpsellPanel'
 import { usePlural, useT } from '@amare/i18n/react'
 import { useAuth, ROLE_KEY } from '@/auth/AuthContext'
 import { getMessages, getPatientCard, sendMessage } from '@/lib/mock'
@@ -39,14 +41,15 @@ const TAB_KEYS = [
   ['progress', 'tab.progress', TrendingUp],
   ['school', 'tab.school', GraduationCap],
   ['chat', 'tab.chat', MessageCircle],
+  ['more', 'tab.more', Sparkles],
 ] as const
 
 const TAB_IDS = TAB_KEYS.map(([id]) => id)
 
-/** Группы меню: всё о подопечном, затем своё — учёба и связь. */
+/** Группы меню: всё о подопечном, затем своё — учёба, доп. услуги и связь. */
 const GROUP_KEYS = [
   ['group.ward', ['ward', 'care', 'plan', 'diary', 'meds', 'progress']],
-  ['group.guardian', ['school']],
+  ['group.guardian', ['school', 'more']],
   ['group.contact', ['chat']],
 ] as const
 
@@ -103,6 +106,9 @@ export function GuardianCabinetPage() {
       {tab === 'progress' && <ProgressPanel />}
       {tab === 'school' && <GuardianSchool />}
       {tab === 'chat' && <ChatPanel api={CHAT_API} readOnly />}
+      {/* Доп. услуги опекуну тоже: консультацию или удалённую реабилитацию
+          для подопечного чаще всего заказывает именно он */}
+      {tab === 'more' && <UpsellPanel />}
     </CabinetShell>
   )
 }

@@ -48,7 +48,6 @@ export const cabinet: Translation<"cabinet"> = {
   "plan.exerciseMinutes": "{count} мин",
   "plan.feedbackAsk": "Жаттығу қалай өтті?",
   "plan.feedbackDone": "Сіздің бағаңыз: {level}",
-  "plan.feedbackPatient": "Пациенттің бағасы: {level}",
   "plan.difficulty1": "жеңіл",
   "plan.difficulty2": "қалыпты",
   "plan.difficulty3": "ауыр",
@@ -164,7 +163,6 @@ export const cabinet: Translation<"cabinet"> = {
   "guardian.reportsNote": "Материалдар тек сізге және емдеуші командаға қолжетімді.",
   "guardian.reports": "Сабақ есептері",
 
-  "guardian.feedback.count": "{count}",
 
   "sos.open": "Инсульт белгілері және жедел жәрдем шақыру",
   "sos.close": "Жабу",

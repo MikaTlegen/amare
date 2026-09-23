@@ -93,14 +93,6 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
         )}
       </div>
 
-      {/*
-       * Сводка по оценкам «как далось упражнение» — только опекуну, рядом
-       * со списком, тем же вариантом обратной связи, что видит пациент
-       * построчно (см. ниже, {done && readOnly && exercise.feedback}).
-       * Пациенту сводка не нужна: он и так видит и ставит каждую оценку сам.
-       */}
-      {readOnly && <FeedbackSummary exercises={plan.exercises} />}
-
       <ul className="flex flex-col gap-3">
         {[...plan.exercises]
           .sort((a, b) => SHOW_ORDER[a.status] - SHOW_ORDER[b.status])
@@ -198,13 +190,6 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                   </span>
                 )}
 
-                {/* Опекун и куратор оценку видят, но не ставят: она не их —
-                    поэтому «Оценка пациента», а не «Ваша оценка» */}
-                {done && readOnly && exercise.feedback && (
-                  <span className="text-base text-muted">
-                    {t('plan.feedbackPatient',{ level: t(`plan.difficulty${exercise.feedback}`) })}
-                  </span>
-                )}
               </div>
 
               <span className="hidden shrink-0 text-base text-muted sm:block sm:w-20 sm:text-right">
@@ -279,37 +264,3 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
   )
 }
 
-/** Сводка «сколько упражнений какой оценки» — для опекуна, компактно, над списком. */
-function FeedbackSummary({ exercises }: { exercises: Exercise[] }) {
-  const t = useT('cabinet')
-  const counts = exercises.reduce(
-    (acc, exercise) => {
-      if (exercise.feedback) acc[exercise.feedback] += 1
-      return acc
-    },
-    { 1: 0, 2: 0, 3: 0 } as Record<ExerciseDifficulty, number>,
-  )
-  const total = counts[1] + counts[2] + counts[3]
-  if (total === 0) return null
-
-  return (
-    <ul className="m-0 flex flex-wrap list-none gap-2.5 p-0">
-      {DIFFICULTY_LEVELS.filter((level) => counts[level] > 0).map((level) => (
-        <li
-          key={level}
-          className={cn(
-            'flex items-center gap-2 rounded-xl px-3.5 py-2',
-            level === 1 && 'bg-tint',
-            level === 2 && 'bg-bg',
-            level === 3 && 'bg-[rgb(253,238,237)]',
-          )}
-        >
-          <span className="font-display text-lg font-semibold tracking-[-0.02em]">
-            {t('guardian.feedback.count', { count: counts[level] })}
-          </span>
-          <span className="text-base">{t(`plan.difficulty${level}`)}</span>
-        </li>
-      ))}
-    </ul>
-  )
-}
