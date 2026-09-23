@@ -8,7 +8,7 @@ import { Button, Link } from '@/components/Links'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 import { readUtm, submitLead, type LeadPayload } from '@/lib/crm'
 import { cn } from '@amare/ui'
-import { useContent, useT } from '@amare/i18n/react'
+import { useContent, useLocale, useT } from '@amare/i18n/react'
 
 type Step = 'when' | 'mobility' | 'contacts' | 'urgent' | 'done'
 
@@ -36,6 +36,8 @@ export function Quiz() {
   const text = useContent('quiz')
   const contacts = useT('contacts')
   const booking = useT('booking')
+  // Язык страницы решает, в какую форму CRM уйдёт заявка
+  const locale = useLocale()
   const reduced = useReducedMotion()
   const [step, setStep] = useState<Step>('when')
   /** История шагов — чтобы можно было вернуться и исправить ответ. */
@@ -88,7 +90,7 @@ export function Quiz() {
       source: 'quiz',
       utm: readUtm(),
       consent,
-    } as LeadPayload)
+    } as LeadPayload, locale)
 
     setSending(false)
     // Отказ нельзя проглатывать: без этой ветки опросник просто замирает

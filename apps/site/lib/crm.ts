@@ -10,7 +10,12 @@
  * там свой обработчик негде (docs/DECISIONS.md). Это отступление от требования
  * «данные уходят на собственный бэкенд в РК» — решение владельца, зафиксировано
  * в журнале решений. Секретов здесь нет: адрес формы публичный по замыслу.
+ *
+ * Форм две — русская и казахская. У казахской есть поле «дополнительные
+ * сведения», в него уезжают ответы анкеты.
  */
+
+import type { Locale } from '@amare/i18n'
 
 export type LeadSource = 'quiz' | 'form' | 'callback' | 'booking'
 
@@ -48,21 +53,72 @@ export function readUtm(): Record<string, string> {
   return utm
 }
 
+/** Подписи ответов анкеты для оператора. Он читает карточку в CRM по-русски. */
+const FILLED_BY_LABEL: Record<NonNullable<LeadPayload['filledBy']>, string> = {
+  patient: 'сам пациент',
+  relative: 'родственник',
+}
+
+const STROKE_AGO_LABEL: Record<NonNullable<LeadPayload['strokeAgo']>, string> = {
+  '<1m': 'меньше месяца',
+  '1-6m': '1–6 месяцев',
+  '6-12m': '6–12 месяцев',
+  '>12m': 'больше года',
+}
+
+const MOBILITY_LABEL: Record<NonNullable<LeadPayload['mobility']>, string> = {
+  bedridden: 'лежачий',
+  wheelchair: 'на коляске',
+  assisted: 'ходит с поддержкой',
+  independent: 'ходит сам',
+}
+
+/** Форма без ответов анкеты: поле обязательное, пустым его слать нельзя. */
+const FALLBACK_MESSAGE = 'Заявка с сайта'
+
+/**
+ * Ответы анкеты одной строкой для поля «дополнительные сведения».
+ *
+ * Отдельных полей под давность и подвижность в форме CRM нет, а терять их
+ * жалко: по ним администратор понимает срочность ещё до звонка.
+ */
+export function buildMessage(payload: LeadPayload): string {
+  const parts = [
+    payload.filledBy && `кто заполняет: ${FILLED_BY_LABEL[payload.filledBy]}`,
+    payload.strokeAgo && `давность события: ${STROKE_AGO_LABEL[payload.strokeAgo]}`,
+    payload.mobility && `подвижность: ${MOBILITY_LABEL[payload.mobility]}`,
+    `источник: ${payload.source}`,
+    payload.utm &&
+      Object.keys(payload.utm).length > 0 &&
+      Object.entries(payload.utm)
+        .map(([key, value]) => `${key}=${value}`)
+        .join(', '),
+  ].filter((part): part is string => typeof part === 'string' && part.length > 0)
+
+  return parts.length > 0 ? parts.join('; ') : FALLBACK_MESSAGE
+}
+
+/** Адрес формы своего языка: у русской и казахской он разный. */
+function formUrl(locale: Locale): string | undefined {
+  return locale === 'kk'
+    ? process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_KK
+    : process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU
+}
+
 /**
  * Отправка лида в воронку CRM.
- *
- * Форма принимает только имя и телефон, поэтому остальные ответы анкеты
- * (давность, подвижность, UTM) до CRM не доходят — они появятся, когда
- * владелец добавит поля в конструкторе формы Tennet.
  *
  * Отказ не проглатываем: возвращаем ok: false, и форма показывает человеку
  * телефон клиники, а не мнимый успех. Так же обрабатывается требование капчи:
  * решать её здесь нечем, поэтому для человека это обычный отказ.
  */
-export async function submitLead(payload: LeadPayload): Promise<{ ok: boolean }> {
+export async function submitLead(
+  payload: LeadPayload,
+  locale: Locale = 'ru',
+): Promise<{ ok: boolean }> {
   // Адрес формы вшивается в сборку скриптом build-static.sh
-  const formUrl = process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL
-  if (!payload.consent || !formUrl) {
+  const url = formUrl(locale)
+  if (!payload.consent || !url) {
     return { ok: false }
   }
 
@@ -73,12 +129,14 @@ export async function submitLead(payload: LeadPayload): Promise<{ ok: boolean }>
   }
 
   try {
-    const response = await fetch(formUrl, {
+    const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         standard_name: payload.name ?? '',
         standard_phone: payload.phone ?? '',
+        // Русская форма такого поля пока не имеет и просто его игнорирует
+        standard_message: buildMessage(payload),
         website_url: '',
       }),
     })

@@ -24,7 +24,8 @@ SITE_URL="${SITE_URL%/}"
 # Публичная лид-форма CRM: туда уходят заявки с сайта. Не секрет — этот адрес
 # виден в любом коде встраивания формы. Пустое значение означало бы, что форма
 # на сайте молча не работает, поэтому адрес задан здесь, а не оставлен на память.
-CRM_LEAD_FORM_URL="${CRM_LEAD_FORM_URL:-https://crm.tennet.kz/api/public/forms/d4ad399c-701d-411e-a884-64881accca18/}"
+CRM_LEAD_FORM_URL_RU="${CRM_LEAD_FORM_URL_RU:-https://crm.tennet.kz/api/public/forms/d4ad399c-701d-411e-a884-64881accca18/}"
+CRM_LEAD_FORM_URL_KK="${CRM_LEAD_FORM_URL_KK:-https://crm.tennet.kz/api/public/forms/3f9d1692-f6e1-45fb-99d1-d23398cbab84/}"
 
 # Виджет онлайн-записи CRM: стоит на странице записи и в профилях врачей.
 # Тоже не секрет — адрес виден в коде страницы.
@@ -37,7 +38,8 @@ echo "Домен сборки: $SITE_URL"
 
 export STATIC_EXPORT=1
 export NEXT_PUBLIC_SITE_URL="$SITE_URL"
-export NEXT_PUBLIC_CRM_LEAD_FORM_URL="$CRM_LEAD_FORM_URL"
+export NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU="$CRM_LEAD_FORM_URL_RU"
+export NEXT_PUBLIC_CRM_LEAD_FORM_URL_KK="$CRM_LEAD_FORM_URL_KK"
 export NEXT_PUBLIC_CRM_BOOKING_URL="$CRM_BOOKING_URL"
 export NEXT_PUBLIC_CARE_URL="$SITE_URL/care"
 export NEXT_PUBLIC_STAFF_URL="$SITE_URL/staff"

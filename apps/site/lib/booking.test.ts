@@ -4,7 +4,7 @@ import { BOOKING_HORIZON_DAYS, createBooking, getSlots } from "./booking";
 const FORM_URL = "https://crm.example.test/api/public/forms/test/";
 
 beforeEach(() => {
-  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", FORM_URL);
+  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU", FORM_URL);
 });
 
 afterEach(() => {
@@ -39,7 +39,7 @@ describe("createBooking", () => {
     expect(result).toEqual({ ok: true });
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe(FORM_URL);
-    expect(JSON.parse(String(init.body))).toEqual({
+    expect(JSON.parse(String(init.body))).toMatchObject({
       standard_name: "Тест",
       standard_phone: "+7 700 000 00 00",
       website_url: "",

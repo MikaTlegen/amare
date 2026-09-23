@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readUtm, submitLead } from "./crm";
+import { buildMessage, readUtm, submitLead } from "./crm";
 
-const FORM_URL = "https://crm.example.test/api/public/forms/test/";
+const FORM_URL = "https://crm.example.test/api/public/forms/ru/";
+const FORM_URL_KK = "https://crm.example.test/api/public/forms/kk/";
 
 beforeEach(() => {
-  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", FORM_URL);
+  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU", FORM_URL);
+  vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL_KK", FORM_URL_KK);
 });
 
 afterEach(() => {
@@ -45,11 +47,45 @@ describe("submitLead", () => {
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe(FORM_URL);
     expect(init.method).toBe("POST");
-    expect(JSON.parse(String(init.body))).toEqual({
+    expect(JSON.parse(String(init.body))).toMatchObject({
       standard_name: "Тест",
       standard_phone: "+7 700 000 00 00",
       website_url: "",
     });
+  });
+
+  // Заявку с казахской страницы ждёт своя форма, со своими подписями полей
+  it("с казахской страницы шлёт в казахскую форму", async () => {
+    const fetchMock = stubFetch(true);
+
+    await submitLead(
+      { filledBy: "patient", phone: "+7 700 000 00 00", source: "form", consent: true },
+      "kk",
+    );
+
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(FORM_URL_KK);
+  });
+
+  it("кладёт ответы анкеты в поле дополнительных сведений", async () => {
+    const fetchMock = stubFetch(true);
+
+    await submitLead(
+      {
+        filledBy: "relative",
+        strokeAgo: "1-6m",
+        mobility: "wheelchair",
+        phone: "+7 700 000 00 00",
+        source: "form",
+        consent: true,
+      },
+      "kk",
+    );
+
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    const message = String(JSON.parse(String(init.body)).standard_message);
+    expect(message).toContain("родственник");
+    expect(message).toContain("1–6 месяцев");
+    expect(message).toContain("на коляске");
   });
 
   // Боту нельзя показывать, что ловушка сработала, иначе он подберёт обход
@@ -92,13 +128,33 @@ describe("submitLead", () => {
 
   // Сборка без адреса формы — заявка уйдёт в никуда, честнее показать отказ
   it("возвращает ok: false, если адрес формы не задан при сборке", async () => {
-    vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU", "");
     const fetchMock = stubFetch(true);
 
     const result = await submitLead({ filledBy: "patient", phone: "+7 700 000 00 00", source: "form", consent: true });
 
     expect(result).toEqual({ ok: false });
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("buildMessage", () => {
+  // Поле в казахской форме обязательное: пустую строку она не примет
+  it("без ответов анкеты даёт непустую строку", () => {
+    const message = buildMessage({ filledBy: "patient", source: "callback", consent: true });
+
+    expect(message.length).toBeGreaterThan(0);
+  });
+
+  it("переносит utm-метки", () => {
+    const message = buildMessage({
+      filledBy: "patient",
+      source: "quiz",
+      consent: true,
+      utm: { utm_source: "2gis" },
+    });
+
+    expect(message).toContain("utm_source=2gis");
   });
 });
 

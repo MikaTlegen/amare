@@ -9,7 +9,7 @@ import { Button, Link } from '@/components/Links'
 import { submitLead, readUtm, type LeadPayload } from '@/lib/crm'
 import { CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
-import { useContent, useT } from '@amare/i18n/react'
+import { useContent, useLocale, useT } from '@amare/i18n/react'
 
 // Подписи вариантов лежат в словаре forms по ключу `<группа>.<id>`
 const WHEN = ['<1m', '1-6m', '6-12m', '>12m'] as const
@@ -29,6 +29,8 @@ export function IntakeFormPage() {
   const contacts = useT('contacts')
   const common = useT('common')
   const booking = useT('booking')
+  // Язык страницы решает, в какую форму CRM уйдёт заявка
+  const locale = useLocale()
 
   const [filledBy, setFilledBy] = useState<'patient' | 'relative'>('relative')
   const [when, setWhen] = useState<string>('')
@@ -63,7 +65,7 @@ export function IntakeFormPage() {
       source: 'form',
       utm: readUtm(),
       consent,
-    })
+    }, locale)
     setSending(false)
     // Без ветки отказа кнопка просто разблокируется, и человек уходит
     // с уверенностью, что заявка отправлена

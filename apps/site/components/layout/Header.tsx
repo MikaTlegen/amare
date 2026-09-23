@@ -97,9 +97,10 @@ export function Header() {
             {CLINIC.phones[0].label}
           </a>
 
-          <div className="hidden sm:block">
-            <LanguageSwitch />
-          </div>
+          {/* Виден и на телефоне: иначе переключить язык можно было только
+              через меню, и человек, попавший на казахскую версию, не находил
+              обратной дороги */}
+          <LanguageSwitch />
           <AccessibilityMenu />
 
           <CabinetLink />
