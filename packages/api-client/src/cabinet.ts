@@ -33,7 +33,12 @@ export interface User {
 
 export type ExerciseStatus = "done" | "now" | "todo";
 
-/** Сложность упражнения: 1 — лёгкое, 3 — тяжёлое. Подписи в словаре cabinet. */
+/**
+ * Как далось упражнение: 1 — легко, 3 — тяжело. Подписи в словаре cabinet.
+ *
+ * Это оценка пациента, а не врача: врач не знает, чего стоило занятие.
+ * По ней куратор видит, где нагрузку пора снизить или поднять.
+ */
 export type ExerciseDifficulty = 1 | 2 | 3;
 
 export interface Exercise {
@@ -44,7 +49,8 @@ export interface Exercise {
   /** К какому направлению относится — для группировки и статистики. */
   direction: string;
   hint?: string;
-  difficulty: ExerciseDifficulty;
+  /** Оценка пациента после занятия. Пусто — он ещё не отвечал. */
+  feedback?: ExerciseDifficulty;
   /** Разбор упражнения на видео. Внешняя ссылка: плеер в кабинет не встраиваем. */
   videoUrl?: string;
 }
@@ -241,9 +247,9 @@ export const DEMO_DAY_PLAN: DayPlan = {
       title: "Разработка кисти",
       minutes: 15,
       status: "done",
+      feedback: 1,
       direction: "hand",
       hint: "Медленно, до лёгкого сопротивления. Боли быть не должно.",
-      difficulty: 1,
       videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
@@ -251,9 +257,9 @@ export const DEMO_DAY_PLAN: DayPlan = {
       title: "Речевая гимнастика",
       minutes: 20,
       status: "done",
+      feedback: 3,
       direction: "speech",
       hint: "Перед зеркалом, десять повторов каждого упражнения.",
-      difficulty: 2,
       videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
@@ -263,7 +269,6 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "now",
       direction: "walking",
       hint: "Обязательно рядом с устойчивой опорой и в присутствии близкого.",
-      difficulty: 3,
       videoUrl: "https://www.youtube.com/watch?v=oCTAxHgJdW8",
     },
     {
@@ -273,7 +278,6 @@ export const DEMO_DAY_PLAN: DayPlan = {
       status: "todo",
       direction: "walking",
       hint: "В комфортном темпе, с остановками.",
-      difficulty: 2,
     },
   ],
 };

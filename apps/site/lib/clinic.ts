@@ -49,6 +49,15 @@ export const CABINETS = {
  * Каждый путь отсюда обязан существовать в app/, иначе ссылка
  * молча ведёт на 404 (проверяется тестом app/routes.test.ts).
  */
+/**
+ * Онлайн-запись Tennet. Кнопки «Записаться» ведут прямо сюда, а не на свою
+ * страницу: лишний шаг между решением и календарём теряет людей. Новой
+ * вкладкой открывает сам Button — он так делает со всеми http-ссылками.
+ */
+export const BOOKING_URL =
+  process.env.NEXT_PUBLIC_CRM_BOOKING_URL ??
+  'https://crm.tennet.kz/booking/05a40895-39c2-4a5e-8b9d-21ec43b01bbb/'
+
 export const ROUTES = {
   home: '/',
   directions: '/napravleniya',

@@ -9,7 +9,7 @@ import { PageCover } from '@/components/PageCover'
 import { Reveal } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { DOCTORS, CONDITION_LIST, type ConditionId } from '@/data/doctors'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 import { cn } from '@amare/ui'
 
 /**
@@ -217,7 +217,7 @@ export function TeamPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.booking}>{t('cta.pick')}</Button>
+            <Button href={BOOKING_URL}>{t('cta.pick')}</Button>
             <Button href={CLINIC.phones[0].href} variant="onDark">
               {CLINIC.phones[0].label}
             </Button>

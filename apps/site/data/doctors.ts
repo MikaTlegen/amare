@@ -6,10 +6,17 @@ export interface Doctor {
   /** Опубликованные клиникой документы: подпись лежит в словаре по ключу. */
   /**
    * Снимки «до курса» и «после курса» для блока в профиле.
-   * Пока пусто: настоящие фотографии можно публиковать только с письменного
-   * согласия пациента, поэтому блок показывает заглушки с пометкой.
+   *
+   * Сейчас это фотографии самой клиники из public/photos — показать, как блок
+   * выглядит. Снимков пациентов здесь быть не может без письменного согласия,
+   * поэтому блок подписан «пример оформления».
    */
   showcase?: { before: string; after: string }
+  /**
+   * Тот же человек в CRM: по нему берутся свободные окна и создаётся запись.
+   * Список id — GET /api/public/booking/<uuid>/, поле specialists.
+   */
+  crmSpecialistId?: number
   certificates: DoctorCertificate[]
   /**
    * Состояния, с которыми работает специалист.
@@ -38,30 +45,40 @@ export type ConditionId = 'ischemic' | 'hemorrhagic' | 'tbi' | 'postop' | 'cp'
 export const DOCTORS: Doctor[] = [
   {
     id: 'kuspanova',
+    crmSpecialistId: 364667,
+    showcase: { before: '/photos/hand-therapy.jpg', after: '/photos/fine-motor.jpg' },
     photo: '/photos/doctor-kuspanova.webp',
     certificates: [{ labelKey: 'kuspanova.cert', href: '/certificates/kuspanova.webp' }],
     conditions: ['ischemic', 'hemorrhagic', 'tbi', 'postop'],
   },
   {
     id: 'ahaaga',
+    crmSpecialistId: 364668,
+    showcase: { before: '/photos/hospital-drip.jpg', after: '/photos/equipment.jpg' },
     photo: '/photos/doctor-ahaaga.webp',
     certificates: [{ labelKey: 'ahaaga.cert', href: '/certificates/ahaaga.pdf' }],
     conditions: ['ischemic', 'hemorrhagic', 'tbi'],
   },
   {
     id: 'zhumabekova',
+    crmSpecialistId: 364664,
+    showcase: { before: '/photos/hand-device.jpg', after: '/photos/hand-therapy.jpg' },
     photo: '/photos/doctor-zhumabekova.png',
     certificates: [{ labelKey: 'zhumabekova.cert', href: '/certificates/zhumabekova.pdf' }],
     conditions: ['ischemic', 'hemorrhagic', 'postop', 'cp'],
   },
   {
     id: 'moldabekov',
+    crmSpecialistId: 364669,
+    showcase: { before: '/photos/equipment.jpg', after: '/photos/hand-device.jpg' },
     photo: '/photos/doctor-moldabekov.png',
     certificates: [],
     conditions: ['hemorrhagic', 'tbi', 'postop'],
   },
   {
     id: 'niyazbekova',
+    crmSpecialistId: 364665,
+    showcase: { before: '/photos/fine-motor.jpg', after: '/photos/healthy-plate.jpg' },
     photo: '/photos/doctor-niyazbekova.png',
     certificates: [],
     conditions: ['ischemic', 'hemorrhagic', 'tbi', 'cp'],

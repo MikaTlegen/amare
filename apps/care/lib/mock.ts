@@ -16,6 +16,7 @@ import {
   type CareTask,
   type Consent,
   type DayPlan,
+  type ExerciseDifficulty,
   type GuardianLesson,
   type Material,
   type Medication,
@@ -75,6 +76,21 @@ export async function signInAs(role: CareRole): Promise<User> {
 }
 
 export async function getDayPlan(): Promise<DayPlan> {
+  return delay(dayPlan)
+}
+
+/**
+ * Оценка пациента: как далось упражнение. Возвращает обновлённый план.
+ *
+ * Ставит её сам человек, а не врач: по ней куратор понимает, где снизить
+ * нагрузку. Переоценить можно — передумать после занятия нормально.
+ */
+export async function setExerciseFeedback(
+  id: string,
+  feedback: ExerciseDifficulty,
+): Promise<DayPlan> {
+  const exercises = dayPlan.exercises.map((e) => (e.id === id ? { ...e, feedback } : e))
+  dayPlan = { ...dayPlan, exercises }
   return delay(dayPlan)
 }
 

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, UserRound, HeartHandshake, Stethoscope, ShieldCheck, LibraryBig } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { useContent, useT } from '@amare/i18n/react'
+import { LanguageSwitch, useSetCabinetLocale } from '@amare/ui'
 import { useAuth } from '@/auth/AuthContext'
 import type { CareRole } from '@/lib/mock'
 import { ROUTES, SITE_URL, safeRedirectPath, staffLoginUrl, type StaffRoleId } from '@/lib/routes'
@@ -33,6 +34,7 @@ const DEMO_ROLES: { role: CareRole; Icon: LucideIcon }[] = [
  */
 export function LoginPage() {
   const t = useT('cabinet')
+  const setLocale = useSetCabinetLocale()
   const text = useContent('cabinet')
   const { user, signIn } = useAuth()
   const router = useRouter()
@@ -57,14 +59,19 @@ export function LoginPage() {
     <section className="container-content py-14">
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <div className="flex flex-col gap-2">
-          {/* Кабинет — отдельное приложение, ссылка «/» вела бы внутрь него */}
-          <a
-            href={SITE_URL}
-            className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {t('login.home')}
-          </a>
+          {/* Язык выбирают до входа: внутри кабинета переключатель есть,
+              а на этой странице человек мог застрять на чужом языке */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Кабинет — отдельное приложение, ссылка «/» вела бы внутрь него */}
+            <a
+              href={SITE_URL}
+              className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              {t('login.home')}
+            </a>
+            <LanguageSwitch onChange={setLocale} />
+          </div>
           <h1 className="m-0 mt-2 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
             {t('login.title')}
           </h1>

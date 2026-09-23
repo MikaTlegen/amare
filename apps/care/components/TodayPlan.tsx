@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { Check, Clock, Play, Info, PlayCircle } from 'lucide-react'
-import type { DayPlan } from '@amare/api-client'
+import type { DayPlan, ExerciseDifficulty } from '@amare/api-client'
 import { cn } from '@amare/ui'
 import { useT } from '@amare/i18n/react'
-import { completeExercise, getDayPlan } from '@/lib/mock'
+import { completeExercise, getDayPlan, setExerciseFeedback } from '@/lib/mock'
 
 /**
  * План дня.
@@ -37,6 +37,11 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
     setBusy(id)
     setPlan(await completeExercise(id))
     setBusy(null)
+  }
+
+  /** Оценка пациента: как далось упражнение. Менять можно сколько угодно. */
+  const rate = async (id: string, level: ExerciseDifficulty) => {
+    setPlan(await setExerciseFeedback(id, level))
   }
 
   return (
@@ -112,38 +117,55 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                   </span>
                 )}
 
-                <span className="flex flex-wrap items-center gap-3 text-base text-muted">
-                  {/*
-                   * Сложность подписана словом, а не только точками: форма и
-                   * цвет — не признак для того, кто их не различает.
-                   */}
-                  <span className="flex items-center gap-1.5">
-                    <span aria-hidden="true" className="flex gap-1">
-                      {[1, 2, 3].map((level) => (
-                        <span
+                {exercise.videoUrl && (
+                  <a
+                    href={exercise.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-fit items-center gap-1.5 text-base font-medium text-deep"
+                  >
+                    <PlayCircle className="h-4 w-4" aria-hidden="true" />
+                    {t('plan.video')}
+                  </a>
+                )}
+
+                {/*
+                 * Как далось упражнение, отвечает сам пациент — врач этого
+                 * не знает. Спрашиваем только после выполнения: до занятия
+                 * вопрос бессмысленный. Ответ можно изменить.
+                 */}
+                {done && !readOnly && (
+                  <span className="flex flex-wrap items-center gap-2 text-base text-muted">
+                    {exercise.feedback
+                      ? t('plan.feedbackDone', { level: t(`plan.difficulty${exercise.feedback}`) })
+                      : t('plan.feedbackAsk')}
+                    <span className="flex flex-wrap gap-1.5">
+                      {([1, 2, 3] as const).map((level) => (
+                        <button
                           key={level}
+                          type="button"
+                          onClick={() => void rate(exercise.id, level)}
+                          aria-pressed={exercise.feedback === level}
                           className={cn(
-                            'h-2 w-2 rounded-full',
-                            level <= exercise.difficulty ? 'bg-deep' : 'bg-line',
+                            'min-h-[2.4rem] rounded-xl border px-3 py-1.5 text-base',
+                            exercise.feedback === level
+                              ? 'border-deep bg-deep text-white'
+                              : 'border-line bg-bg text-ink',
                           )}
-                        />
+                        >
+                          {t(`plan.difficulty${level}`)}
+                        </button>
                       ))}
                     </span>
-                    {t('plan.difficulty', { level: t(`plan.difficulty${exercise.difficulty}`) })}
                   </span>
+                )}
 
-                  {exercise.videoUrl && (
-                    <a
-                      href={exercise.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 font-medium text-deep"
-                    >
-                      <PlayCircle className="h-4 w-4" aria-hidden="true" />
-                      {t('plan.video')}
-                    </a>
-                  )}
-                </span>
+                {/* Опекун и куратор оценку видят, но не ставят: она не их */}
+                {done && readOnly && exercise.feedback && (
+                  <span className="text-base text-muted">
+                    {t('plan.feedbackDone', { level: t(`plan.difficulty${exercise.feedback}`) })}
+                  </span>
+                )}
               </div>
 
               <span className="text-base text-muted sm:w-20 sm:text-right">

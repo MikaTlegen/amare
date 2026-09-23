@@ -6,7 +6,7 @@ import { stripLocale } from '@amare/i18n/locales'
 import { useT } from '@amare/i18n/react'
 import { Button } from '@/components/Links'
 import { ClinicMap } from '@/components/ClinicMap'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 
 /**
  * Заглушка для страниц, которых ещё нет.
@@ -62,7 +62,7 @@ export function StubPage() {
         </p>
 
         <div className="flex flex-wrap gap-3">
-          <Button to={ROUTES.booking}>{t('book')}</Button>
+          <Button href={BOOKING_URL}>{t('book')}</Button>
           <Button to={ROUTES.home} variant="outline">
             {t('home')}
           </Button>

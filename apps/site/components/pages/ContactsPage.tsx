@@ -3,7 +3,7 @@ import { getT, type Locale } from '@amare/i18n'
 import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { ClinicMap } from '@/components/ClinicMap'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC } from '@/lib/clinic'
 
 /** Контакты (S-02 ТЗ): адрес, телефоны, график, каналы связи и карта. */
 export function ContactsPage({ locale }: { locale: Locale }) {
@@ -77,7 +77,7 @@ export function ContactsPage({ locale }: { locale: Locale }) {
                 <Camera className="h-5 w-5" aria-hidden="true" />
                 {common('contact.instagram')}
               </Button>
-              <Button to={ROUTES.booking}>{t('address.book')}</Button>
+              <Button href={BOOKING_URL}>{t('address.book')}</Button>
             </div>
           </article>
         </div>

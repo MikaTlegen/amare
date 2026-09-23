@@ -5,7 +5,7 @@ import { Reveal } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { PageCover } from '@/components/PageCover'
 import { RECOVERY_STORIES } from '@/data/stories'
-import { ROUTES, whatsappLink } from '@/lib/clinic'
+import { BOOKING_URL, whatsappLink } from '@/lib/clinic'
 
 /** Истории восстановления (S-08 ТЗ): пары фото «до/после» с описанием. */
 export function ResultsPage({ locale }: { locale: Locale }) {
@@ -111,7 +111,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.booking}>{t('cta.book')}</Button>
+            <Button href={BOOKING_URL}>{t('cta.book')}</Button>
             <Button href={whatsappLink(t('cta.whatsappText'))} variant="outline">
               {t('cta.whatsapp')}
             </Button>

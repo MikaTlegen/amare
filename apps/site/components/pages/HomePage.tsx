@@ -16,7 +16,7 @@ import { ResultsBand } from '@/components/home/ResultsBand'
 import { Reviews } from '@/components/home/Reviews'
 import { FounderWord } from '@/components/home/FounderWord'
 import { ClinicMap } from '@/components/ClinicMap'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 
 /* Видео и постер лежат у нас: раньше файл тянулся с videos.pexels.com,
    то есть каждый визит уходил запросом к третьей стороне — ровно то, от чего
@@ -137,7 +137,7 @@ function Hero() {
             {t('hero.note')}
           </motion.p>
           <motion.div variants={fadeUp} className='mt-8 flex flex-wrap items-center gap-5'>
-            <Button to={ROUTES.booking} size='lg'>
+            <Button href={BOOKING_URL} size='lg'>
               {t('hero.book')}
               <ArrowDownRight className='h-5 w-5' aria-hidden='true' />
             </Button>
@@ -358,7 +358,7 @@ function Contact() {
           </h2>
           <p className='mt-7 max-w-[32em] text-lg leading-relaxed text-white/75'>{contacts('addressFull')}</p>
           <div className='mt-8 flex flex-wrap items-center gap-5'>
-            <Button to={ROUTES.booking} variant='white' size='lg'>{t('contact.book')}</Button>
+            <Button href={BOOKING_URL} variant='white' size='lg'>{t('contact.book')}</Button>
             <a href={CLINIC.phones[0].href} className='tap-target inline-flex items-center gap-2 text-base font-semibold text-white no-underline hover:text-sky'>
               <Phone className='h-5 w-5' aria-hidden='true' />
               {CLINIC.phones[0].label}

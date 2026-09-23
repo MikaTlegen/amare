@@ -6,7 +6,7 @@ import { ParallaxBand } from '@amare/ui'
 import { Reveal } from '@amare/ui'
 import { Button } from '@/components/Links'
 import { COURSE_STEPS, FORMATS } from '@/data/course'
-import { CLINIC, ROUTES, whatsappLink } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, whatsappLink } from '@/lib/clinic'
 
 /** Страница «Курс и цены»: пять шагов, форматы, иногородние. */
 export function CoursePage({ locale }: { locale: Locale }) {
@@ -37,7 +37,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
           {COURSE_STEPS.map((step, i) => (
             <Reveal as="li" key={step.n} delay={i * 0.05}>
               <Link
-                href={ROUTES.booking}
+                href={BOOKING_URL}
                 className="group grid items-center gap-5 rounded-3xl border border-line bg-surface p-7 no-underline transition-colors hover:border-brand hover:bg-tint lg:grid-cols-12 lg:gap-7"
               >
                 <span className="font-display text-3xl font-semibold tracking-tighter text-muted transition-colors group-hover:text-brand lg:col-span-1">
@@ -73,7 +73,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
         <div className="flex flex-col items-start gap-4 rounded-3xl bg-deep p-7 sm:flex-row sm:items-center sm:gap-6">
           <p className="m-0 flex-1 text-lg leading-relaxed text-white/85">{t('help.note')}</p>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.booking} variant="white">
+            <Button href={BOOKING_URL} variant="white">
               {t('help.book')}
             </Button>
             <Button href={whatsappLink(t('help.whatsappText'))} variant="white">
@@ -107,7 +107,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
                   {text(`format.${format.id}.note`)}
                 </p>
                 <Button
-                  to={`${ROUTES.booking}?format=${format.bookingFormat}`}
+                  href={BOOKING_URL}
                   variant="outline"
                   className="mt-auto w-full"
                 >
@@ -157,7 +157,7 @@ export function CoursePage({ locale }: { locale: Locale }) {
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button to={ROUTES.booking}>{t('cta.pick')}</Button>
+            <Button href={BOOKING_URL}>{t('cta.pick')}</Button>
             <Button href={CLINIC.phones[0].href} variant="outline">
               {CLINIC.phones[0].label}
             </Button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Stethoscope, LibraryBig, ShieldCheck } from 'lucide-react'
 import { useT } from '@amare/i18n/react'
+import { LanguageSwitch, useSetCabinetLocale } from '@amare/ui'
 import type { LucideIcon } from 'lucide-react'
 import type { StaffRole } from '@amare/api-client'
 import { useAuth } from '@/auth/AuthContext'
@@ -58,6 +59,7 @@ function isStaffRole(value: string | null): value is StaffRole {
  */
 export function LoginPage() {
   const t = useT('staff')
+  const setLocale = useSetCabinetLocale()
   const { user, signIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -95,14 +97,19 @@ export function LoginPage() {
     <section className="container-content py-14">
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <div className="flex flex-col gap-2">
-          {/* Рабочее место — отдельное приложение, ссылка «/» вела бы внутрь него */}
-          <a
-            href={SITE_URL}
-            className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            На главную страницу
-          </a>
+          {/* Язык выбирают до входа: внутри рабочего места переключатель есть,
+              а на этой странице человек мог застрять на чужом языке */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Рабочее место — отдельное приложение, ссылка «/» вела бы внутрь него */}
+            <a
+              href={SITE_URL}
+              className="tap-target inline-flex w-fit items-center gap-2 text-base font-semibold text-ink no-underline hover:text-brand"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              На главную страницу
+            </a>
+            <LanguageSwitch onChange={setLocale} />
+          </div>
           <h1 className="m-0 mt-2 font-display text-3xl font-medium tracking-[-0.045em] sm:text-4xl">
             {t('login.title')}
           </h1>

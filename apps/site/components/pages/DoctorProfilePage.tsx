@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import type { Locale } from '@amare/i18n'
 import { useContent, useT } from '@amare/i18n/react'
 import { BookingWidget } from '@/components/booking/BookingWidget'
+import { DoctorBooking } from '@/components/booking/DoctorBooking'
 import { DOCTORS } from '@/data/doctors'
 import { ROUTES, bookingLink } from '@/lib/clinic'
 
@@ -153,11 +154,21 @@ export function DoctorProfilePage({ doctorId, locale }: { doctorId: string; loca
         </div>
 
         <div className='min-w-0 lg:col-span-7'>
-          <BookingWidget
-            hint={booking('widget.doctorHint', {
-              name: `${text(`${doctor.id}.name`)}, ${text(`${doctor.id}.role`).toLocaleLowerCase(locale)}`,
-            })}
-          />
+          {/* Свой календарь — только если врач связан с CRM. Иначе остаётся
+              кнопка на виджет: пустая форма хуже честной ссылки */}
+          {doctor.crmSpecialistId ? (
+            <DoctorBooking
+              specialistId={doctor.crmSpecialistId}
+              doctorName={text(`${doctor.id}.name`)}
+              locale={locale}
+            />
+          ) : (
+            <BookingWidget
+              hint={booking('widget.doctorHint', {
+                name: `${text(`${doctor.id}.name`)}, ${text(`${doctor.id}.role`).toLocaleLowerCase(locale)}`,
+              })}
+            />
+          )}
 
           <p className='mt-4 text-xs leading-relaxed text-muted'>
             {t('profile.clinicOnly')}{' '}

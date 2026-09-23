@@ -5,7 +5,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Phone, Info, CheckCircle2, ArrowLeft } from 'lucide-react'
 import { Button, Link } from '@/components/Links'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 import { readUtm, submitLead, type LeadPayload } from '@/lib/crm'
 import { cn } from '@amare/ui'
 import { useContent, useLocale, useT } from '@amare/i18n/react'
@@ -283,7 +283,7 @@ export function Quiz() {
                    * где он стоит целиком.
                    */}
                   <div className="flex flex-wrap gap-3">
-                    <Button to={ROUTES.booking}>{booking('widget.title')}</Button>
+                    <Button href={BOOKING_URL}>{booking('widget.title')}</Button>
                     <Button href={CLINIC.phones[0].href} variant="outline">
                       {CLINIC.phones[0].label}
                     </Button>

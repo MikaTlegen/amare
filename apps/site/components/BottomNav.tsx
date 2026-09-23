@@ -7,7 +7,7 @@ import { useT } from '@amare/i18n/react'
 import { cn } from '@amare/ui'
 import { Link } from '@/components/Links'
 import { MobileMenu } from '@/components/layout/MobileMenu'
-import { CLINIC, ROUTES } from '@/lib/clinic'
+import { BOOKING_URL, CLINIC, ROUTES } from '@/lib/clinic'
 
 /**
  * Высота панели. Задана явно, а не содержимым: её же должна занять распорка
@@ -70,14 +70,6 @@ export function BottomNav() {
       active: pathname.startsWith(ROUTES.directions),
       accent: false,
     },
-    {
-      to: ROUTES.booking,
-      Icon: CalendarCheck,
-      label: common('book'),
-      active: pathname === ROUTES.booking,
-      // Единственное цветное пятно панели: записаться — то, ради чего сюда пришли
-      accent: true,
-    },
   ]
 
   return (
@@ -100,6 +92,19 @@ export function BottomNav() {
             <span className={LABEL}>{label}</span>
           </Link>
         ))}
+
+        {/* Запись ведёт прямо в календарь CRM, а не на свою страницу:
+            лишний шаг между решением и выбором времени теряет людей.
+            Единственное цветное пятно панели — ради этого сюда и пришли */}
+        <a
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={tabClass(false)}
+        >
+          <CalendarCheck className={iconClass(true)} aria-hidden="true" />
+          <span className={LABEL}>{common('book')}</span>
+        </a>
 
         <a href={CLINIC.phones[0].href} className={tabClass(false)}>
           <Phone className={iconClass(false)} aria-hidden="true" />

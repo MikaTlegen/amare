@@ -20,6 +20,16 @@ export const booking = {
 
   "formats.title": "Форматы приёма и цены",
 
+  "slots.service": "Услуга",
+  "slots.duration": "{count} мин",
+  "slots.date": "Дата",
+  "slots.time": "Свободное время",
+  "slots.loading": "Смотрим расписание…",
+  "slots.failed": "Не удалось загрузить расписание. Позвоните — администратор подберёт время:",
+  "slots.chosen": "Выбрано: {date}, {time}",
+  "slots.doctorNote":
+    "Показано расписание специалиста {name}. Запись создаётся сразу в календаре клиники.",
+
   "format.legend": "1. Формат приёма",
   "format.clinic": "В клинике",
   "format.online": "Онлайн",

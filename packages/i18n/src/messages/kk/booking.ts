@@ -18,6 +18,16 @@ export const booking: Translation<"booking"> = {
 
   "formats.title": "Қабылдау форматтары және бағалар",
 
+  "slots.service": "Қызмет",
+  "slots.duration": "{count} мин",
+  "slots.date": "Күні",
+  "slots.time": "Бос уақыт",
+  "slots.loading": "Кестені қарап жатырмыз…",
+  "slots.failed": "Кестені жүктеу мүмкін болмады. Қоңырау шалыңыз — әкімші уақыт таңдап береді:",
+  "slots.chosen": "Таңдалды: {date}, {time}",
+  "slots.doctorNote":
+    "{name} маманының кестесі көрсетілген. Жазылу бірден клиника күнтізбесінде жасалады.",
+
   "format.legend": "1. Қабылдау форматы",
   "format.clinic": "Клиникада",
   "format.online": "Онлайн",
