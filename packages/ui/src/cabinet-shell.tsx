@@ -157,7 +157,7 @@ export function CabinetShell({
         >
           <div className="mx-auto flex max-w-[76rem] flex-col gap-4 sm:gap-6">
             <div className="flex flex-col gap-1.5">
-              <h1 className="m-0 font-display text-2xl font-semibold leading-tight tracking-[-0.04em] sm:text-4xl">
+              <h1 className="m-0 font-display text-xl font-semibold leading-tight tracking-[-0.04em] sm:text-4xl">
                 {title}
               </h1>
               {subtitle && <p className="m-0 text-base text-muted">{subtitle}</p>}

@@ -8,6 +8,7 @@ import { cn } from '@amare/ui'
 import type { MessageKey } from '@amare/i18n'
 import { useT } from '@amare/i18n/react'
 import { addVital, getVitals } from '@/lib/mock'
+import { isAboveTarget, PRESSURE_TARGET } from '@/lib/summary'
 
 const MOODS: { value: number; face: string; key: MessageKey<'cabinet'> }[] = [
   { value: 2, face: '🙁', key: 'diary.bad' },
@@ -15,8 +16,7 @@ const MOODS: { value: number; face: string; key: MessageKey<'cabinet'> }[] = [
   { value: 4, face: '🙂', key: 'diary.good' },
 ]
 
-/** Целевой коридор давления. TODO M8: индивидуальные цели задаёт врач. */
-const TARGET = { systolic: 140, diastolic: 90 }
+const TARGET = PRESSURE_TARGET
 
 function isSuspicious(entry: { systolic: number; diastolic: number; pulse: number }): boolean {
   const { systolic, diastolic, pulse } = VITALS_SANITY
@@ -86,19 +86,19 @@ export function DiaryPanel({
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-12">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
       {!readOnly && (
         <form
           onSubmit={submit}
-          className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5"
+          className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-5"
         >
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
             {t('diary.title')}
           </h2>
 
           <div className="grid grid-cols-2 gap-3">
-            <NumberField id="sys" label={t('diary.systolic')} value={systolic} onChange={setSystolic} />
-            <NumberField id="dia" label={t('diary.diastolic')} value={diastolic} onChange={setDiastolic} />
+            <NumberField id="sys" label={t('diary.systolic')} unit={t('diary.unit')} value={systolic} onChange={setSystolic} />
+            <NumberField id="dia" label={t('diary.diastolic')} unit={t('diary.unit')} value={diastolic} onChange={setDiastolic} />
           </div>
           <NumberField id="pulse" label={t('diary.pulse')} value={pulse} onChange={setPulse} />
 
@@ -167,7 +167,7 @@ export function DiaryPanel({
 
       <section
         className={cn(
-          'flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6',
+          'flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6',
           readOnly ? 'lg:col-span-12' : 'lg:col-span-7',
         )}
       >
@@ -182,19 +182,31 @@ export function DiaryPanel({
 
         <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
           {entries.map((entry) => {
-            const high = entry.systolic > TARGET.systolic || entry.diastolic > TARGET.diastolic
+            const high = isAboveTarget(entry)
+            const mood = MOODS.find((item) => item.value === entry.mood)
             return (
               <li
                 key={entry.id}
                 className={cn(
-                  'flex flex-wrap items-center gap-x-5 gap-y-1 rounded-2xl px-5 py-4',
+                  'flex flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4',
                   high ? 'bg-[rgb(253,238,237)]' : 'bg-bg',
                 )}
               >
-                <span className="font-display text-xl font-semibold tracking-[-0.04em]">
-                  {entry.systolic}/{entry.diastolic}
+                {/* Подпись «Давление» и единицы — прямо в строке: голое «138/86»
+                    человек 55+ может не узнать, а врач должен видеть единицы */}
+                <span className="flex items-baseline gap-2">
+                  <span className="text-base text-muted">{t('diary.pressure')}</span>
+                  <span className="font-display text-xl font-semibold tracking-[-0.04em]">
+                    {entry.systolic}/{entry.diastolic}
+                  </span>
+                  <span className="text-base text-muted">{t('diary.unit')}</span>
                 </span>
                 <span className="text-base text-muted">{t('diary.pulseValue', { value: entry.pulse })}</span>
+                {mood && (
+                  <span className="text-base text-muted">
+                    {t('diary.moodValue', { mood: t(mood.key) })}
+                  </span>
+                )}
                 <span className="text-base text-muted">{entry.at}</span>
                 {entry.byGuardian && (
                   <span className="rounded-full bg-tint px-3 py-1 text-sm font-medium text-deep">
@@ -222,18 +234,22 @@ export function DiaryPanel({
 function NumberField({
   id,
   label,
+  unit,
   value,
   onChange,
 }: {
   id: string
   label: string
+  /** Единицы — частью подписи поля, чтобы диктор читал их вместе. */
+  unit?: string
   value: string
   onChange: (next: string) => void
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-base font-medium">
+      <label htmlFor={id} className="flex flex-col text-base font-medium leading-snug">
         {label}
+        {unit && <span className="font-normal text-muted">{unit}</span>}
       </label>
       <input
         id={id}

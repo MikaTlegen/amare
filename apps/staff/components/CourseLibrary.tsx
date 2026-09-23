@@ -43,10 +43,10 @@ export function CourseLibrary({ onEdit }: { onEdit: (courseId: string | null) =>
     staff.filter((member) => ids?.includes(member.id)).map((member) => member.name)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex flex-col gap-1.5">
-          <h2 className="m-0 font-display text-3xl font-semibold tracking-[-0.04em]">{t('tab.courses')}</h2>
+          <h2 className="m-0 font-display text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">{t('tab.courses')}</h2>
           <p className="m-0 text-base text-muted">
             {t('courses.summary', { total: items.length, published, drafts: items.length - published })}
           </p>
@@ -86,7 +86,7 @@ export function CourseLibrary({ onEdit }: { onEdit: (courseId: string | null) =>
             const curators = names(course.curatorIds)
             const moderators = names(course.moderatorIds)
             return (
-              <li key={course.id} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+              <li key={course.id} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h3 className="m-0 min-w-0 flex-1 font-display text-xl font-semibold tracking-[-0.035em]">
                     {course.title}

@@ -15,6 +15,8 @@ import { completeExercise, getDayPlan, setExerciseFeedback } from '@/lib/mock'
  */
 const SHOW_ORDER: Record<Exercise['status'], number> = { now: 0, todo: 1, done: 2 }
 
+const DIFFICULTY_LEVELS: readonly ExerciseDifficulty[] = [1, 2, 3]
+
 /**
  * План дня.
  *
@@ -27,6 +29,8 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
   const t = useT('cabinet')
   const [plan, setPlan] = useState<DayPlan | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  /** Упражнение, по которому сейчас спрашиваем «как далось». */
+  const [asking, setAsking] = useState<string | null>(null)
 
   useEffect(() => {
     void getDayPlan().then(setPlan)
@@ -41,10 +45,11 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
     .reduce((sum, e) => sum + e.minutes, 0)
   const percent = Math.round((doneMinutes / plan.planMinutes) * 100)
 
-  const markDone = async (id: string) => {
+  const markDone = async (id: string, feedback?: ExerciseDifficulty) => {
     setBusy(id)
-    setPlan(await completeExercise(id))
+    setPlan(await completeExercise(id, feedback))
     setBusy(null)
+    setAsking(null)
   }
 
   /** Оценка пациента: как далось упражнение. Менять можно сколько угодно. */
@@ -54,7 +59,7 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
 
   return (
     <div className="flex flex-col gap-4 sm:gap-6">
-      <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-5 sm:p-6">
+      <div className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <span className="font-display text-xl font-medium tracking-[-0.035em]">
             {t('plan.day', { day: plan.day, total: plan.courseLength })}
@@ -109,7 +114,9 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                 // На телефоне иконка, название и минуты — одной строкой, кнопка
                 // переносится под них на всю ширину: так «Выполнено» текущего
                 // упражнения помещается в первый экран над нижней панелью
-                'flex flex-wrap items-start gap-3 rounded-3xl border p-5 sm:flex-nowrap sm:items-center sm:gap-5',
+                'flex flex-wrap items-start gap-3 rounded-3xl border p-4 sm:flex-nowrap sm:items-center sm:gap-5 sm:p-5',
+                // Вопрос «как далось» встаёт отдельной строкой под упражнением
+                asking === exercise.id && 'sm:flex-wrap',
                 done && 'border-line bg-bg',
                 now && 'border-[1.5px] border-brand bg-surface',
                 !done && !now && 'border-line bg-surface',
@@ -204,15 +211,59 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                 {t('plan.exerciseMinutes', { count: exercise.minutes })}
               </span>
 
-              {!readOnly && !done && (
+              {!readOnly && !done && asking !== exercise.id && (
                 <button
                   type="button"
-                  onClick={() => void markDone(exercise.id)}
-                  disabled={busy === exercise.id}
-                  className="min-h-[3rem] w-full shrink-0 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white disabled:opacity-60 sm:w-auto"
+                  onClick={() => setAsking(exercise.id)}
+                  className="min-h-[3rem] w-full shrink-0 rounded-xl bg-deep px-5 py-3 text-base font-semibold text-white sm:w-auto"
                 >
-                  {busy === exercise.id ? t('plan.marking') : t('plan.done')}
+                  {t('plan.done')}
                 </button>
+              )}
+
+              {/*
+               * «Как далось?» — в момент отметки, а не потом: после занятия
+               * человек помнит, чего оно стоило, а назавтра уже нет. Ответ
+               * уходит куратору вместе с отметкой. Пропустить можно — отметка
+               * всё равно ставится, выдумывать оценку за человека нельзя.
+               */}
+              {!readOnly && !done && asking === exercise.id && (
+                <div className="flex w-full flex-col gap-3 border-t border-line pt-4">
+                  <span className="text-base font-semibold">{t('plan.feedbackAsk')}</span>
+                  {/* Столбиком на узком экране: «нормально» не помещается в треть
+                      ширины, а уменьшать кегль для 55+ нельзя */}
+                  <div className="grid gap-2 min-[26rem]:grid-cols-3">
+                    {DIFFICULTY_LEVELS.map((level) => (
+                      <button
+                        key={level}
+                        type="button"
+                        onClick={() => void markDone(exercise.id, level)}
+                        disabled={busy === exercise.id}
+                        className="min-h-[3rem] rounded-xl bg-deep px-2 py-3 text-base font-semibold text-white disabled:opacity-60"
+                      >
+                        {t(`plan.difficulty${level}`)}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <button
+                      type="button"
+                      onClick={() => void markDone(exercise.id)}
+                      disabled={busy === exercise.id}
+                      className="min-h-11 text-base font-medium text-deep underline-offset-4 hover:underline disabled:opacity-60"
+                    >
+                      {busy === exercise.id ? t('plan.marking') : t('plan.skipRating')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAsking(null)}
+                      className="min-h-11 text-base font-medium text-muted hover:text-ink"
+                    >
+                      {t('plan.cancel')}
+                    </button>
+                  </div>
+                  <span className="text-base leading-snug text-muted">{t('plan.ratingNote')}</span>
+                </div>
               )}
             </li>
           )
@@ -227,8 +278,6 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
     </div>
   )
 }
-
-const DIFFICULTY_LEVELS: readonly ExerciseDifficulty[] = [1, 2, 3]
 
 /** Сводка «сколько упражнений какой оценки» — для опекуна, компактно, над списком. */
 function FeedbackSummary({ exercises }: { exercises: Exercise[] }) {

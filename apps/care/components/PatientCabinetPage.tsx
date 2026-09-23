@@ -4,6 +4,7 @@ import {
   BookOpen,
   CalendarCheck,
   FileLock2,
+  LayoutDashboard,
   MessageCircle,
   NotebookPen,
   Pill,
@@ -11,6 +12,7 @@ import {
   TrendingUp,
 } from 'lucide-react'
 import { CabinetShell, DemoNotice, ChatPanel, useCabinetTab, type Tab, type TabGroup } from '@amare/ui'
+import { CareDashboard } from './CareDashboard'
 import { TodayPlan } from './TodayPlan'
 import { ProgressPanel } from './ProgressPanel'
 import { DiaryPanel } from './DiaryPanel'
@@ -29,6 +31,7 @@ import { getMessages, sendMessage } from '@/lib/mock'
  * на что смотрят (прогресс, материалы, документы), и в конце связь.
  */
 const TAB_KEYS = [
+  ['home', 'tab.home', LayoutDashboard],
   ['plan', 'tab.today', CalendarCheck],
   ['diary', 'tab.diary', NotebookPen],
   ['meds', 'tab.meds', Pill],
@@ -47,14 +50,17 @@ const TAB_IDS = TAB_KEYS.map(([id]) => id)
  * доп. услуги — отдельно и последними: туда заходят редко.
  */
 const GROUP_KEYS = [
-  ['group.today', ['plan', 'diary', 'meds']],
+  ['group.today', ['home', 'plan', 'diary', 'meds']],
   ['group.progress', ['progress', 'materials']],
   ['group.contact', ['chat']],
   ['group.docs', ['docs', 'more']],
 ] as const
 
-/** Нижняя панель на телефоне: самое частое за день, остальное — в «Ещё». */
-const MOBILE_BAR = ['plan', 'diary', 'chat']
+/**
+ * Нижняя панель на телефоне: сводка, план дня и куратор. Дневник ушёл
+ * в «Ещё», но с главной до него одно нажатие — карточка «Давление».
+ */
+const MOBILE_BAR = ['home', 'plan', 'chat']
 
 // Модульная константа: getMessages/sendMessage стабильны, ChatPanel не перезапрашивает
 // сообщения на каждый ре-рендер родителя (объект-литерал внутри JSX пересоздавался бы).
@@ -67,7 +73,7 @@ const CURATOR_NAME = 'Индира Жумабекова'
 export function PatientCabinetPage() {
   const t = useT('cabinet')
   const { user, signOut } = useAuth()
-  const [tab, setTab] = useCabinetTab(TAB_IDS, 'plan')
+  const [tab, setTab] = useCabinetTab(TAB_IDS, 'home')
 
   const tabs: Tab[] = TAB_KEYS.map(([id, key, icon]) => ({ id, label: t(key), icon }))
   const groups: TabGroup[] = GROUP_KEYS.map(([key, ids]) => ({ label: t(key), ids }))
@@ -89,6 +95,7 @@ export function PatientCabinetPage() {
       headerExtra={<SosButton />}
     >
       <DemoNotice />
+      {tab === 'home' && <CareDashboard role="patient" onOpen={setTab} />}
       {tab === 'plan' && <TodayPlan />}
       {tab === 'diary' && <DiaryPanel />}
       {tab === 'meds' && <MedsPanel />}

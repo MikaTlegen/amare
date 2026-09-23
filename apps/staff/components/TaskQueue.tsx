@@ -38,7 +38,7 @@ export function TaskQueue({
   const closed = tasks.filter((task) => task.done)
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <ul className="m-0 flex list-none flex-col gap-3 p-0">
         {open.map((task) => {
           const Icon = TASK_ICON[task.kind]
@@ -47,7 +47,7 @@ export function TaskQueue({
             <li
               key={task.id}
               className={cn(
-                'flex flex-col gap-3 rounded-3xl border p-5 sm:flex-row sm:items-center sm:gap-5',
+                'flex flex-col gap-3 rounded-3xl border p-4 sm:p-5 sm:flex-row sm:items-center sm:gap-5',
                 urgent ? 'border-accent bg-[rgb(253,238,237)]' : 'border-line bg-surface',
               )}
             >
@@ -93,7 +93,7 @@ export function TaskQueue({
       </ul>
 
       {open.length === 0 && (
-        <p className="m-0 rounded-3xl border border-line bg-surface p-6 text-lg text-muted">
+        <p className="m-0 rounded-3xl border border-line bg-surface p-4 sm:p-6 text-lg text-muted">
           {t('queue.empty')}
         </p>
       )}

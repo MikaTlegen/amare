@@ -40,7 +40,7 @@ export function CareLogPanel() {
   const done = tasks.filter((task) => task.doneAt).length
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div className="flex flex-wrap items-baseline justify-between gap-3 rounded-3xl border border-line bg-surface px-6 py-5">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
           {t('care.title')}
@@ -57,7 +57,7 @@ export function CareLogPanel() {
             <li
               key={task.id}
               className={cn(
-                'flex flex-col gap-3 rounded-3xl border p-5 sm:flex-row sm:items-center sm:gap-5',
+                'flex flex-col gap-3 rounded-3xl border p-4 sm:p-5 sm:flex-row sm:items-center sm:gap-5',
                 isDone ? 'border-line bg-bg' : 'border-line bg-surface',
               )}
             >

@@ -61,7 +61,7 @@ export function CourseStructureEditor({
       {stages.map((stage, stageIndex) => {
         const n = stageIndex + 1
         return (
-          <fieldset key={stage.id} className="m-0 flex min-w-0 flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
+          <fieldset key={stage.id} className="m-0 flex min-w-0 flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-5">
             <legend className="sr-only">{t('builder.stage', { n })}</legend>
             <div className="flex items-end gap-3">
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">

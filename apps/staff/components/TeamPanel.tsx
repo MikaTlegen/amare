@@ -27,7 +27,7 @@ export function TeamPanel() {
     ).length
 
   const group = (role: StaffRole, title: string) => (
-    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
       <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{title}</h3>
       <ul className="m-0 flex list-none flex-col p-0">
         {staff
@@ -58,8 +58,8 @@ export function TeamPanel() {
   )
 
   return (
-    <div className="flex flex-col gap-6">
-      <h2 className="m-0 font-display text-3xl font-semibold tracking-[-0.04em]">{t('tab.team')}</h2>
+    <div className="flex flex-col gap-4 sm:gap-6">
+      <h2 className="m-0 font-display text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">{t('tab.team')}</h2>
       <div className="grid gap-4 xl:grid-cols-2">
         {group('curator', t('team.curators'))}
         {group('moderator', t('team.moderators'))}

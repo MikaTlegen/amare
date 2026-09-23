@@ -21,10 +21,11 @@ import { STAFF_ROLE_KEY, useAuth } from "@/auth/AuthContext"
 import { getStaffPatients, getStaffTasks } from "@/lib/mock"
 import { ContentApprovalPanel } from "./ContentApprovalPanel"
 import { CourseBuilder } from "./CourseBuilder"
+import { CuratorHome } from "./CuratorHome"
 import { CourseLibrary } from "./CourseLibrary"
 import { ModeratorContentPanel } from "./ModeratorContentPanel"
 import { ModeratorDashboard } from "./ModeratorDashboard"
-import { PatientDetail } from "./PatientDetail"
+import { PatientDetail, type Section } from "./PatientDetail"
 import { PatientsBoard } from "./PatientsBoard"
 import { TaskQueue } from "./TaskQueue"
 import { TeamPanel } from "./TeamPanel"
@@ -32,6 +33,7 @@ import { VideoReviewPanel } from "./VideoReviewPanel"
 
 /** Разделы куратора: подписи берутся из словаря staff. */
 const CURATOR_TABS = [
+  ["home", "tab.home", LayoutDashboard],
   ["queue", "tab.queue", ListTodo],
   ["patients", "tab.patients", Users],
   ["video", "tab.video", Video],
@@ -52,7 +54,7 @@ const MODERATOR_TABS = [
   ["team", "tab.team", UsersRound],
 ] as const
 
-const CURATOR_GROUPS = [["group.work", ["queue", "patients", "video", "content-review"]]] as const
+const CURATOR_GROUPS = [["group.work", ["home", "queue", "patients", "video", "content-review"]]] as const
 const MODERATOR_GROUPS = [
   ["group.overview", ["dashboard"]],
   ["group.courses", ["courses", "builder"]],
@@ -73,16 +75,18 @@ export function StaffCabinetPage() {
   const source = isModerator ? MODERATOR_TABS : CURATOR_TABS
   const tabs: Tab[] = source.map(([id, key, icon]) => ({ id, label: t(key), icon }))
   const groups: TabGroup[] = (isModerator ? MODERATOR_GROUPS : CURATOR_GROUPS).map(([key, ids]) => ({ label: t(key), ids }))
-  const [tab, setTab] = useCabinetTab(isModerator ? MODERATOR_IDS : CURATOR_IDS, isModerator ? "dashboard" : "queue")
+  const [tab, setTab] = useCabinetTab(isModerator ? MODERATOR_IDS : CURATOR_IDS, isModerator ? "dashboard" : "home")
 
   const [tasks, setTasks] = useState<StaffTask[]>([])
   const [patients, setPatients] = useState<PatientCard[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  /** С какого раздела открыть карточку пациента: со сводки по «тяжело» — сразу на оценки. */
+  const [detailSection, setDetailSection] = useState<Section>("program")
   /** Какой курс открыт в конструкторе; null — новый курс. */
   const [editingId, setEditingId] = useState<string | null>(null)
   useEffect(() => { if (!isModerator) { void getStaffPatients().then(setPatients); void getStaffTasks().then(setTasks) } }, [isModerator])
   const selected = patients.find((patient) => patient.id === selectedId) ?? null
-  const openPatient = (id: string) => { setSelectedId(id); setTab("patients") }
+  const openPatient = (id: string, section: Section = "program") => { setSelectedId(id); setDetailSection(section); setTab("patients") }
   const openCourse = (id: string | null) => { setEditingId(id); setTab("builder") }
   // Пункт «Конструктор» в меню — всегда новый курс; правка открывается из библиотеки
   const changeTab = (id: string) => { if (id === "builder") setEditingId(null); setTab(id) }
@@ -98,9 +102,10 @@ export function StaffCabinetPage() {
     {isModerator && tab === "builder" && <CourseBuilder key={editingId ?? "new"} courseId={editingId} onBack={() => setTab("courses")} />}
     {isModerator && tab === "team" && <TeamPanel />}
     {isModerator && (tab === "library" || tab === "review" || tab === "archive") && <ModeratorContentPanel view={tab} />}
+    {!isModerator && tab === "home" && <CuratorHome tasks={tasks} patients={patients} onOpen={changeTab} onOpenPatient={openPatient} />}
     {!isModerator && tab === "queue" && <TaskQueue tasks={tasks} onTasksChange={setTasks} onOpenPatient={openPatient} />}
     {!isModerator && tab === "video" && <VideoReviewPanel />}
     {!isModerator && tab === "content-review" && <ContentApprovalPanel />}
-    {!isModerator && tab === "patients" && (selected ? <PatientDetail patient={selected} canAssign onBack={() => setSelectedId(null)} /> : <PatientsBoard patients={patients} onOpen={setSelectedId} />)}
+    {!isModerator && tab === "patients" && (selected ? <PatientDetail key={`${selected.id}-${detailSection}`} patient={selected} canAssign initialSection={detailSection} onBack={() => { setSelectedId(null); setDetailSection("program") }} /> : <PatientsBoard patients={patients} onOpen={(id) => openPatient(id)} />)}
   </CabinetShell>
 }

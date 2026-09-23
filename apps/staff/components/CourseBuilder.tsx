@@ -87,7 +87,7 @@ export function CourseBuilder({ courseId, onBack }: { courseId: string | null; o
   const published = course.status !== 'draft'
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div className="flex flex-col gap-3">
         <button
           type="button"
@@ -98,7 +98,7 @@ export function CourseBuilder({ courseId, onBack }: { courseId: string | null; o
           {t('builder.back')}
         </button>
         <div className="flex flex-wrap items-center gap-3">
-          <h2 className="m-0 font-display text-3xl font-semibold tracking-[-0.04em]">
+          <h2 className="m-0 font-display text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
             {course.title.trim() || t('builder.new')}
           </h2>
           <StatusChip status={published ? 'published' : 'draft'} />
@@ -112,7 +112,7 @@ export function CourseBuilder({ courseId, onBack }: { courseId: string | null; o
         </section>
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:col-span-5">
-          <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
+          <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-5">
             <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('builder.about')}</h3>
 
             <Field id="course-title" label={t('builder.name')}>
@@ -182,7 +182,7 @@ export function CourseBuilder({ courseId, onBack }: { courseId: string | null; o
             </Field>
           </section>
 
-          <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-5">
+          <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-5">
             <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('builder.team')}</h3>
             <MemberPicker
               legend={t('course.curators')}

@@ -35,8 +35,8 @@ export function WeeklyReviewSection({ patient }: { patient: PatientCard }) {
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-12">
-      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
+      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-5">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
           Что было на неделе
         </h3>
@@ -55,7 +55,7 @@ export function WeeklyReviewSection({ patient }: { patient: PatientCard }) {
         </p>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
+      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-7">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
           Письмо пациенту и опекуну
         </h3>

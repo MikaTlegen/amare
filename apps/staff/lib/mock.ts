@@ -57,6 +57,7 @@ export function resetMockState() {
   videoReviews = structuredClone(DEMO_VIDEO_REVIEWS)
   weeklySent = {}
   templates = structuredClone(PROGRAM_TEMPLATES)
+  contentReviews = structuredClone(DEMO_CONTENT_REVIEWS)
 }
 
 /**
@@ -331,6 +332,55 @@ export async function saveCourse(course: ProgramTemplate): Promise<SaveCourseRes
     ? templates.map((item) => (item.id === saved.id ? saved : item))
     : [...templates, saved]
   return delay({ templates, issues: [] }, 200)
+}
+
+/* ------------------------------------------------------------------ *
+ * Медицинская проверка контента куратором
+ * ------------------------------------------------------------------ */
+
+export type ContentStatus = 'На проверке' | 'Утверждён' | 'Возвращён'
+
+export interface ContentReviewItem {
+  id: string
+  name: string
+  version: string
+  kind: string
+  author: string
+  note: string
+  status: ContentStatus
+  /** Комментарий автору: что исправить или на что обратить внимание. */
+  comment: string
+}
+
+const DEMO_CONTENT_REVIEWS: ContentReviewItem[] = [
+  { id: 'c-1', name: 'Речь и глотание', version: 'v1.0', kind: 'Шаблон курса', author: 'Алия Турсунова', note: '14 дней, 14 упражнений', status: 'На проверке', comment: '' },
+  { id: 'c-2', name: 'Перенос веса стоя', version: 'v1.0', kind: 'Упражнение', author: 'Алия Турсунова', note: 'Начальный уровень, требуется опекун', status: 'На проверке', comment: '' },
+]
+
+let contentReviews: ContentReviewItem[] = structuredClone(DEMO_CONTENT_REVIEWS)
+
+export async function getContentReviews(): Promise<ContentReviewItem[]> {
+  return delay(contentReviews)
+}
+
+/**
+ * Решение по материалу.
+ *
+ * Вернуть без объяснения нельзя: автор не узнает, что исправлять, и
+ * пришлёт ту же версию. Поэтому возврат без комментария не проходит,
+ * а утверждение комментарий допускает, но не требует.
+ *
+ * TODO BACKEND: решение пишет сервер — кто, когда и почему, без правки задним числом.
+ */
+export async function decideContent(
+  id: string,
+  status: Exclude<ContentStatus, 'На проверке'>,
+  comment: string,
+): Promise<ContentReviewItem[]> {
+  const text = comment.trim()
+  if (status === 'Возвращён' && !text) return delay(contentReviews, 120)
+  contentReviews = contentReviews.map((item) => (item.id === id ? { ...item, status, comment: text } : item))
+  return delay(contentReviews, 160)
 }
 
 /** Кураторы и модераторы клиники — для назначения на курс. */

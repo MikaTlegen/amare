@@ -47,7 +47,7 @@ export function PatientsBoard({
     .sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status])
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div role="group" aria-label={t('board.filter')} className="flex flex-wrap gap-2">
         {FILTERS.map((item) => {
           const count =
@@ -80,7 +80,7 @@ export function PatientsBoard({
       </div>
 
       {rows.length === 0 ? (
-        <p className="m-0 rounded-3xl border border-line bg-surface p-6 text-lg text-muted">
+        <p className="m-0 rounded-3xl border border-line bg-surface p-4 sm:p-6 text-lg text-muted">
           {t('board.empty')}
         </p>
       ) : (
@@ -94,7 +94,7 @@ export function PatientsBoard({
               <li
                 key={patient.id}
                 className={cn(
-                  'flex flex-col gap-3 rounded-3xl border-[1.5px] bg-surface p-6',
+                  'flex flex-col gap-3 rounded-3xl border-[1.5px] bg-surface p-4 sm:p-6',
                   STATUS_STYLE[status].border,
                 )}
               >

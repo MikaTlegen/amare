@@ -48,13 +48,13 @@ export function UpsellPanel() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <div className="flex flex-col gap-1.5">
         <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('upsell.title')}</h2>
         <p className="m-0 text-base text-muted">{t('upsell.subtitle')}</p>
       </div>
 
-      <div className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-6 sm:max-w-sm">
+      <div className="flex flex-col gap-2 rounded-3xl border border-line bg-surface p-4 sm:p-6 sm:max-w-sm">
         <label htmlFor="upsell-phone" className="text-base font-medium">
           {t('upsell.phone')}
         </label>
@@ -72,7 +72,7 @@ export function UpsellPanel() {
         {OFFERS.map(({ id, Icon, titleKey, priceKey, textKey }) => {
           const offerStatus = status[id] ?? 'idle'
           return (
-            <section key={id} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+            <section key={id} className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
               <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint">
                 <Icon className="h-5 w-5 text-brand" aria-hidden="true" />
               </span>

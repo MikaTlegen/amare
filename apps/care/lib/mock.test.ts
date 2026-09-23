@@ -4,7 +4,10 @@ import {
   completeExercise,
   getCareTasks,
   getDayPlan,
+  getMedHistory,
   getMedications,
+  getPatientDocuments,
+  getSessionReports,
   getVitals,
   resetMockState,
   sendMessage,
@@ -27,11 +30,52 @@ describe('completeExercise', () => {
     expect(nextNow?.id).not.toBe(now!.id)
   })
 
+  it('сохраняет оценку «как далось» вместе с отметкой — её увидит куратор', async () => {
+    resetMockState()
+    const before = await getDayPlan()
+    const now = before.exercises.find((e) => e.status === 'now')
+
+    const after = await completeExercise(now!.id, 3)
+    const updated = after.exercises.find((e) => e.id === now!.id)
+    expect(updated).toMatchObject({ status: 'done', feedback: 3 })
+  })
+
+  it('без оценки отмечает выполнение и не выдумывает ответ', async () => {
+    resetMockState()
+    const before = await getDayPlan()
+    const now = before.exercises.find((e) => e.status === 'now')
+
+    const after = await completeExercise(now!.id)
+    expect(after.exercises.find((e) => e.id === now!.id)?.feedback).toBeUndefined()
+  })
+
   it('не падает и не меняет план, если id упражнения не найден', async () => {
     resetMockState()
     const before = await getDayPlan()
     const after = await completeExercise('нет-такого-id')
     expect(after).toEqual(before)
+  })
+})
+
+describe('отчёты, документы, история приёмов', () => {
+  it('отчёты с занятий не пустые и у каждого есть подробности', async () => {
+    const reports = await getSessionReports()
+    expect(reports.length).toBeGreaterThan(0)
+    expect(reports.every((report) => report.details.length > 0)).toBe(true)
+  })
+
+  it('у каждого документа пациента есть содержимое для просмотра', async () => {
+    const docs = await getPatientDocuments()
+    expect(docs.length).toBeGreaterThan(0)
+    expect(docs.every((doc) => doc.body.length > 0)).toBe(true)
+  })
+
+  it('в истории приёмов у пропуска нет времени приёма, у принятого — есть', async () => {
+    const history = await getMedHistory()
+    expect(history.some((log) => log.state === 'missed')).toBe(true)
+    for (const log of history) {
+      expect(Boolean(log.takenAt)).toBe(log.state !== 'missed')
+    }
   })
 })
 

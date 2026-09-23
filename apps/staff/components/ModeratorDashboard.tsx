@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowRight, Info, TriangleAlert } from 'lucide-react'
+import { CalendarX, CircleCheck, Info, LibraryBig, TriangleAlert, Users, Video } from 'lucide-react'
 import type { PatientCard, ProgramTemplate } from '@amare/api-client'
-import { cn } from '@amare/ui'
+import { cn, DashCard, DashGrid } from '@amare/ui'
 import { useT } from '@amare/i18n/react'
 import { getEditableTemplates, getStaffPatients } from '@/lib/mock'
 import { isPublished } from '@/lib/courses'
@@ -117,10 +117,10 @@ export function ModeratorDashboard({ onOpenCourses }: { onOpenCourses: () => voi
   const published = courses.filter(isPublished).length
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-col gap-1.5">
-          <h2 className="m-0 font-display text-3xl font-semibold tracking-[-0.04em]">{t('dash.headline')}</h2>
+          <h2 className="m-0 font-display text-xl font-semibold tracking-[-0.035em] sm:text-3xl sm:tracking-[-0.04em]">{t('dash.headline')}</h2>
           <p className="m-0 text-base text-muted">
             {t('dash.summary', { patients: stats.active, attention: attention.length })}
           </p>
@@ -144,35 +144,27 @@ export function ModeratorDashboard({ onOpenCourses }: { onOpenCourses: () => voi
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Kpi dark label={t('kpi.active')} value={stats.active} note={t('kpi.activeNote')} />
-        <Kpi label={t('kpi.adherence')} value={`${stats.adherence}%`} note={t('kpi.adherenceNote')} />
-        <Kpi label={t('kpi.missed')} value={stats.missed} note={t('kpi.missedNote')} />
-        <Kpi label={t('kpi.videos')} value={stats.videos} note={t('kpi.videosNote')} />
-      </div>
+      <DashGrid className="lg:grid-cols-2 xl:grid-cols-4">
+        <DashCard tone="dark" icon={Users} label={t('kpi.active')} value={stats.active} note={t('kpi.activeNote')} />
+        <DashCard icon={CircleCheck} label={t('kpi.adherence')} value={`${stats.adherence}%`} note={t('kpi.adherenceNote')} />
+        <DashCard icon={CalendarX} label={t('kpi.missed')} value={stats.missed} note={t('kpi.missedNote')} />
+        <DashCard icon={Video} label={t('kpi.videos')} value={stats.videos} note={t('kpi.videosNote')} />
+      </DashGrid>
 
-      <div className="grid gap-4 xl:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 xl:grid-cols-3">
         <FeedbackCard feedback={stats.feedback} />
 
-        <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
-          <h3 className="m-0 text-base font-medium text-muted">{t('kpi.courses')}</h3>
-          <p className="m-0 font-display text-5xl font-semibold tabular-nums tracking-[-0.04em]">{courses.length}</p>
-          <p className="m-0 text-base text-muted">
-            {t('kpi.coursesNote', { published, drafts: courses.length - published })}
-          </p>
-          <button
-            type="button"
-            onClick={onOpenCourses}
-            className="mt-auto inline-flex min-h-11 w-fit items-center gap-2 text-base font-semibold text-deep"
-          >
-            {t('tab.courses')}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </section>
+        <DashCard
+          icon={LibraryBig}
+          label={t('kpi.courses')}
+          value={courses.length}
+          note={t('kpi.coursesNote', { published, drafts: courses.length - published })}
+          onClick={onOpenCourses}
+        />
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+        <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
           <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('dash.attention')}</h3>
           {attention.length === 0 ? (
             <p className="m-0 text-base text-muted">{t('dash.attentionEmpty')}</p>
@@ -197,7 +189,7 @@ export function ModeratorDashboard({ onOpenCourses }: { onOpenCourses: () => voi
           )}
         </section>
 
-        <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+        <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
           <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('dash.curators')}</h3>
           <ul className="m-0 flex list-none flex-col p-0">
             {stats.curators.map((curator) => (
@@ -234,21 +226,6 @@ export function ModeratorDashboard({ onOpenCourses }: { onOpenCourses: () => voi
   )
 }
 
-function Kpi({ label, value, note, dark = false }: { label: string; value: string | number; note: string; dark?: boolean }) {
-  return (
-    <section
-      className={cn(
-        'flex flex-col gap-2 rounded-3xl p-6',
-        dark ? 'bg-deep text-white' : 'border border-line bg-surface',
-      )}
-    >
-      <h3 className={cn('m-0 text-base font-medium', dark ? 'text-white/75' : 'text-muted')}>{label}</h3>
-      <p className="m-0 font-display text-5xl font-semibold tabular-nums tracking-[-0.04em]">{value}</p>
-      <p className={cn('m-0 text-base', dark ? 'text-white/75' : 'text-muted')}>{note}</p>
-    </section>
-  )
-}
-
 /**
  * Как даются упражнения: распределение оценок пациентов одной полосой.
  * Цвет не единственный признак — у каждой доли подпись и число.
@@ -258,7 +235,7 @@ function FeedbackCard({ feedback }: { feedback: [number, number, number] }) {
   const total = feedback.reduce((sum, value) => sum + value, 0) || 1
 
   return (
-    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 xl:col-span-2">
+    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 xl:col-span-2">
       <div className="flex flex-col gap-0.5">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('kpi.feedback')}</h3>
         <p className="m-0 text-base text-muted">{t('kpi.feedbackNote')}</p>

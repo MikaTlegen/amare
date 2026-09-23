@@ -6,7 +6,7 @@ import type { PatientCard } from '@amare/api-client'
 import { BarthelChart, cn } from '@amare/ui'
 import { useContentList, useT } from '@amare/i18n/react'
 import { getPatientCard } from '@/lib/mock'
-
+import { SessionReports } from './SessionReports'
 
 /** Прогресс: шкалы, минуты практики за неделю, уведомления куратора. */
 export function ProgressPanel() {
@@ -24,8 +24,8 @@ export function ProgressPanel() {
   const maxMinutes = Math.max(...card.weekMinutes, 60)
 
   return (
-    <div className="grid gap-5 lg:grid-cols-12">
-      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
+      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
             {t('progress.barthel')}
@@ -40,7 +40,7 @@ export function ProgressPanel() {
         </p>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
+      <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
             {t('progress.week')}
@@ -74,6 +74,10 @@ export function ProgressPanel() {
         </p>
       </section>
 
+      <div className="lg:col-span-12">
+        <SessionReports />
+      </div>
+
       {card.alerts.length > 0 && (
         <section className="flex flex-col gap-3 lg:col-span-12">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('progress.notifications')}</h2>
@@ -93,8 +97,7 @@ export function ProgressPanel() {
                 ) : (
                   <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
                 )}
-                <span className="flex-1 text-base leading-relaxed">{alert.text}</span>
-                <span className="shrink-0 text-sm text-muted">{alert.at}</span>
+                <span className="flex min-w-0 flex-1 flex-col gap-0.5"><span className="text-base leading-snug">{alert.text}</span><span className="text-sm text-muted">{alert.at}</span></span>
               </li>
             ))}
           </ul>

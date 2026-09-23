@@ -21,10 +21,10 @@ function duration(seconds: number): string {
 /**
  * Проверка видео (W-03 ТЗ).
  *
- * Плеера здесь пока нет: видео пациента — медицинские данные, они
- * появятся вместе с хранилищем в РК и выдачей по подписанной ссылке.
- * Всё остальное из требования работает уже сейчас: вердикт по шаблону,
- * быстрые ответы и комментарий.
+ * В демо запись открывается внешней ссылкой (тот же ролик, что у
+ * упражнений). В бою видео пациента — медицинские данные: хранилище в РК
+ * и выдача по подписанной ссылке. Вердикт по шаблону, быстрые ответы
+ * и комментарий работают уже сейчас.
  */
 export function VideoReviewPanel() {
   const t = useT('staff')
@@ -55,7 +55,7 @@ export function VideoReviewPanel() {
   const pending = items.filter((item) => !item.verdict)
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       <p className="m-0 text-base text-muted">
           {t('video.pending', { pending: pending.length, total: items.length })}
       </p>
@@ -85,6 +85,17 @@ export function VideoReviewPanel() {
                   <span className="text-base font-medium text-brand">
                     {text(VERDICT_KEY[item.verdict])}
                   </span>
+                )}
+                {item.videoUrl && (
+                  <a
+                    href={item.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 w-fit items-center gap-1.5 text-base font-semibold text-deep"
+                  >
+                    <PlayCircle className="h-5 w-5" aria-hidden="true" />
+                    {t('video.watch')}
+                  </a>
                 )}
               </div>
 
@@ -166,9 +177,8 @@ export function VideoReviewPanel() {
       </ul>
 
       <p className="m-0 text-base leading-relaxed text-muted">
-        {/* TODO BACKEND: плеер появится вместе с хранилищем видео в РК */}
-        Просмотр записи подключается вместе с хранилищем: видео пациента нельзя отдавать по прямой
-        ссылке.
+        {/* TODO BACKEND: видео пациента — из хранилища в РК по подписанной ссылке, не по прямой */}
+        {t('video.note')}
       </p>
     </div>
   )

@@ -14,10 +14,11 @@ import {
   sendPatientMessage,
   uploadPatientDocument,
 } from '@/lib/mock'
+import { useT } from '@amare/i18n/react'
 import { WeeklyReviewSection } from './WeeklyReviewSection'
 import { useAuth } from '@/auth/AuthContext'
 
-type Section = 'program' | 'docs' | 'progress' | 'weekly' | 'chat'
+export type Section = 'program' | 'feedback' | 'docs' | 'progress' | 'weekly' | 'chat'
 
 /**
  * Разделы карточки.
@@ -28,10 +29,11 @@ type Section = 'program' | 'docs' | 'progress' | 'weekly' | 'chat'
  */
 const CURATOR_SECTIONS: { id: Section; label: string }[] = [
   { id: 'program', label: 'Программа' },
-  { id: 'docs', label: 'Документы' },
+  { id: 'feedback', label: 'Как даются упражнения' },
   { id: 'progress', label: 'Динамика' },
   { id: 'weekly', label: 'Разбор недели' },
   { id: 'chat', label: 'Переписка' },
+  { id: 'docs', label: 'Документы' },
 ]
 
 const ADMIN_SECTIONS: { id: Section; label: string }[] = [
@@ -51,14 +53,26 @@ export function PatientDetail({
   patient,
   onBack,
   canAssign = false,
+  clinical = true,
+  initialSection = 'program',
 }: {
   patient: PatientCard
   onBack: () => void
-  /** Назначать программу может только администратор (роль admin). */
+  /** Может ли этот сотрудник назначать программу. */
   canAssign?: boolean
+  /**
+   * Видны ли клинические разделы (динамика, оценки, разбор, переписка).
+   * Раньше это решал canAssign, и куратор, которому дали право назначать
+   * курс, терял свои же клинические разделы. Теперь это два разных права.
+   */
+  clinical?: boolean
+  /** С какого раздела открыть — например, со сводки по «тяжело» сразу на оценки. */
+  initialSection?: Section
 }) {
-  const sections = canAssign ? ADMIN_SECTIONS : CURATOR_SECTIONS
-  const [section, setSection] = useState<Section>('program')
+  const sections = clinical ? CURATOR_SECTIONS : ADMIN_SECTIONS
+  const [section, setSection] = useState<Section>(
+    sections.some((item) => item.id === initialSection) ? initialSection : 'program',
+  )
 
   // Стабильная ссылка на api для ChatPanel: без useMemo объект пересоздавался бы
   // на каждый ре-рендер и эффект внутри ChatPanel перезапрашивал бы сообщения заново.
@@ -71,7 +85,7 @@ export function PatientDetail({
   )
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-1">
           <button
@@ -98,11 +112,10 @@ export function PatientDetail({
           {patient.alerts.map((alert) => (
             <li
               key={alert.id}
-              className="flex items-start gap-3 rounded-2xl border border-accent bg-[rgb(253,238,237)] px-5 py-4"
+              className="flex items-start gap-3 rounded-2xl border border-accent bg-[rgb(253,238,237)] px-4 py-3.5 sm:px-5 sm:py-4"
             >
               <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
-              <span className="flex-1 text-base leading-relaxed">{alert.text}</span>
-              <span className="shrink-0 text-sm text-muted">{alert.at}</span>
+              <span className="flex min-w-0 flex-1 flex-col gap-0.5"><span className="text-base leading-snug">{alert.text}</span><span className="text-sm text-muted">{alert.at}</span></span>
             </li>
           ))}
         </ul>
@@ -132,11 +145,12 @@ export function PatientDetail({
       </div>
 
       {section === 'program' && <ProgramSection patient={patient} canAssign={canAssign} />}
+      {section === 'feedback' && <FeedbackSection patient={patient} />}
       {section === 'docs' && <DocumentsSection patient={patient} />}
       {section === 'weekly' && <WeeklyReviewSection patient={patient} />}
       {section === 'chat' && <ChatPanel api={chatApi} />}
       {section === 'progress' && (
-        <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6">
+        <div className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6">
           <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
             Индекс Бартел
           </h3>
@@ -148,6 +162,51 @@ export function PatientDetail({
         </div>
       )}
     </div>
+  )
+}
+
+/**
+ * Оценки пациента «как далось» — главный сигнал, где менять нагрузку.
+ * «Тяжело» выделено: два таких ответа подряд по одному упражнению —
+ * повод снизить повторы до следующего занятия, не дожидаясь разбора.
+ */
+function FeedbackSection({ patient }: { patient: PatientCard }) {
+  const t = useT('staff')
+  const items = patient.feedback ?? []
+  const hard = items.filter((item) => item.level === 3).length
+
+  return (
+    <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{t('detail.feedback')}</h3>
+        {items.length > 0 && (
+          <span className="text-base text-muted">{t('detail.hardCount', { count: hard, total: items.length })}</span>
+        )}
+      </div>
+      <p className="m-0 text-base leading-relaxed text-muted">{t('detail.feedbackNote')}</p>
+
+      {items.length === 0 ? (
+        <p className="m-0 text-base text-muted">{t('detail.feedbackEmpty')}</p>
+      ) : (
+        <ul className="m-0 flex list-none flex-col gap-2 p-0">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className={cn(
+                'flex flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl px-4 py-3',
+                item.level === 3 ? 'border-[1.5px] border-accent bg-[rgb(253,238,237)]' : 'bg-bg',
+              )}
+            >
+              <span className="min-w-0 flex-1 text-base font-medium">{item.exercise}</span>
+              <span className={cn('text-base font-semibold', item.level === 3 ? 'text-accent' : 'text-deep')}>
+                {t(`difficulty.${item.level}`)}
+              </span>
+              <span className="text-base text-muted">{item.at}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }
 
@@ -189,7 +248,7 @@ function ProgramSection({ patient, canAssign }: { patient: PatientCard; canAssig
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-12">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
       {!canAssign && (
         <p className="m-0 rounded-3xl border border-line bg-bg px-6 py-5 text-base leading-relaxed text-muted lg:col-span-7">
           Курс назначает администратор клиники. Если программу нужно изменить — напишите ему,
@@ -200,7 +259,7 @@ function ProgramSection({ patient, canAssign }: { patient: PatientCard; canAssig
       {canAssign && (
       <form
         onSubmit={submit}
-        className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 lg:col-span-7"
+        className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-7"
       >
         <h3 className="m-0 flex items-center gap-2 font-display text-xl font-medium tracking-[-0.035em]">
           <ClipboardPlus className="h-5 w-5 text-brand" aria-hidden="true" />
@@ -294,7 +353,7 @@ function ProgramSection({ patient, canAssign }: { patient: PatientCard; canAssig
       </form>
       )}
 
-      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
+      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-5">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
           Назначенные программы
         </h3>
@@ -354,7 +413,7 @@ function DocumentsSection({ patient }: { patient: PatientCard }) {
         items={fromPatient}
       />
 
-      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
+      <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6">
         <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
           Документы клиники
         </h3>
@@ -404,7 +463,7 @@ function DocumentList({
   const kindLabel = useKindLabel()
 
   return (
-    <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-6">
+    <section className="flex flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6">
       <h3 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">{title}</h3>
 
       {items.length === 0 ? (

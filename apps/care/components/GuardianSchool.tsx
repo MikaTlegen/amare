@@ -46,7 +46,7 @@ export function GuardianSchool() {
   const done = lessons.filter((lesson) => lesson.done).length
 
   return (
-    <div className="grid gap-5 lg:grid-cols-12">
+    <div className="grid grid-cols-1 gap-4 sm:gap-5 lg:grid-cols-12">
       <section className="flex flex-col gap-4 lg:col-span-7">
         <div className="flex flex-wrap items-baseline justify-between gap-3 rounded-3xl border border-line bg-surface px-6 py-5">
           <h2 className="m-0 flex items-center gap-2 font-display text-xl font-medium tracking-[-0.035em]">
@@ -63,7 +63,7 @@ export function GuardianSchool() {
             <li
               key={lesson.id}
               className={cn(
-                'flex flex-col gap-3 rounded-3xl border p-5 sm:flex-row sm:items-center sm:gap-5',
+                'flex flex-col gap-3 rounded-3xl border p-4 sm:p-5 sm:flex-row sm:items-center sm:gap-5',
                 lesson.done ? 'border-line bg-bg' : 'border-line bg-surface',
               )}
             >
@@ -114,7 +114,7 @@ export function GuardianSchool() {
         </ul>
       </section>
 
-      <section className="flex h-fit flex-col gap-3 rounded-3xl border border-line bg-surface p-6 lg:col-span-5">
+      <section className="flex h-fit flex-col gap-3 rounded-3xl border border-line bg-surface p-4 sm:p-6 lg:col-span-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="m-0 font-display text-xl font-medium tracking-[-0.035em]">
             {t('school.checklist')}

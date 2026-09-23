@@ -5,9 +5,12 @@ import {
   DEMO_DAY_PLAN,
   DEMO_GUARDIAN_LESSONS,
   DEMO_MATERIALS,
+  DEMO_MED_HISTORY,
   DEMO_MEDICATIONS,
   DEMO_MESSAGES,
   DEMO_PATIENT,
+  DEMO_PATIENT_DOCUMENTS,
+  DEMO_SESSION_REPORTS,
   DEMO_USERS,
   DEMO_VITALS,
   detectKind,
@@ -20,10 +23,13 @@ import {
   type GuardianLesson,
   type Material,
   type Medication,
+  type MedicationLog,
   type MedicationState,
   type Message,
   type PatientCard,
+  type PatientDocument,
   type Role,
+  type SessionReport,
   type User,
   type VitalEntry,
 } from '@amare/api-client'
@@ -94,14 +100,20 @@ export async function setExerciseFeedback(
   return delay(dayPlan)
 }
 
-/** Отметить упражнение выполненным. Возвращает обновлённый план. */
-export async function completeExercise(id: string): Promise<DayPlan> {
+/**
+ * Отметить упражнение выполненным. Возвращает обновлённый план.
+ *
+ * `feedback` — ответ «как далось», который пациент даёт в момент отметки:
+ * так он не забывает ответить, а куратор получает оценку сразу.
+ * Без ответа отметка тоже ставится — вопрос можно пропустить.
+ */
+export async function completeExercise(id: string, feedback?: ExerciseDifficulty): Promise<DayPlan> {
   const exists = dayPlan.exercises.some((e) => e.id === id)
   if (exists) {
     // Следующее невыполненное становится текущим.
     let promoteNext = true
     const exercises = dayPlan.exercises.map((e) => {
-      if (e.id === id) return { ...e, status: 'done' as const }
+      if (e.id === id) return { ...e, status: 'done' as const, ...(feedback ? { feedback } : {}) }
       if (promoteNext && e.status === 'todo') {
         promoteNext = false
         return { ...e, status: 'now' as const }
@@ -204,6 +216,24 @@ export async function setMedicationState(
 
 export async function getMaterials(): Promise<Material[]> {
   return delay(DEMO_MATERIALS)
+}
+
+/** История приёмов за последние дни: что пропущено и во сколько приняли на деле. */
+export async function getMedHistory(): Promise<MedicationLog[]> {
+  return delay(DEMO_MED_HISTORY)
+}
+
+/** Отчёты куратора с занятий — видят пациент и опекун. */
+export async function getSessionReports(): Promise<SessionReport[]> {
+  return delay(DEMO_SESSION_REPORTS)
+}
+
+/**
+ * Документы пациента: выписки и заключения.
+ * TODO BACKEND: файл по подписанной ссылке с коротким сроком жизни.
+ */
+export async function getPatientDocuments(): Promise<PatientDocument[]> {
+  return delay(DEMO_PATIENT_DOCUMENTS)
 }
 
 export async function getConsents(): Promise<Consent[]> {

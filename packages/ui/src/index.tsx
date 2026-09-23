@@ -9,6 +9,7 @@ export { CabinetShell, DemoNotice, type Tab, type TabGroup } from "./cabinet-she
 export { resolveGroups, tabFromSearch, useCabinetTab } from "./cabinet-nav";
 export { ChatPanel, type ChatApi } from "./chat-panel";
 export { cn } from "./cn";
+export { DashCard, DashGrid, type DashTone } from "./dash-card";
 export { LanguageSwitch } from "./language-switch";
 export { Logo, LogoMark, type LogoMarkProps, type LogoProps } from "./logo";
 export { ParallaxBand } from "./parallax-band";

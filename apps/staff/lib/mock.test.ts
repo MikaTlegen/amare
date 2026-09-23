@@ -3,6 +3,8 @@ import {
   addTemplate,
   assignProgram,
   closeTask,
+  decideContent,
+  getContentReviews,
   getEditableTemplates,
   getPatientPrograms,
   getProgramTemplates,
@@ -16,6 +18,30 @@ import {
   saveCourse,
   sendWeeklyReview,
 } from './mock'
+
+describe('decideContent', () => {
+  it('не возвращает материал без комментария — автор не узнает, что исправлять', async () => {
+    resetMockState()
+    const after = await decideContent('c-1', 'Возвращён', '   ')
+    expect(after.find((item) => item.id === 'c-1')?.status).toBe('На проверке')
+  })
+
+  it('возвращает с комментарием и сохраняет его для автора', async () => {
+    resetMockState()
+    const after = await decideContent('c-1', 'Возвращён', 'Добавьте противопоказания')
+    expect(after.find((item) => item.id === 'c-1')).toMatchObject({
+      status: 'Возвращён',
+      comment: 'Добавьте противопоказания',
+    })
+  })
+
+  it('утверждает и без комментария', async () => {
+    resetMockState()
+    const after = await decideContent('c-2', 'Утверждён', '')
+    expect(after.find((item) => item.id === 'c-2')?.status).toBe('Утверждён')
+    expect((await getContentReviews()).filter((item) => item.status === 'На проверке')).toHaveLength(1)
+  })
+})
 
 describe('assignProgram', () => {
   it('добавляет программу конкретному пациенту и не трогает чужие', async () => {
