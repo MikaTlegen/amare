@@ -98,11 +98,20 @@ export function buildMessage(payload: LeadPayload): string {
   return parts.length > 0 ? parts.join('; ') : FALLBACK_MESSAGE
 }
 
-/** Адрес формы своего языка: у русской и казахской он разный. */
-function formUrl(locale: Locale): string | undefined {
+/**
+ * Адрес формы своего языка: у русской и казахской он разный.
+ *
+ * Запасные значения — как у адресов кабинетов в lib/clinic.ts. Без них
+ * анкета молча не работала в любой сборке, где забыли переменную: человек
+ * видел «не удалось отправить», хотя со связью всё было в порядке.
+ * Секрета тут нет, эти адреса стоят в коде встраивания формы.
+ */
+function formUrl(locale: Locale): string {
   return locale === 'kk'
-    ? process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_KK
-    : process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU
+    ? (process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_KK ??
+        'https://crm.tennet.kz/api/public/forms/3f9d1692-f6e1-45fb-99d1-d23398cbab84/')
+    : (process.env.NEXT_PUBLIC_CRM_LEAD_FORM_URL_RU ??
+        'https://crm.tennet.kz/api/public/forms/d4ad399c-701d-411e-a884-64881accca18/')
 }
 
 /**

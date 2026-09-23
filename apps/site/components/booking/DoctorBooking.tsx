@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { CheckCircle2 } from 'lucide-react'
+import { Calendar } from './Calendar'
 import { CLINIC } from '@/lib/clinic'
 import {
   createBooking,
@@ -19,8 +20,20 @@ import { useT } from '@amare/i18n/react'
 /** Локаль форматирования дат: у Intl свои теги, у нас — коды локалей. */
 const INTL_TAG: Record<Locale, string> = { ru: 'ru-RU', kk: 'kk-KZ' }
 
-/** На сколько дней вперёд показываем выбор даты. */
-const DAYS_AHEAD = 14
+/** На сколько дней вперёд открыта запись. */
+const DAYS_AHEAD = 30
+
+/** «2026-09-25» → Date по местному времени: полночь UTC сдвинула бы день. */
+function asDate(value: string): Date {
+  return new Date(`${value}T12:00`)
+}
+
+/** Обратно в «2026-09-25»: toISOString сдвинул бы день на часовой пояс. */
+function toIsoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
 
 /**
  * Запись к конкретному специалисту.
@@ -179,21 +192,17 @@ export function DoctorBooking({
 
       <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
         <legend className="mb-1 p-0 text-base font-semibold">{t('slots.date')}</legend>
-        <div className="flex flex-wrap gap-2">
-          {days.map((day) => (
-            <button
-              key={day}
-              type="button"
-              onClick={() => setDate(day)}
-              className={cn(
-                'min-h-[2.8rem] rounded-xl border-[1.5px] px-3 py-2 text-base',
-                date === day ? 'border-accent bg-accent/8 font-semibold' : 'border-line bg-bg',
-              )}
-            >
-              {formatDay(day)}
-            </button>
-          ))}
-        </div>
+        {/* Календарь, а не ряд кнопок: человек ищет «следующую среду»,
+            а не пятый день от сегодня. Дальше горизонта записи не пускаем */}
+        <Calendar
+          lang={locale}
+          mode="single"
+          selected={asDate(date)}
+          onSelect={(next) => next && setDate(toIsoDate(next))}
+          startMonth={asDate(days[0]!)}
+          endMonth={asDate(days[days.length - 1]!)}
+          disabled={(day) => toIsoDate(day) < days[0]! || toIsoDate(day) > days[days.length - 1]!}
+        />
       </fieldset>
 
       <fieldset className="m-0 flex flex-col gap-3 border-0 p-0">
