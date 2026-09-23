@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-20T00:00:00.000Z",
+  "generatedAt": "2026-09-23T00:00:00.000Z",
   "title": "Design System: Amare Care",
   "extensions": {
     "colorMeta": {
@@ -8,79 +8,196 @@
         "role": "neutral",
         "displayName": "Холодная бумага",
         "canonical": "rgb(242 247 248)",
-        "tonalRamp": ["#0C1214", "#182428", "#2B3D42", "#456066", "#688891", "#96B4BB", "#C7DCE0", "#F2F7F8"]
+        "tonalRamp": [
+          "#0C1214",
+          "#182428",
+          "#2B3D42",
+          "#456066",
+          "#688891",
+          "#96B4BB",
+          "#C7DCE0",
+          "#F2F7F8"
+        ]
       },
       "surface": {
         "role": "neutral",
         "displayName": "Белый лист",
         "canonical": "rgb(255 255 255)",
-        "tonalRamp": ["#141414", "#262626", "#3D3D3D", "#5C5C5C", "#858585", "#B3B3B3", "#DBDBDB", "#FFFFFF"]
+        "tonalRamp": [
+          "#141414",
+          "#262626",
+          "#3D3D3D",
+          "#5C5C5C",
+          "#858585",
+          "#B3B3B3",
+          "#DBDBDB",
+          "#FFFFFF"
+        ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Сине-чёрный",
         "canonical": "rgb(15 26 28)",
-        "tonalRamp": ["#0F1A1C", "#1B2E32", "#2C474D", "#40646B", "#5C868E", "#87AAB1", "#B8CFD4", "#E5EFF1"]
+        "tonalRamp": [
+          "#0F1A1C",
+          "#1B2E32",
+          "#2C474D",
+          "#40646B",
+          "#5C868E",
+          "#87AAB1",
+          "#B8CFD4",
+          "#E5EFF1"
+        ]
       },
       "muted": {
         "role": "neutral",
         "displayName": "Приглушённый сланец",
         "canonical": "rgb(76 95 99)",
-        "tonalRamp": ["#111719", "#1F292C", "#313F43", "#4C5F63", "#6B8288", "#95AAB0", "#C0CFD3", "#E8EFF0"]
+        "tonalRamp": [
+          "#111719",
+          "#1F292C",
+          "#313F43",
+          "#4C5F63",
+          "#6B8288",
+          "#95AAB0",
+          "#C0CFD3",
+          "#E8EFF0"
+        ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Линия",
         "canonical": "rgb(219 231 233)",
-        "tonalRamp": ["#151A1B", "#242E30", "#3A4A4D", "#556B6F", "#7A9296", "#A5BCC0", "#DBE7E9", "#F4F9FA"]
+        "tonalRamp": [
+          "#151A1B",
+          "#242E30",
+          "#3A4A4D",
+          "#556B6F",
+          "#7A9296",
+          "#A5BCC0",
+          "#DBE7E9",
+          "#F4F9FA"
+        ]
       },
       "deep": {
         "role": "tertiary",
         "displayName": "Ночная гавань",
         "canonical": "rgb(8 58 66)",
-        "tonalRamp": ["#04181C", "#083A42", "#0C5462", "#107285", "#1793AB", "#4FBBD0", "#96D9E5", "#D3EFF4"]
+        "tonalRamp": [
+          "#04181C",
+          "#083A42",
+          "#0C5462",
+          "#107285",
+          "#1793AB",
+          "#4FBBD0",
+          "#96D9E5",
+          "#D3EFF4"
+        ]
       },
       "deep-2": {
         "role": "tertiary",
         "displayName": "Глубокая вода",
         "canonical": "rgb(13 82 93)",
-        "tonalRamp": ["#051E22", "#0A3F47", "#0D525D", "#116E7D", "#158FA3", "#45B6CB", "#90D6E3", "#D0EDF3"]
+        "tonalRamp": [
+          "#051E22",
+          "#0A3F47",
+          "#0D525D",
+          "#116E7D",
+          "#158FA3",
+          "#45B6CB",
+          "#90D6E3",
+          "#D0EDF3"
+        ]
       },
       "brand": {
         "role": "primary",
         "displayName": "Глубокая бирюза",
         "canonical": "rgb(9 118 132)",
-        "tonalRamp": ["#04252A", "#06404A", "#085C69", "#097684", "#0C97A9", "#27BCD0", "#7FDCE9", "#CBF1F7"]
+        "tonalRamp": [
+          "#04252A",
+          "#06404A",
+          "#085C69",
+          "#097684",
+          "#0C97A9",
+          "#27BCD0",
+          "#7FDCE9",
+          "#CBF1F7"
+        ]
       },
       "brand-bright": {
         "role": "primary",
         "displayName": "Бирюза вывески",
         "canonical": "rgb(43 196 212)",
-        "tonalRamp": ["#06282C", "#0A464E", "#0F6874", "#158D9D", "#1DAFC2", "#2BC4D4", "#7ADDE8", "#CBF3F8"]
+        "tonalRamp": [
+          "#06282C",
+          "#0A464E",
+          "#0F6874",
+          "#158D9D",
+          "#1DAFC2",
+          "#2BC4D4",
+          "#7ADDE8",
+          "#CBF3F8"
+        ]
       },
       "sky": {
         "role": "tertiary",
         "displayName": "Светлая волна",
         "canonical": "rgb(140 228 238)",
-        "tonalRamp": ["#0A272B", "#10444B", "#17646E", "#1F8694", "#2BA9BA", "#55CBDC", "#8CE4EE", "#D2F5F9"]
+        "tonalRamp": [
+          "#0A272B",
+          "#10444B",
+          "#17646E",
+          "#1F8694",
+          "#2BA9BA",
+          "#55CBDC",
+          "#8CE4EE",
+          "#D2F5F9"
+        ]
       },
       "accent": {
         "role": "secondary",
         "displayName": "Кирпичное сердце",
         "canonical": "rgb(201 58 44)",
-        "tonalRamp": ["#2B0C08", "#4C1611", "#71211A", "#9A2C23", "#C93A2C", "#E0685B", "#EE9C94", "#F9D6D2"]
+        "tonalRamp": [
+          "#2B0C08",
+          "#4C1611",
+          "#71211A",
+          "#9A2C23",
+          "#C93A2C",
+          "#E0685B",
+          "#EE9C94",
+          "#F9D6D2"
+        ]
       },
       "accent-ink": {
         "role": "secondary",
         "displayName": "Белый на акценте",
         "canonical": "rgb(255 255 255)",
-        "tonalRamp": ["#141414", "#262626", "#3D3D3D", "#5C5C5C", "#858585", "#B3B3B3", "#DBDBDB", "#FFFFFF"]
+        "tonalRamp": [
+          "#141414",
+          "#262626",
+          "#3D3D3D",
+          "#5C5C5C",
+          "#858585",
+          "#B3B3B3",
+          "#DBDBDB",
+          "#FFFFFF"
+        ]
       },
       "tint": {
         "role": "tertiary",
         "displayName": "Морская дымка",
         "canonical": "rgb(224 246 249)",
-        "tonalRamp": ["#0A2226", "#103A41", "#17555F", "#1F747F", "#2B96A4", "#5CBECC", "#9EDCE7", "#E0F6F9"]
+        "tonalRamp": [
+          "#0A2226",
+          "#103A41",
+          "#17555F",
+          "#1F747F",
+          "#2B96A4",
+          "#5CBECC",
+          "#9EDCE7",
+          "#E0F6F9"
+        ]
       }
     },
     "typographyMeta": {
@@ -175,11 +292,26 @@
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" },
-      { "name": "2xl", "value": "1536px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
     ]
   },
   "components": [
@@ -238,6 +370,22 @@
       "description": "Кнопка виджета доступности в шапке. Открывает панель с ползунком кегля и контрастной темой — сигнатурный элемент системы.",
       "html": "<button class=\"ds-a11y\" aria-label=\"Настройки отображения\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg><span aria-hidden=\"true\">А+</span></button>",
       "css": ".ds-a11y { display: inline-flex; align-items: center; gap: 0.5rem; height: 2.75rem; padding: 0 0.75rem; border: 1.5px solid rgb(var(--c-line, 219 231 233)); border-radius: 0.875rem; background: transparent; color: rgb(var(--c-ink, 15 26 28)); font-family: Inter, 'Segoe UI', system-ui, sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s; } .ds-a11y:hover { border-color: rgb(var(--c-ink, 15 26 28)); } .ds-a11y:focus-visible { outline: none; box-shadow: 0 0 0 2px rgb(var(--c-bg, 242 247 248)), 0 0 0 4px rgb(var(--c-accent, 201 58 44)); } .ds-a11y .ds-icon { width: 1.25rem; height: 1.25rem; }"
+    },
+    {
+      "name": "Cabinet Tab",
+      "kind": "nav",
+      "refersTo": "cabinet-tab",
+      "description": "Вкладка кабинета: активная — deep с белым, остальные — рамка line и muted.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Сегодня</button><button class=\"ds-tab\">Дневник</button></div>",
+      "css": ".ds-tabs{display:flex;gap:.5rem}.ds-tab{min-height:3rem;padding:.625rem 1.25rem;border-radius:.875rem;font:500 1rem Inter,system-ui,sans-serif;border:1px solid rgb(var(--c-line));background:transparent;color:rgb(var(--c-muted));transition:color .2s,border-color .2s}.ds-tab:hover{border-color:rgb(var(--c-ink));color:rgb(var(--c-ink))}.ds-tab-active{background:rgb(var(--c-deep));border-color:rgb(var(--c-deep));color:#fff}.ds-tab:focus-visible{outline:2px solid rgb(var(--c-accent));outline-offset:2px}"
+    },
+    {
+      "name": "SOS Button",
+      "kind": "button",
+      "refersTo": "sos-button",
+      "description": "Контурная иконочная кнопка SOS в шапке кабинета; красный — только иконка.",
+      "html": "<button class=\"ds-sos\" aria-label=\"Признаки инсульта и вызов скорой\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\"/><path d=\"M12 9v4\"/><path d=\"M12 17h.01\"/></svg></button>",
+      "css": ".ds-sos{display:inline-flex;width:2.75rem;height:2.75rem;align-items:center;justify-content:center;border-radius:.875rem;border:1px solid rgb(var(--c-line));background:transparent;color:rgb(var(--c-accent));transition:border-color .2s}.ds-sos:hover{border-color:rgb(var(--c-ink))}.ds-sos:focus-visible{outline:2px solid rgb(var(--c-accent));outline-offset:2px}"
     }
   ],
   "narrative": {
