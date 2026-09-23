@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// У care нет отдельной «домашней» страницы — вход и кабинет решают роль
+// У care нет отдельной «домашней» страницы: корень ведёт на выбор роли
 export default function HomePage() {
-  redirect("/kabinet");
+  redirect("/vhod");
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, UserRound, HeartHandshake, Stethoscope, ShieldCheck } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -35,19 +35,16 @@ export function LoginPage() {
   const t = useT('cabinet')
   const setLocale = useSetCabinetLocale()
   const text = useContent('cabinet')
-  const { user, signIn } = useAuth()
+  const { signIn } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [busy, setBusy] = useState<CareRole | null>(null)
 
   const from = safeRedirectPath(searchParams.get('from'))
 
-  useEffect(() => {
-    if (user) router.replace(from ?? ROUTES.cabinet)
-  }, [user, from, router])
-
-  if (user) return null
-
+  // Выбор роли показывается всегда, даже если в браузере остался прошлый
+  // демо-вход: на показах платформы кнопку «Кабинет» жмут разные люди, и
+  // автопереход в чужой кабинет сбивал с толку. Выбор роли заменяет сессию.
   const enter = async (role: CareRole) => {
     setBusy(role)
     await signIn(role)
