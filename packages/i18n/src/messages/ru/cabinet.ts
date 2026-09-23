@@ -38,6 +38,7 @@ export const cabinet = {
   "plan.exerciseMinutes": "{count} мин",
   "plan.feedbackAsk": "Как далось упражнение?",
   "plan.feedbackDone": "Ваша оценка: {level}",
+  "plan.feedbackPatient": "Оценка пациента: {level}",
   "plan.difficulty1": "легко",
   "plan.difficulty2": "нормально",
   "plan.difficulty3": "тяжело",

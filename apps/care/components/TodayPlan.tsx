@@ -168,10 +168,11 @@ export function TodayPlan({ readOnly = false }: { readOnly?: boolean }) {
                   </span>
                 )}
 
-                {/* Опекун и куратор оценку видят, но не ставят: она не их */}
+                {/* Опекун и куратор оценку видят, но не ставят: она не их —
+                    поэтому «Оценка пациента», а не «Ваша оценка» */}
                 {done && readOnly && exercise.feedback && (
                   <span className="text-base text-muted">
-                    {t('plan.feedbackDone', { level: t(`plan.difficulty${exercise.feedback}`) })}
+                    {t('plan.feedbackPatient',{ level: t(`plan.difficulty${exercise.feedback}`) })}
                   </span>
                 )}
               </div>

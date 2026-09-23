@@ -41,6 +41,7 @@ export const cabinet: Translation<"cabinet"> = {
   "plan.exerciseMinutes": "{count} мин",
   "plan.feedbackAsk": "Жаттығу қалай өтті?",
   "plan.feedbackDone": "Сіздің бағаңыз: {level}",
+  "plan.feedbackPatient": "Пациенттің бағасы: {level}",
   "plan.difficulty1": "жеңіл",
   "plan.difficulty2": "қалыпты",
   "plan.difficulty3": "ауыр",
